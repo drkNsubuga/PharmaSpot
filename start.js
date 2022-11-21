@@ -1,11 +1,14 @@
+require('@electron/remote/main').initialize();
+require('electron-store').initRenderer();
 const setupEvents = require('./installers/setupEvents')
  if (setupEvents.handleSquirrelEvent()) {
     return;
  }
- 
+
+
 const server = require('./server');
 const {app, BrowserWindow, ipcMain} = require('electron');
-const path = require('path')
+const path = require('path');
 
 const contextMenu = require('electron-context-menu');
 
@@ -37,6 +40,10 @@ function createWindow() {
   })
 }
 
+// https://github.com/electron/remote/issues/94#issuecomment-1024849702
+app.on('browser-window-created', (_, window) => {
+    require("@electron/remote/main").enable(window.webContents);
+});
 
 app.on('ready', createWindow)
 
@@ -45,6 +52,9 @@ app.on('window-all-closed', () => {
     app.quit()
   }
 })
+// app.on('browser-window-created', (_, window) => {
+//     require("@electron/remote/main").enable(window.webContents)
+// });
 
 app.on('activate', () => {
   if (mainWindow === null) {

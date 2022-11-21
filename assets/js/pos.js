@@ -30,7 +30,7 @@ let Swal = require('sweetalert2');
 let { ipcRenderer } = require('electron');
 let dotInterval = setInterval(function () { $(".dot").text('.') }, 3000);
 let Store = require('electron-store');
-const remote = require('electron').remote;
+const remote = require('@electron/remote');
 const app = remote.app;
 let img_path = app.getPath('appData') + '/POS/uploads/';
 let api = 'http://' + host + ':' + port + '/api/';
@@ -731,7 +731,7 @@ if (auth == undefined) {
 
         </left>
         <hr>
-        <table width="100%">
+        <table class="table table-responsive">
             <thead style="text-align: left;">
             <tr>
                 <th>Item</th>
