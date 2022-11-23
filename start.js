@@ -73,7 +73,9 @@ ipcMain.on('app-reload', (event, arg) => {
   mainWindow.reload();
 });
 
-
+ipcMain.on('app_version', (event) => {
+  event.sender.send('app_version', { version: app.getVersion() });
+});
 
 contextMenu({
   prepend: (params, browserWindow) => [

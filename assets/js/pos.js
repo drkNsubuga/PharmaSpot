@@ -60,8 +60,13 @@ let end_date = moment(end).toDate();
 let by_till = 0;
 let by_user = 0;
 let by_status = 1;
-
+const moneyFormat=(amount)=>{
+        return new Intl.NumberFormat('en-US').format(amount);
+    };
 $(function () {
+
+
+    
 
     function cb(start, end) {
         $('#reportrange span').html(start.format('MMMM D, YYYY') + '  -  ' + end.format('MMMM D, YYYY'));
@@ -226,7 +231,7 @@ if (auth == undefined) {
                                         <div class="name" id="product_name">${item.name}</div> 
                                         <span class="sku">${item.sku}</span>
                                         <span class="stock">STOCK </span><span class="count">${item.stock == 1 ? item.quantity : 'N/A'}</span></div>
-                                        <sp class="text-success text-center"><b data-plugin="counterup">${settings.symbol + item.price}</b> </sp>
+                                        <sp class="text-success text-center"><b data-plugin="counterup">${settings.symbol + moneyFormat(item.price)}</b> </sp>
                             </div>
                         </div>`;
                     $('#parent').append(item_info);
@@ -436,7 +441,7 @@ if (auth == undefined) {
                 total += data.quantity * data.price;
             });
             total = total - $("#inputDiscount").val();
-            $('#price').text(settings.symbol + total.toFixed(2));
+            $('#price').text(settings.symbol + moneyFormat(total.toFixed(2)));
 
             subTotal = total;
 
@@ -455,7 +460,7 @@ if (auth == undefined) {
 
             orderTotal = grossTotal.toFixed(2);
 
-            $("#gross_price").text(settings.symbol + grossTotal.toFixed(2));
+            $("#gross_price").text(settings.symbol + moneyFormat(grossTotal.toFixed(2)));
             $("#payablePrice").val(grossTotal);
         };
 
@@ -483,6 +488,7 @@ if (auth == undefined) {
                                     class: 'form-control',
                                     type: 'number',
                                     value: data.quantity,
+                                    min:'1',
                                     onInput: '$(this).qtInput(' + index + ')'
                                 }),
                                 $('<div>', { class: 'input-group-btn btn-xs' }).append(
@@ -495,7 +501,7 @@ if (auth == undefined) {
                                 )
                             )
                         ),
-                        $('<td>', { text: settings.symbol + (data.price * data.quantity).toFixed(2) }),
+                        $('<td>', { text: settings.symbol + moneyFormat((data.price * data.quantity).toFixed(2)) }),
                         $('<td>').append(
                             $('<button>', {
                                 class: 'btn btn-danger btn-xs',
@@ -630,14 +636,14 @@ if (auth == undefined) {
             let items = "";
             let payment = 0;
             cart.forEach(item => {
-                items += "<tr><td>" + item.product_name + "</td><td>" + item.quantity + "</td><td>" + settings.symbol + parseFloat(item.price).toFixed(2) + "</td></tr>";
+                items += "<tr><td>" + item.product_name + "</td><td>" + item.quantity + "</td><td>" + settings.symbol + moneyFormat(parseFloat(item.price).toFixed(2)) + "</td></tr>";
             });
 
             let currentTime = new Date(moment());
             let discount = $("#inputDiscount").val();
             let customer = JSON.parse($("#customer").val());
             let date = moment(currentTime).format("YYYY-MM-DD HH:mm:ss");
-            let paid = $("#payment").val() == "" ? "" : parseFloat($("#payment").val()).toFixed(2);
+            let paid = $("#payment").val() == "" ? "" :parseFloat($("#payment").val()).toFixed(2);
             let change = $("#change").text() == "" ? "" : parseFloat($("#change").text()).toFixed(2);
             let refNumber = $("#refNumber").val();
             let orderNumber = holdOrder;
@@ -661,7 +667,7 @@ if (auth == undefined) {
                     <tr>
                         <td>Change</td>
                         <td>:</td>
-                        <td>${settings.symbol + Math.abs(change).toFixed(2)}</td>
+                        <td>${settings.symbol + moneyFormat(Math.abs(change).toFixed(2))}</td>
                     </tr>
                     <tr>
                         <td>Method</td>
@@ -745,12 +751,12 @@ if (auth == undefined) {
             <tr>                        
                 <td><b>Subtotal</b></td>
                 <td>:</td>
-                <td><b>${settings.symbol}${subTotal.toFixed(2)}</b></td>
+                <td><b>${settings.symbol}${moneyFormat(subTotal.toFixed(2))}</b></td>
             </tr>
             <tr>
                 <td>Discount</td>
                 <td>:</td>
-                <td>${discount > 0 ? settings.symbol + parseFloat(discount).toFixed(2) : ''}</td>
+                <td>${discount > 0 ? settings.symbol + moneyFormat(parseFloat(discount).toFixed(2)) : ''}</td>
             </tr>
             
             ${tax_row}
@@ -759,7 +765,7 @@ if (auth == undefined) {
                 <td><h3>Total</h3></td>
                 <td><h3>:</h3></td>
                 <td>
-                    <h3>${settings.symbol}${parseFloat(orderTotal).toFixed(2)}</h3>
+                    <h3>${settings.symbol}${moneyFormat(parseFloat(orderTotal).toFixed(2))}</h3>
                 </td>
             </tr>
             ${payment == 0 ? '' : payment}
@@ -1961,9 +1967,9 @@ function loadTransactions() {
                 transaction_list += `<tr>
                                 <td>${trans.order}</td>
                                 <td class="nobr">${moment(trans.date).format('YYYY MMM DD hh:mm:ss')}</td>
-                                <td>${settings.symbol + trans.total}</td>
-                                <td>${trans.paid == "" ? "" : settings.symbol + trans.paid}</td>
-                                <td>${trans.change ? settings.symbol + Math.abs(trans.change).toFixed(2) : ''}</td>
+                                <td>${settings.symbol + moneyFormat(trans.total)}</td>
+                                <td>${trans.paid == "" ? "" : settings.symbol + moneyFormat(trans.paid)}</td>
+                                <td>${trans.change ? settings.symbol + moneyFormat(Math.abs(trans.change)).toFixed(2) : ''}</td>
                                 <td>${trans.paid == "" ? "" : trans.payment_type == 0 ? "Cash" : 'Card'}</td>
                                 <td>${trans.till}</td>
                                 <td>${trans.user}</td>
@@ -1972,7 +1978,7 @@ function loadTransactions() {
 
                 if (counter == transactions.length) {
 
-                    $('#total_sales #counter').text(settings.symbol + parseFloat(sales).toFixed(2));
+                    $('#total_sales #counter').text(settings.symbol + moneyFormat(parseFloat(sales).toFixed(2)));
                     $('#total_transactions #counter').text(transact);
 
                     const result = {};
@@ -2152,7 +2158,7 @@ $.fn.viewTransaction = function (index) {
                 <tr>
                     <td>Change</td>
                     <td>:</td>
-                    <td>${settings.symbol + Math.abs(allTransactions[index].change).toFixed(2)}</td>
+                    <td>${settings.symbol + moneyFormat(Math.abs(allTransactions[index].change).toFixed(2))}</td>
                 </tr>
                 <tr>
                     <td>Method</td>
@@ -2208,12 +2214,12 @@ $.fn.viewTransaction = function (index) {
         <tr>                        
             <td><b>Subtotal</b></td>
             <td>:</td>
-            <td><b>${settings.symbol}${allTransactions[index].subtotal}</b></td>
+            <td><b>${settings.symbol}${moneyFormat(allTransactions[index].subtotal)}</b></td>
         </tr>
         <tr>
             <td>Discount</td>
             <td>:</td>
-            <td>${discount > 0 ? settings.symbol + parseFloat(allTransactions[index].discount).toFixed(2) : ''}</td>
+            <td>${discount > 0 ? settings.symbol + moneyFormat(parseFloat(allTransactions[index].discount).toFixed(2)) : ''}</td>
         </tr>
         
         ${tax_row}
@@ -2222,7 +2228,7 @@ $.fn.viewTransaction = function (index) {
             <td><h3>Total</h3></td>
             <td><h3>:</h3></td>
             <td>
-                <h3>${settings.symbol}${allTransactions[index].total}</h3>
+                <h3>${settings.symbol}${moneyFormat(allTransactions[index].total)}</h3>
             </td>
         </tr>
         ${payment == 0 ? '' : payment}
