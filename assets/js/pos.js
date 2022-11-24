@@ -64,10 +64,7 @@ const moneyFormat=(amount)=>{
         return new Intl.NumberFormat('en-US').format(amount);
     };
 $(function () {
-
-
     
-
     function cb(start, end) {
         $('#reportrange span').html(start.format('MMMM D, YYYY') + '  -  ' + end.format('MMMM D, YYYY'));
     }
