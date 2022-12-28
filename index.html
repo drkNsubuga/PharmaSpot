@@ -3,16 +3,7 @@
   <head>
     <meta charset="UTF-8">
     <title>Point Of Sale</title>
-    <link href="assets/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
-    <link href="assets/css/core.css" rel="stylesheet" type="text/css" />
-    <link href="assets/css/components.css" rel="stylesheet" type="text/css" />
-    <link href="assets/css/icons.css" rel="stylesheet" type="text/css" />    
-    <link href="assets/css/responsive.css" rel="stylesheet" type="text/css" />
-    <link href="assets/plugins/chosen/chosen.min.css" rel="stylesheet" type="text/css" />
-    <link href="assets/plugins/daterangepicker/daterangepicker.css" rel="stylesheet" type="text/css" />    
-    <link href="assets/plugins/dataTables/jquery.dataTables.min.css" rel="stylesheet" type="text/css" />
-    <link href="assets/plugins/dataTables/dataTables.bootstrap.min.css" rel="stylesheet" type="text/css" />    
-    <link href="assets/css/pages.css" rel="stylesheet" type="text/css" />
+    <link href="assets/dist/css/bundle.min.css" rel="stylesheet" type="text/css" />
     </head>
   <body>
     
@@ -22,11 +13,9 @@
   <div class="container">
         <div class="row">
                 <div class="col-sm-12">
-
-                             <div class="button-list pull-left m-t-15 m-l-10">  
-                        
+                             <div class="button-list pull-left m-t-15 m-l-10">
                             <div class="btn-group p_one">
-                            <button id="productModal" data-toggle="modal" data-target="#Products" type="button" class="btn btn-default waves-effect waves-light">
+                            <button id="productModal" data-toggle="modal" data-target="#Products" type="button" class="btn btn-success waves-effect waves-light">
                                     <span class="btn-label"><i class=" 	glyphicon glyphicon-barcode"></i> </span>  Products   
                             </button>
                             <button id="newProductModal" data-toggle="modal" data-target="#newProduct" type="button" class="btn btn-warning waves-effect waves-light">
@@ -35,7 +24,7 @@
                             </div>
 
                             <div class="btn-group p_two">
-                            <button id="categoryModal" data-toggle="modal" data-target="#Categories" type="button" class="btn btn-default waves-effect waves-light">
+                            <button id="categoryModal" data-toggle="modal" data-target="#Categories" type="button" class="btn btn-success waves-effect waves-light">
                                     <span class="btn-label"><i class="glyphicon glyphicon-th"></i> </span>  Categories   
                             </button>
                             <button id="newCategoryModal" data-toggle="modal" data-target="#newCategory" type="button" class="btn btn-warning waves-effect waves-light">
@@ -60,20 +49,20 @@
 
                     <div class="button-list pull-right m-t-15 m-l-10">  
 
-                            <button id="settings" data-toggle="modal" data-target="#settingsModal"  type="button"  class="btn btn-default waves-effect waves-light p_five">
+                            <button id="settings" data-toggle="modal" data-target="#settingsModal"  type="button"  class="btn btn-success waves-effect waves-light p_five">
                                 <i class="glyphicon glyphicon-cog"></i>
                           </button>
 
-                            <button id="transactions" type="button" class="btn btn-default waves-effect waves-light p_three">
+                            <button id="transactions" type="button" class="btn btn-success waves-effect waves-light p_three">
                             <span class="btn-label"><i class=" 	glyphicon glyphicon-credit-card"></i> </span>  Transactions 
                             </button>
 
-                            <button id="pointofsale" type="button" class="btn btn-default waves-effect waves-light">
+                            <button id="pointofsale" type="button" class="btn btn-success waves-effect waves-light">
                                 <span class="btn-label"><i class=" 	glyphicon glyphicon-shopping-cart"></i> </span>  Point of Sale
                             </button>
 
                             <div class="btn-group p_four">
-                                <button id="usersModal" data-toggle="modal" data-target="#Users" type="button" class="btn btn-default waves-effect waves-light">
+                                <button id="usersModal" data-toggle="modal" data-target="#Users" type="button" class="btn btn-success waves-effect waves-light">
                                         <span class="btn-label"><i class=" 	glyphicon glyphicon-user"></i> </span>  Users  
                                 </button>
                                 <button id="add-user" data-toggle="modal"   type="button" class="btn btn-dark waves-effect waves-light">
@@ -172,7 +161,7 @@
                                                 <div id="counter">0</div>
                                             </div>
 
-                                            <div id="total_products" class="btn-default">
+                                            <div id="total_products" class="btn-success">
                                                 <h5>PRODUCTS</h5>
                                                 <div id="counter">0</div>
                                             </div>
@@ -183,9 +172,9 @@
                            </div>
 
                            <div class="col-md-7">
-                            <table class="table table-responsive" id="transactionList">
+                            <table class="table table-striped table-bordered table-responsive" id="transactionList">
                                 <thead>
-                                    <tr>                                                                      
+                                    <tr>                               
                                         <th>Invoice</th>                                      
                                         <th>Date</th>
                                         <th>Total</th>
@@ -206,7 +195,6 @@
             </div>
         </div>
    </div>
-
 
    <div id="pos_view">
       <div class="row">
@@ -231,8 +219,8 @@
                               <i class="glyphicon glyphicon-ok"></i>
                           </span>
                       </div>
-                  </div>
-                  <div>
+                  <!-- </div>
+                  <div> -->
                       <table class="table table-responsive m-0" id="cartTable">
   
                           <thead>
@@ -281,7 +269,7 @@
                           <span class="btn-label"><i class="fa fa-ban"></i></span>Cancel
                       </button>
   
-                      <button type="button" id="hold" class="btn btn-default waves-effect waves-light">
+                      <button type="button" id="hold" class="btn btn-success waves-effect waves-light">
                           <span class="btn-label"><i class="fa fa-hand-paper-o"></i></span>Hold
                       </button>
   
@@ -485,7 +473,7 @@
                         <div class="btn btn-primary btn-block btn-lg waves-effect waves-light">Change <span id="change_curr"></span><span id="change"></span> </div>
                       </div>
                       <div class="col-md-6">
-                        <button type="button" id="confirmPayment" class="btn btn-default btn-block btn-lg waves-effect waves-light">Confirm Payment</button>
+                        <button type="button" id="confirmPayment" class="btn btn-success btn-block btn-lg waves-effect waves-light">Confirm Payment</button>
                     </div>
                   </div>
                   
@@ -808,7 +796,7 @@
     <div class="modal-dialog modal-sm">
         <div class="modal-content">
             <div class="modal-header">
-                <button class="btn btn-sm btn-default" onclick="$(this).print()">Print</button> <br> <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <button class="btn btn-sm btn-success" onclick="$(this).print()">Print</button> <br> <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
               </div>
             <div class="modal-body" id="viewTransaction">                 
             </div>
@@ -861,7 +849,7 @@
                             </div>
                     </div>
                      <div class="form-group">
-                        <input id="save_settings" type="submit" class="btn btn-default btn-block waves-effect waves-light" value="Save Settings">
+                        <input id="save_settings" type="submit" class="btn btn-success btn-block waves-effect waves-light" value="Save Settings">
                     </div>
                  </div>
                 </form>
@@ -933,7 +921,7 @@
 
                        
                         <div class="form-group">
-                                <input id="save_settings" type="submit" class="btn btn-default btn-block waves-effect waves-light" value="Save Settings">
+                                <input id="save_settings" type="submit" class="btn btn-success btn-block waves-effect waves-light" value="Save Settings">
                         </div>
 
                     </form>
@@ -947,50 +935,7 @@
 </div>
 
 <script> window.$ = window.jQuery = require('jquery'); </script>
-
-<script> 
-
-
-require('./renderer.js');
-
-    </script>
-
-    <script src="assets/plugins/bootstrap/bootstrap.min.js"></script>
-    <script src="assets/plugins/chosen/chosen.jquery.min.js"></script>
-    <script src="assets/plugins/jquery-ui/jquery.form.min.js"></script>
-    <script src="assets/plugins/daterangepicker/daterangepicker.min.js"></script>
-    <script src="assets/plugins/dataTables/jquery.dataTables.min.js"></script>
-    <script src="assets/plugins/dataTables/jquery.dataTables.bootstrap.js"></script>
-    <script src="assets/plugins/dataTables/dataTables.buttons.min.js"></script>
-    <script src="assets/plugins/dataTables/buttons.html5.min.js"></script>
-    <script src="assets/plugins/dataTables/pdfmake.min.js"></script>
-    <script src="assets/plugins/dataTables/vfs_fonts.js"></script>
-    <!-- <script src="assets/plugins/jquery-ui/jquery-ui.min.js"></script>
-    <script src="assets/plugins/jq-keyboard/jqkeyboard-min.js"></script>
-    <script src="assets/plugins/jq-keyboard/jqk.layout.en.js"></script>
-    <script src="assets/plugins/onscreen-keyboard/jquery.caret.min.js"></script> -->
-
-    
-    <script>
-
-    // $(function () {
-    //  "use strict";
-    //     jqKeyboard.init({
-    //         icon: "light"
-    //       });
-    //  });
- 
-
-    //  $('.holdOrderKeyboard').onscreenKeyboard({
-	//     allowTypingClass: 'holdOrderInput'
-    //   });
-
-
-    //   $('.customerOrderKeyboard').onscreenKeyboard({
-	//     allowTypingClass: 'holdCustomerOrderInput'
-    //   });
-
-     </script>
-
+<script> require('./renderer.js');</script>
+    <script src="assets/dist/js/bundle.min.js"></script>
   </body>
 </html>

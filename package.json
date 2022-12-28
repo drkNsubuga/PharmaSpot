@@ -1,12 +1,12 @@
 {
-  "name": "POS",
+  "name": "PharmaSpot",
   "version": "1.0.0",
-  "description": "Store Point of Sale is a desktop pplication developed by Hosting Domain and available for free download at www.storepointofsale.com.",
+  "description": "Easy Point of Sale for Pharmacies",
   "author": "Hosting Domain",
   "private": true,
   "main": "start.js",
   "build": {
-    "appId": "01",
+    "appId": "pharmaspot.hostingdomain.com",
     "directories": {
       "buildResources": "assets"
     }
@@ -16,11 +16,10 @@
     "async": "^3.2.4",
     "body-parser": "^1.20.1",
     "btoa": "^1.2.1",
-    "electron": ">=21.3.0",
     "electron-context-menu": "^3.6.0",
+    "electron-squirrel-startup": "^1.0.0",
     "electron-store": "^8.1.0",
     "electron-updater": "^5.3.0",
-    "electron-winstaller": "^5.1.0",
     "express": "^4.18.2",
     "express-fileupload": "^1.4.0",
     "html2canvas": "^1.4.1",
@@ -44,7 +43,10 @@
   "scripts": {
     "electron": "cross-env NODE_ENV=dev nodemon --exec \"\"electron .\"\"",
     "electron-build": "electron-builder",
-    "package-win": "electron-packager . POS --overwrite --asar=false --platform=win32 --arch=x64 --icon=assets/images/icon.ico --prune=true --out=release-builds --version-string.ProductName=\"POS\""
+    "package-win": "electron-packager . PharmaSpot --overwrite --asar=false --platform=win32 --arch=x64 --icon=assets/images/icon.ico --prune=true --out=release-builds --version-string.ProductName=\"PharmaSpot\"",
+    "start": "electron-forge start",
+    "package": "electron-forge package",
+    "make": "electron-forge make"
   },
   "browserslist": {
     "production": [
@@ -59,9 +61,24 @@
     ]
   },
   "devDependencies": {
+    "@electron-forge/cli": "^6.0.4",
+    "@electron-forge/maker-deb": "^6.0.4",
+    "@electron-forge/maker-rpm": "^6.0.4",
+    "@electron-forge/maker-squirrel": "^6.0.4",
+    "@electron-forge/maker-zip": "^6.0.4",
+    "browser-sync": "^2.27.10",
     "cross-env": "^7.0.3",
-    "electron-builder": "^23.6.0",
+    "electron": "21.3.1",
     "electron-is-dev": "^2.0.0",
-    "nodemon": "^1.19.3"
+    "gulp": "^4.0.2",
+    "gulp-clean-css": "^4.3.0",
+    "gulp-concat": "^2.6.1",
+    "gulp-javascript-obfuscator": "^1.1.6",
+    "gulp-minify": "^3.1.0",
+    "gulp-purgecss": "^5.0.0",
+    "gulp-rename": "^2.0.0",
+    "gulp-uglify": "^3.0.2",
+    "merge-stream": "^2.0.0",
+    "nodemon": "^2.0.20"
   }
 }

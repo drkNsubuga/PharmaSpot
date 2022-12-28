@@ -155,7 +155,7 @@ margin-right: 30px;
 #loading {
   background: rgb(221,221,221);
 /*  background: radial-gradient(circle, rgba(153,153,153,1) 0%, rgba(221,221,221,1)  100%); */
-  background:radial-gradient(circle, #81c868 0%, #eee  100%)
+  background:radial-gradient(circle, #81c868 0%, #eee  100%);
   position: absolute;
   height: 100%;
   width: 100%;

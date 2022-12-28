@@ -1966,7 +1966,7 @@ function loadTransactions() {
                                 <td class="nobr">${moment(trans.date).format('YYYY MMM DD hh:mm:ss')}</td>
                                 <td>${settings.symbol + moneyFormat(trans.total)}</td>
                                 <td>${trans.paid == "" ? "" : settings.symbol + moneyFormat(trans.paid)}</td>
-                                <td>${trans.change ? settings.symbol + moneyFormat(Math.abs(trans.change)).toFixed(2) : ''}</td>
+                                <td>${trans.change ? settings.symbol + moneyFormat(Math.abs(trans.change).toFixed(2)) : ''}</td>
                                 <td>${trans.paid == "" ? "" : trans.payment_type == 0 ? "Cash" : 'Card'}</td>
                                 <td>${trans.till}</td>
                                 <td>${trans.user}</td>
@@ -2078,7 +2078,7 @@ function loadSoldProducts() {
             <td>${item.product}</td>
             <td>${item.qty}</td>
             <td>${product[0].stock == 1 ? product.length > 0 ? product[0].quantity : '' : 'N/A'}</td>
-            <td>${settings.symbol + (item.qty * parseFloat(item.price)).toFixed(2)}</td>
+            <td>${settings.symbol + moneyFormat((item.qty * parseFloat(item.price)).toFixed(2))}</td>
             </tr>`;
 
         if (counter == sold.length) {
