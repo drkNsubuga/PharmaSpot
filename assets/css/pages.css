@@ -243,3 +243,7 @@ margin-right: 30px;
   font-size: 32px;
   width: 100%;
 }
+
+.modal-body {
+    max-height: calc(100vh - 143px);
+    overflow-y: auto; }

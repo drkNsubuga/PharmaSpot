@@ -28,7 +28,7 @@ let port = '8001';
 let moment = require('moment');
 let Swal = require('sweetalert2');
 let { ipcRenderer } = require('electron');
-let dotInterval = setInterval(function () { $(".dot").text('.') }, 3000);
+let dotInterval = setInterval(function() { $(".dot").text('.') }, 3000);
 let Store = require('electron-store');
 const remote = require('@electron/remote');
 const app = remote.app;
@@ -39,6 +39,7 @@ let jsPDF = require('jspdf');
 let html2canvas = require('html2canvas');
 let JsBarcode = require('jsbarcode');
 let macaddress = require('macaddress');
+let notiflix = require('notiflix');
 let categories = [];
 let holdOrderList = [];
 let customerOrderList = [];
@@ -60,11 +61,17 @@ let end_date = moment(end).toDate();
 let by_till = 0;
 let by_user = 0;
 let by_status = 1;
-const moneyFormat=(amount)=>{
-        return new Intl.NumberFormat('en-US').format(amount);
-    };
-$(function () {
-    
+notiflix.Notify.init({
+    position: "right-bottom",
+    cssAnimationDuration: 600,
+    messageMaxLength: 150
+});
+
+const moneyFormat = (amount) => {
+    return new Intl.NumberFormat('en-US').format(amount);
+};
+$(function() {
+
     function cb(start, end) {
         $('#reportrange span').html(start.format('MMMM D, YYYY') + '  -  ' + end.format('MMMM D, YYYY'));
     }
@@ -94,10 +101,10 @@ $(function () {
 });
 
 
-$.fn.serializeObject = function () {
+$.fn.serializeObject = function() {
     var o = {};
     var a = this.serializeArray();
-    $.each(a, function () {
+    $.each(a, function() {
         if (o[this.name]) {
             if (!o[this.name].push) {
                 o[this.name] = [o[this.name]];
@@ -116,7 +123,7 @@ user = storage.get('user');
 
 
 if (auth == undefined) {
-    $.get(api + 'users/check/', function (data) { });
+    $.get(api + 'users/check/', function(data) {});
     $("#loading").show();
     authenticate();
 
@@ -124,7 +131,7 @@ if (auth == undefined) {
 
     $('#loading').show();
 
-    setTimeout(function () {
+    setTimeout(function() {
         $('#loading').hide();
     }, 2000);
 
@@ -138,24 +145,24 @@ if (auth == undefined) {
         }
     }
 
-    $.get(api + 'users/user/' + user._id, function (data) {
+    $.get(api + 'users/user/' + user._id, function(data) {
         user = data;
         $('#loggedin-user').text(user.fullname);
     });
 
 
-    $.get(api + 'settings/get', function (data) {
+    $.get(api + 'settings/get', function(data) {
         settings = data.settings;
     });
 
 
-    $.get(api + 'users/all', function (users) {
+    $.get(api + 'users/all', function(users) {
         allUsers = [...users];
     });
 
 
 
-    $(document).ready(function () {
+    $(document).ready(function() {
 
         $(".loading").hide();
 
@@ -169,11 +176,10 @@ if (auth == undefined) {
         }
 
 
-        setTimeout(function () {
+        setTimeout(function() {
             if (settings == undefined && auth != undefined) {
                 $('#settingsModal').modal('show');
-            }
-            else {
+            } else {
                 vat = parseFloat(settings.percentage);
                 $("#taxInfo").text(settings.charge_tax ? vat : 0);
             }
@@ -182,9 +188,9 @@ if (auth == undefined) {
 
 
 
-        $("#settingsModal").on("hide.bs.modal", function () {
+        $("#settingsModal").on("hide.bs.modal", function() {
 
-            setTimeout(function () {
+            setTimeout(function() {
                 if (settings == undefined && auth != undefined) {
                     $('#settingsModal').modal('show');
                 }
@@ -201,7 +207,7 @@ if (auth == undefined) {
 
         function loadProducts() {
 
-            $.get(api + 'inventory/products', function (data) {
+            $.get(api + 'inventory/products', function(data) {
 
                 data.forEach(item => {
                     item.price = parseFloat(item.price).toFixed(2);
@@ -210,6 +216,27 @@ if (auth == undefined) {
                 allProducts = [...data];
 
                 loadProductList();
+
+                let delay = 0;
+                allProducts.forEach(product => {
+                    let todayDate = Date.now();
+                    let expDate = moment(product.expirationDate, "DD-MM-YYYY");
+                    const diffTime = Math.abs(expDate - todayDate);
+                    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+                    if (diffDays <= 7 && diffDays > 2) {
+                        notiflix.Notify.init.timeout = 4000 + delay;
+                        notiflix.Notify.warning(`${product.name} has only ${diffDays} day(s) left to expiry`);
+
+                    } else if (diffDays <= 2) {
+                        notiflix.Notify.init.timeout = 8000 + delay * 2;
+                        notiflix.Notify.failure(`${product.name} has only ${diffDays} day(s) left to expiry`);
+                    }
+                    delay += 100;
+
+
+
+                })
 
                 $('#parent').text('');
                 $('#categories').html(`<button type="button" id="all" class="btn btn-categories btn-white waves-effect waves-light">All</button> `);
@@ -236,7 +263,7 @@ if (auth == undefined) {
 
                 categories.forEach(category => {
 
-                    let c = allCategories.filter(function (ctg) {
+                    let c = allCategories.filter(function(ctg) {
                         return ctg._id == category;
                     })
 
@@ -248,7 +275,7 @@ if (auth == undefined) {
         }
 
         function loadCategories() {
-            $.get(api + 'categories/all', function (data) {
+            $.get(api + 'categories/all', function(data) {
                 allCategories = data;
                 loadCategoryList();
                 $('#category').html(`<option value="0">Select</option>`);
@@ -261,7 +288,7 @@ if (auth == undefined) {
 
         function loadCustomers() {
 
-            $.get(api + 'customers/all', function (customers) {
+            $.get(api + 'customers/all', function(customers) {
 
                 $('#customer').html(`<option value="0" selected="selected">Walk in customer</option>`);
 
@@ -278,24 +305,22 @@ if (auth == undefined) {
         }
 
 
-        $.fn.addToCart = function (id, count, stock) {
+        $.fn.addToCart = function(id, count, stock) {
 
             if (stock == 1) {
                 if (count > 0) {
-                    $.get(api + 'inventory/product/' + id, function (data) {
+                    $.get(api + 'inventory/product/' + id, function(data) {
                         $(this).addProductToCart(data);
                     });
-                }
-                else {
+                } else {
                     Swal.fire(
                         'Out of stock!',
                         'This item is currently unavailable',
                         'info'
                     );
                 }
-            }
-            else {
-                $.get(api + 'inventory/product/' + id, function (data) {
+            } else {
+                $.get(api + 'inventory/product/' + id, function(data) {
                     $(this).addProductToCart(data);
                 });
             }
@@ -322,7 +347,7 @@ if (auth == undefined) {
                 contentType: 'application/json; charset=utf-8',
                 cache: false,
                 processData: false,
-                success: function (data) {
+                success: function(data) {
 
                     if (data._id != undefined && data.quantity >= 1) {
                         $(this).addProductToCart(data);
@@ -331,15 +356,13 @@ if (auth == undefined) {
                         $("#basic-addon2").append(
                             $('<i>', { class: 'glyphicon glyphicon-ok' })
                         )
-                    }
-                    else if (data.quantity < 1) {
+                    } else if (data.quantity < 1) {
                         Swal.fire(
                             'Out of stock!',
                             'This item is currently unavailable',
                             'info'
                         );
-                    }
-                    else {
+                    } else {
 
                         Swal.fire(
                             'Not Found!',
@@ -354,20 +377,19 @@ if (auth == undefined) {
                         )
                     }
 
-                }, error: function (data) {
+                },
+                error: function(data) {
                     if (data.status === 422) {
                         $(this).showValidationError(data);
                         $("#basic-addon2").append(
                             $('<i>', { class: 'glyphicon glyphicon-remove' })
                         )
-                    }
-                    else if (data.status === 404) {
+                    } else if (data.status === 404) {
                         $("#basic-addon2").empty();
                         $("#basic-addon2").append(
                             $('<i>', { class: 'glyphicon glyphicon-remove' })
                         )
-                    }
-                    else {
+                    } else {
                         $(this).showServerError();
                         $("#basic-addon2").empty();
                         $("#basic-addon2").append(
@@ -380,13 +402,13 @@ if (auth == undefined) {
         }
 
 
-        $("#searchBarCode").on('submit', function (e) {
+        $("#searchBarCode").on('submit', function(e) {
             barcodeSearch(e);
         });
 
 
 
-        $('body').on('click', '#jq-keyboard button', function (e) {
+        $('body').on('click', '#jq-keyboard button', function(e) {
             let pressed = $(this)[0].className.split(" ");
             if ($("#skuCode").val() != "" && pressed[2] == "enter") {
                 barcodeSearch(e);
@@ -395,7 +417,7 @@ if (auth == undefined) {
 
 
 
-        $.fn.addProductToCart = function (data) {
+        $.fn.addProductToCart = function(data) {
             item = {
                 id: data._id,
                 product_name: data.name,
@@ -413,9 +435,9 @@ if (auth == undefined) {
         }
 
 
-        $.fn.isExist = function (data) {
+        $.fn.isExist = function(data) {
             let toReturn = false;
-            $.each(cart, function (index, value) {
+            $.each(cart, function(index, value) {
                 if (value.id == data.id) {
                     $(this).setIndex(index);
                     toReturn = true;
@@ -425,16 +447,16 @@ if (auth == undefined) {
         }
 
 
-        $.fn.setIndex = function (value) {
+        $.fn.setIndex = function(value) {
             index = value;
         }
 
 
-        $.fn.calculateCart = function () {
+        $.fn.calculateCart = function() {
             let total = 0;
             let grossTotal;
             $('#total').text(cart.length);
-            $.each(cart, function (index, data) {
+            $.each(cart, function(index, data) {
                 total += data.quantity * data.price;
             });
             total = total - $("#inputDiscount").val();
@@ -449,9 +471,7 @@ if (auth == undefined) {
             if (settings.charge_tax) {
                 totalVat = ((total * vat) / 100);
                 grossTotal = total + totalVat
-            }
-
-            else {
+            } else {
                 grossTotal = total;
             }
 
@@ -463,10 +483,10 @@ if (auth == undefined) {
 
 
 
-        $.fn.renderTable = function (cartList) {
+        $.fn.renderTable = function(cartList) {
             $('#cartTable > tbody').empty();
             $(this).calculateCart();
-            $.each(cartList, function (index, data) {
+            $.each(cartList, function(index, data) {
                 $('#cartTable > tbody').append(
                     $('<tr>').append(
                         $('<td>', { text: index + 1 }),
@@ -485,7 +505,7 @@ if (auth == undefined) {
                                     class: 'form-control',
                                     type: 'number',
                                     value: data.quantity,
-                                    min:'1',
+                                    min: '1',
                                     onInput: '$(this).qtInput(' + index + ')'
                                 }),
                                 $('<div>', { class: 'input-group-btn btn-xs' }).append(
@@ -513,16 +533,16 @@ if (auth == undefined) {
         };
 
 
-        $.fn.deleteFromCart = function (index) {
+        $.fn.deleteFromCart = function(index) {
             cart.splice(index, 1);
             $(this).renderTable(cart);
 
         }
 
 
-        $.fn.qtIncrement = function (i) {
+        $.fn.qtIncrement = function(i) {
             item = cart[i];
-            let product = allProducts.filter(function (selected) {
+            let product = allProducts.filter(function(selected) {
                 return selected._id == parseInt(item.id);
             });
 
@@ -530,17 +550,14 @@ if (auth == undefined) {
                 if (item.quantity < product[0].quantity) {
                     item.quantity += 1;
                     $(this).renderTable(cart);
-                }
-
-                else {
+                } else {
                     Swal.fire(
                         'No more stock!',
                         'You have already added all the available stock.',
                         'info'
                     );
                 }
-            }
-            else {
+            } else {
                 item.quantity += 1;
                 $(this).renderTable(cart);
             }
@@ -548,7 +565,7 @@ if (auth == undefined) {
         }
 
 
-        $.fn.qtDecrement = function (i) {
+        $.fn.qtDecrement = function(i) {
             if (item.quantity > 1) {
                 item = cart[i];
                 item.quantity -= 1;
@@ -557,14 +574,14 @@ if (auth == undefined) {
         }
 
 
-        $.fn.qtInput = function (i) {
+        $.fn.qtInput = function(i) {
             item = cart[i];
             item.quantity = $(this).val();
             $(this).renderTable(cart);
         }
 
 
-        $.fn.cancelOrder = function () {
+        $.fn.cancelOrder = function() {
 
             if (cart.length > 0) {
                 Swal.fire({
@@ -595,7 +612,7 @@ if (auth == undefined) {
         }
 
 
-        $("#payButton").on('click', function () {
+        $("#payButton").on('click', function() {
             if (cart.length != 0) {
                 $("#paymentModel").modal('toggle');
             } else {
@@ -609,7 +626,7 @@ if (auth == undefined) {
         });
 
 
-        $("#hold").on('click', function () {
+        $("#hold").on('click', function() {
 
             if (cart.length != 0) {
 
@@ -629,7 +646,7 @@ if (auth == undefined) {
         }
 
 
-        $.fn.submitDueOrder = function (status) {
+        $.fn.submitDueOrder = function(status) {
             let items = "";
             let payment = 0;
             cart.forEach(item => {
@@ -640,18 +657,21 @@ if (auth == undefined) {
             let discount = $("#inputDiscount").val();
             let customer = JSON.parse($("#customer").val());
             let date = moment(currentTime).format("YYYY-MM-DD HH:mm:ss");
-            let paid = $("#payment").val() == "" ? "" :parseFloat($("#payment").val()).toFixed(2);
+            let paid = $("#payment").val() == "" ? "" : parseFloat($("#payment").val()).toFixed(2);
             let change = $("#change").text() == "" ? "" : parseFloat($("#change").text()).toFixed(2);
             let refNumber = $("#refNumber").val();
             let orderNumber = holdOrder;
             let type = "";
             let tax_row = "";
             switch (paymentType) {
-                case 1: type = "Cheque";
+                case 1:
+                    type = "Cheque";
                     break;
-                case 2: type = "Card";
+                case 2:
+                    type = "Card";
                     break;
-                default: type = "Cash";
+                default:
+                    type = "Cash";
             }
 
 
@@ -706,8 +726,7 @@ if (auth == undefined) {
 
                 orderNumber = holdOrder;
                 method = 'PUT'
-            }
-            else {
+            } else {
                 orderNumber = Math.floor(Date.now() / 1000);
                 method = 'POST'
             }
@@ -785,8 +804,7 @@ if (auth == undefined) {
                     $(".loading").hide();
                     return;
 
-                }
-                else {
+                } else {
 
                     $(".loading").hide();
                     return;
@@ -825,7 +843,7 @@ if (auth == undefined) {
                 contentType: 'application/json; charset=utf-8',
                 cache: false,
                 processData: false,
-                success: function (data) {
+                success: function(data) {
 
                     cart = [];
                     $('#viewTransaction').html('');
@@ -840,7 +858,8 @@ if (auth == undefined) {
                     $(this).getCustomerOrders();
                     $(this).renderTable(cart);
 
-                }, error: function (data) {
+                },
+                error: function(data) {
                     $(".loading").hide();
                     $("#dueModal").modal('toggle');
                     swal("Something went wrong!", 'Please refresh this page and try again');
@@ -855,7 +874,7 @@ if (auth == undefined) {
         }
 
 
-        $.get(api + 'on-hold', function (data) {
+        $.get(api + 'on-hold', function(data) {
             holdOrderList = data;
             holdOrderlocation.empty();
             clearInterval(dotInterval);
@@ -863,8 +882,8 @@ if (auth == undefined) {
         });
 
 
-        $.fn.getHoldOrders = function () {
-            $.get(api + 'on-hold', function (data) {
+        $.fn.getHoldOrders = function() {
+            $.get(api + 'on-hold', function(data) {
                 holdOrderList = data;
                 clearInterval(dotInterval);
                 holdOrderlocation.empty();
@@ -873,8 +892,8 @@ if (auth == undefined) {
         };
 
 
-        $.fn.randerHoldOrders = function (data, renderLocation, orderType) {
-            $.each(data, function (index, order) {
+        $.fn.randerHoldOrders = function(data, renderLocation, orderType) {
+            $.each(data, function(index, order) {
                 $(this).calculatePrice(order);
                 renderLocation.append(
                     $('<div>', { class: orderType == 1 ? 'col-md-3 order' : 'col-md-3 customer-order' }).append(
@@ -908,9 +927,9 @@ if (auth == undefined) {
         }
 
 
-        $.fn.calculatePrice = function (data) {
+        $.fn.calculatePrice = function(data) {
             totalPrice = 0;
-            $.each(data.products, function (index, product) {
+            $.each(data.products, function(index, product) {
                 totalPrice += product.price * product.quantity;
             })
 
@@ -921,7 +940,7 @@ if (auth == undefined) {
         };
 
 
-        $.fn.orderDetails = function (index, orderType) {
+        $.fn.orderDetails = function(index, orderType) {
 
             $('#refNumber').val('');
 
@@ -931,13 +950,13 @@ if (auth == undefined) {
 
                 $("#customer option:selected").removeAttr('selected');
 
-                $("#customer option").filter(function () {
+                $("#customer option").filter(function() {
                     return $(this).text() == "Walk in customer";
                 }).prop("selected", true);
 
                 holdOrder = holdOrderList[index]._id;
                 cart = [];
-                $.each(holdOrderList[index].items, function (index, product) {
+                $.each(holdOrderList[index].items, function(index, product) {
                     item = {
                         id: product.id,
                         product_name: product.product_name,
@@ -953,14 +972,14 @@ if (auth == undefined) {
 
                 $("#customer option:selected").removeAttr('selected');
 
-                $("#customer option").filter(function () {
+                $("#customer option").filter(function() {
                     return $(this).text() == customerOrderList[index].customer.name;
                 }).prop("selected", true);
 
 
                 holdOrder = customerOrderList[index]._id;
                 cart = [];
-                $.each(customerOrderList[index].items, function (index, product) {
+                $.each(customerOrderList[index].items, function(index, product) {
                     item = {
                         id: product.id,
                         product_name: product.product_name,
@@ -977,12 +996,14 @@ if (auth == undefined) {
         }
 
 
-        $.fn.deleteOrder = function (index, type) {
+        $.fn.deleteOrder = function(index, type) {
 
             switch (type) {
-                case 1: deleteId = holdOrderList[index]._id;
+                case 1:
+                    deleteId = holdOrderList[index]._id;
                     break;
-                case 2: deleteId = customerOrderList[index]._id;
+                case 2:
+                    deleteId = customerOrderList[index]._id;
             }
 
             let data = {
@@ -1007,7 +1028,7 @@ if (auth == undefined) {
                         data: JSON.stringify(data),
                         contentType: 'application/json; charset=utf-8',
                         cache: false,
-                        success: function (data) {
+                        success: function(data) {
 
                             $(this).getHoldOrders();
                             $(this).getCustomerOrders();
@@ -1018,7 +1039,8 @@ if (auth == undefined) {
                                 'success'
                             )
 
-                        }, error: function (data) {
+                        },
+                        error: function(data) {
                             $(".loading").hide();
 
                         }
@@ -1029,8 +1051,8 @@ if (auth == undefined) {
 
 
 
-        $.fn.getCustomerOrders = function () {
-            $.get(api + 'customer-orders', function (data) {
+        $.fn.getCustomerOrders = function() {
+            $.get(api + 'customer-orders', function(data) {
                 clearInterval(dotInterval);
                 customerOrderList = data;
                 customerOrderLocation.empty();
@@ -1040,7 +1062,7 @@ if (auth == undefined) {
 
 
 
-        $('#saveCustomer').on('submit', function (e) {
+        $('#saveCustomer').on('submit', function(e) {
 
             e.preventDefault();
 
@@ -1059,7 +1081,7 @@ if (auth == undefined) {
                 contentType: 'application/json; charset=utf-8',
                 cache: false,
                 processData: false,
-                success: function (data) {
+                success: function(data) {
                     $("#newCustomer").modal('hide');
                     Swal.fire("Customer added!", "Customer added successfully!", "success");
                     $("#customer option:selected").removeAttr('selected');
@@ -1069,7 +1091,8 @@ if (auth == undefined) {
 
                     $('#customer').val(`{"id": ${custData._id}, "name": ${custData.name}}`).trigger('chosen:updated');
 
-                }, error: function (data) {
+                },
+                error: function(data) {
                     $("#newCustomer").modal('hide');
                     Swal.fire('Error', 'Something went wrong please try again', 'error')
                 }
@@ -1081,26 +1104,25 @@ if (auth == undefined) {
 
         $("#cardInfo").hide();
 
-        $("#payment").on('input', function () {
+        $("#payment").on('input', function() {
             $(this).calculateChange();
         });
 
 
-        $("#confirmPayment").on('click', function () {
+        $("#confirmPayment").on('click', function() {
             if ($('#payment').val() == "") {
                 Swal.fire(
                     'Nope!',
                     'Please enter the amount that was paid!',
                     'warning'
                 );
-            }
-            else {
+            } else {
                 $(this).submitDueOrder(1);
             }
         });
 
 
-        $('#transactions').click(function () {
+        $('#transactions').click(function() {
             loadTransactions();
             loadUserList();
 
@@ -1112,7 +1134,7 @@ if (auth == undefined) {
         });
 
 
-        $('#pointofsale').click(function () {
+        $('#pointofsale').click(function() {
             $('#pos_view').show();
             $('#transactions').show();
             $('#transactions_view').hide();
@@ -1120,27 +1142,27 @@ if (auth == undefined) {
         });
 
 
-        $("#viewRefOrders").click(function () {
-            setTimeout(function () {
+        $("#viewRefOrders").click(function() {
+            setTimeout(function() {
                 $("#holdOrderInput").focus();
             }, 500);
         });
 
 
-        $("#viewCustomerOrders").click(function () {
-            setTimeout(function () {
+        $("#viewCustomerOrders").click(function() {
+            setTimeout(function() {
                 $("#holdCustomerOrderInput").focus();
             }, 500);
         });
 
 
-        $('#newProductModal').click(function () {
+        $('#newProductModal').click(function() {
             $('#saveProduct').get(0).reset();
             $('#current_img').text('');
         });
 
 
-        $('#saveProduct').submit(function (e) {
+        $('#saveProduct').submit(function(e) {
             e.preventDefault();
 
             $(this).attr('action', api + 'inventory/product');
@@ -1148,7 +1170,7 @@ if (auth == undefined) {
 
             $(this).ajaxSubmit({
                 contentType: 'application/json',
-                success: function (response) {
+                success: function(response) {
 
                     $('#saveProduct').get(0).reset();
                     $('#current_img').text('');
@@ -1169,7 +1191,8 @@ if (auth == undefined) {
                             $("#newProduct").modal('hide');
                         }
                     });
-                }, error: function (data) {
+                },
+                error: function(data) {
                     console.log(data);
                 }
             });
@@ -1178,13 +1201,12 @@ if (auth == undefined) {
 
 
 
-        $('#saveCategory').submit(function (e) {
+        $('#saveCategory').submit(function(e) {
             e.preventDefault();
 
             if ($('#category_id').val() == "") {
                 method = 'POST';
-            }
-            else {
+            } else {
                 method = 'PUT';
             }
 
@@ -1192,7 +1214,7 @@ if (auth == undefined) {
                 type: method,
                 url: api + 'categories/category',
                 data: $(this).serialize(),
-                success: function (data, textStatus, jqXHR) {
+                success: function(data, textStatus, jqXHR) {
                     $('#saveCategory').get(0).reset();
                     loadCategories();
                     loadProducts();
@@ -1211,7 +1233,8 @@ if (auth == undefined) {
                             $("#newCategory").modal('hide');
                         }
                     });
-                }, error: function (data) {
+                },
+                error: function(data) {
                     console.log(data);
                 }
 
@@ -1221,18 +1244,19 @@ if (auth == undefined) {
         });
 
 
-        $.fn.editProduct = function (index) {
+        $.fn.editProduct = function(index) {
 
             $('#Products').modal('hide');
 
-            $("#category option").filter(function () {
+            $("#category option").filter(function() {
                 return $(this).val() == allProducts[index].category;
             }).prop("selected", true);
 
             $('#productName').val(allProducts[index].name);
             $('#product_price').val(allProducts[index].price);
             $('#quantity').val(allProducts[index].quantity);
-
+            $('#barcode').val(allProducts[index].barcode);
+            $('#expirationDate').val(allProducts[index].expirationDate);
             $('#product_id').val(allProducts[index]._id);
             $('#img').val(allProducts[index].img);
 
@@ -1251,12 +1275,12 @@ if (auth == undefined) {
         }
 
 
-        $("#userModal").on("hide.bs.modal", function () {
+        $("#userModal").on("hide.bs.modal", function() {
             $('.perms').hide();
         });
 
 
-        $.fn.editUser = function (index) {
+        $.fn.editUser = function(index) {
 
             user_index = index;
 
@@ -1271,36 +1295,31 @@ if (auth == undefined) {
 
             if (allUsers[index].perm_products == 1) {
                 $('#perm_products').prop("checked", true);
-            }
-            else {
+            } else {
                 $('#perm_products').prop("checked", false);
             }
 
             if (allUsers[index].perm_categories == 1) {
                 $('#perm_categories').prop("checked", true);
-            }
-            else {
+            } else {
                 $('#perm_categories').prop("checked", false);
             }
 
             if (allUsers[index].perm_transactions == 1) {
                 $('#perm_transactions').prop("checked", true);
-            }
-            else {
+            } else {
                 $('#perm_transactions').prop("checked", false);
             }
 
             if (allUsers[index].perm_users == 1) {
                 $('#perm_users').prop("checked", true);
-            }
-            else {
+            } else {
                 $('#perm_users').prop("checked", false);
             }
 
             if (allUsers[index].perm_settings == 1) {
                 $('#perm_settings').prop("checked", true);
-            }
-            else {
+            } else {
                 $('#perm_settings').prop("checked", false);
             }
 
@@ -1308,7 +1327,7 @@ if (auth == undefined) {
         }
 
 
-        $.fn.editCategory = function (index) {
+        $.fn.editCategory = function(index) {
             $('#Categories').modal('hide');
             $('#categoryName').val(allCategories[index].name);
             $('#category_id').val(allCategories[index]._id);
@@ -1316,7 +1335,7 @@ if (auth == undefined) {
         }
 
 
-        $.fn.deleteProduct = function (id) {
+        $.fn.deleteProduct = function(id) {
             Swal.fire({
                 title: 'Are you sure?',
                 text: "You are about to delete this product.",
@@ -1332,7 +1351,7 @@ if (auth == undefined) {
                     $.ajax({
                         url: api + 'inventory/product/' + id,
                         type: 'DELETE',
-                        success: function (result) {
+                        success: function(result) {
                             loadProducts();
                             Swal.fire(
                                 'Done!',
@@ -1347,7 +1366,7 @@ if (auth == undefined) {
         }
 
 
-        $.fn.deleteUser = function (id) {
+        $.fn.deleteUser = function(id) {
             Swal.fire({
                 title: 'Are you sure?',
                 text: "You are about to delete this user.",
@@ -1363,7 +1382,7 @@ if (auth == undefined) {
                     $.ajax({
                         url: api + 'users/user/' + id,
                         type: 'DELETE',
-                        success: function (result) {
+                        success: function(result) {
                             loadUserList();
                             Swal.fire(
                                 'Done!',
@@ -1378,7 +1397,7 @@ if (auth == undefined) {
         }
 
 
-        $.fn.deleteCategory = function (id) {
+        $.fn.deleteCategory = function(id) {
             Swal.fire({
                 title: 'Are you sure?',
                 text: "You are about to delete this category.",
@@ -1394,7 +1413,7 @@ if (auth == undefined) {
                     $.ajax({
                         url: api + 'categories/category/' + id,
                         type: 'DELETE',
-                        success: function (result) {
+                        success: function(result) {
                             loadCategories();
                             Swal.fire(
                                 'Done!',
@@ -1409,17 +1428,17 @@ if (auth == undefined) {
         }
 
 
-        $('#productModal').click(function () {
+        $('#productModal').click(function() {
             loadProductList();
         });
 
 
-        $('#usersModal').click(function () {
+        $('#usersModal').click(function() {
             loadUserList();
         });
 
 
-        $('#categoryModal').click(function () {
+        $('#categoryModal').click(function() {
             loadCategoryList();
         });
 
@@ -1431,7 +1450,7 @@ if (auth == undefined) {
             $('#user_list').empty();
             $('#userList').DataTable().destroy();
 
-            $.get(api + 'users/all', function (users) {
+            $.get(api + 'users/all', function(users) {
 
 
 
@@ -1446,9 +1465,11 @@ if (auth == undefined) {
                         state = user.status.split("_");
 
                         switch (state[0]) {
-                            case 'Logged In': class_name = 'btn-default';
+                            case 'Logged In':
+                                class_name = 'btn-default';
                                 break;
-                            case 'Logged Out': class_name = 'btn-light';
+                            case 'Logged Out':
+                                class_name = 'btn-light';
                                 break;
                         }
                     }
@@ -1465,12 +1486,14 @@ if (auth == undefined) {
                         $('#user_list').html(user_list);
 
                         $('#userList').DataTable({
-                            "order": [[1, "desc"]]
-                            , "autoWidth": false
-                            , "info": true
-                            , "JQueryUI": true
-                            , "ordering": true
-                            , "paging": false
+                            "order": [
+                                [1, "desc"]
+                            ],
+                            "autoWidth": false,
+                            "info": true,
+                            "JQueryUI": true,
+                            "ordering": true,
+                            "paging": false
                         });
                     }
 
@@ -1491,13 +1514,13 @@ if (auth == undefined) {
 
                 counter++;
 
-                let category = allCategories.filter(function (category) {
+                let category = allCategories.filter(function(category) {
                     return category._id == product.category;
                 });
 
 
                 product_list += `<tr>
-            <td><img id="`+ product._id + `"></td>
+            <td><img id="` + product._id + `"></td>
             <td><img style="max-height: 50px; max-width: 50px; border: 1px solid #ddd;" src="${product.img == "" ? "./assets/images/default.jpg" : img_path + product.img}" id="product_img"></td>
             <td>${product.name}</td>
             <td>${settings.symbol}${product.price}</td>
@@ -1510,7 +1533,8 @@ if (auth == undefined) {
                     $('#product_list').html(product_list);
 
                     products.forEach(pro => {
-                        $("#" + pro._id + "").JsBarcode(pro._id, {
+                        let bcode=pro.barcode||pro._id;
+                        $("#" + pro._id + "").JsBarcode(bcode, {
                             width: 2,
                             height: 25,
                             fontSize: 14
@@ -1518,12 +1542,14 @@ if (auth == undefined) {
                     });
 
                     $('#productList').DataTable({
-                        "order": [[1, "desc"]]
-                        , "autoWidth": false
-                        , "info": true
-                        , "JQueryUI": true
-                        , "ordering": true
-                        , "paging": false
+                        "order": [
+                            [1, "desc"]
+                        ],
+                        "autoWidth": false,
+                        "info": true,
+                        "JQueryUI": true,
+                        "ordering": true,
+                        "paging": false
                     });
                 }
 
@@ -1552,21 +1578,21 @@ if (auth == undefined) {
 
                 $('#category_list').html(category_list);
                 $('#categoryList').DataTable({
-                    "autoWidth": false
-                    , "info": true
-                    , "JQueryUI": true
-                    , "ordering": true
-                    , "paging": false
+                    "autoWidth": false,
+                    "info": true,
+                    "JQueryUI": true,
+                    "ordering": true,
+                    "paging": false
 
                 });
             }
         }
 
 
-        $.fn.serializeObject = function () {
+        $.fn.serializeObject = function() {
             var o = {};
             var a = this.serializeArray();
-            $.each(a, function () {
+            $.each(a, function() {
                 if (o[this.name]) {
                     if (!o[this.name].push) {
                         o[this.name] = [o[this.name]];
@@ -1581,7 +1607,7 @@ if (auth == undefined) {
 
 
 
-        $('#log-out').click(function () {
+        $('#log-out').click(function() {
 
             Swal.fire({
                 title: 'Are you sure?',
@@ -1594,7 +1620,7 @@ if (auth == undefined) {
             }).then((result) => {
 
                 if (result.value) {
-                    $.get(api + 'users/logout/' + user._id, function (data) {
+                    $.get(api + 'users/logout/' + user._id, function(data) {
                         storage.delete('auth');
                         storage.delete('user');
                         ipcRenderer.send('app-reload', '');
@@ -1605,14 +1631,14 @@ if (auth == undefined) {
 
 
 
-        $('#settings_form').on('submit', function (e) {
+        $('#settings_form').on('submit', function(e) {
             e.preventDefault();
             let formData = $(this).serializeObject();
             let mac_address;
 
             api = 'http://' + host + ':' + port + '/api/';
 
-            macaddress.one(function (err, mac) {
+            macaddress.one(function(err, mac) {
                 mac_address = mac;
             });
 
@@ -1628,8 +1654,7 @@ if (auth == undefined) {
                     'Please make sure the tax value is a number',
                     'warning'
                 );
-            }
-            else {
+            } else {
                 storage.set('settings', formData);
 
                 $(this).attr('action', api + 'settings/post');
@@ -1638,11 +1663,12 @@ if (auth == undefined) {
 
                 $(this).ajaxSubmit({
                     contentType: 'application/json',
-                    success: function (response) {
+                    success: function(response) {
 
                         ipcRenderer.send('app-reload', '');
 
-                    }, error: function (data) {
+                    },
+                    error: function(data) {
                         console.log(data);
                     }
 
@@ -1654,7 +1680,7 @@ if (auth == undefined) {
 
 
 
-        $('#net_settings_form').on('submit', function (e) {
+        $('#net_settings_form').on('submit', function(e) {
             e.preventDefault();
             let formData = $(this).serializeObject();
 
@@ -1664,14 +1690,12 @@ if (auth == undefined) {
                     'Please enter a number greater than 1.',
                     'warning'
                 );
-            }
-            else {
+            } else {
                 if (isNumeric(formData.till)) {
                     formData['app'] = $('#app').find('option:selected').text();
                     storage.set('settings', formData);
                     ipcRenderer.send('app-reload', '');
-                }
-                else {
+                } else {
                     Swal.fire(
                         'Oops!',
                         'Till number must be a number!',
@@ -1685,7 +1709,7 @@ if (auth == undefined) {
 
 
 
-        $('#saveUser').on('submit', function (e) {
+        $('#saveUser').on('submit', function(e) {
             e.preventDefault();
             let formData = $(this).serializeObject();
 
@@ -1701,8 +1725,7 @@ if (auth == undefined) {
                         );
                     }
                 }
-            }
-            else {
+            } else {
                 if (formData.password != atob(allUsers[user_index].password)) {
                     if (formData.password != formData.pass) {
                         Swal.fire(
@@ -1724,13 +1747,11 @@ if (auth == undefined) {
                     contentType: 'application/json; charset=utf-8',
                     cache: false,
                     processData: false,
-                    success: function (data) {
+                    success: function(data) {
 
                         if (ownUserEdit) {
                             ipcRenderer.send('app-reload', '');
-                        }
-
-                        else {
+                        } else {
                             $('#userModal').modal('hide');
 
                             loadUserList();
@@ -1744,7 +1765,8 @@ if (auth == undefined) {
                         }
 
 
-                    }, error: function (data) {
+                    },
+                    error: function(data) {
                         console.log(data);
                     }
 
@@ -1756,15 +1778,14 @@ if (auth == undefined) {
 
 
 
-        $('#app').change(function () {
+        $('#app').change(function() {
             if ($(this).find('option:selected').text() == 'Network Point of Sale Terminal') {
                 $('#net_settings_form').show(500);
                 $('#settings_form').hide(500);
-                macaddress.one(function (err, mac) {
+                macaddress.one(function(err, mac) {
                     $("#mac").val(mac);
                 });
-            }
-            else {
+            } else {
                 $('#net_settings_form').hide(500);
                 $('#settings_form').show(500);
             }
@@ -1773,7 +1794,7 @@ if (auth == undefined) {
 
 
 
-        $('#cashier').click(function () {
+        $('#cashier').click(function() {
 
             ownUserEdit = true;
 
@@ -1788,7 +1809,7 @@ if (auth == undefined) {
 
 
 
-        $('#add-user').click(function () {
+        $('#add-user').click(function() {
 
             if (platform.app != 'Network Point of Sale Terminal') {
                 $('.perms').show();
@@ -1801,7 +1822,7 @@ if (auth == undefined) {
 
 
 
-        $('#settings').click(function () {
+        $('#settings').click(function() {
 
             if (platform.app == 'Network Point of Sale Terminal') {
                 $('#net_settings_form').show(500);
@@ -1810,15 +1831,14 @@ if (auth == undefined) {
                 $("#ip").val(platform.ip);
                 $("#till").val(platform.till);
 
-                macaddress.one(function (err, mac) {
+                macaddress.one(function(err, mac) {
                     $("#mac").val(mac);
                 });
 
-                $("#app option").filter(function () {
+                $("#app option").filter(function() {
                     return $(this).text() == platform.app;
                 }).prop("selected", true);
-            }
-            else {
+            } else {
                 $('#net_settings_form').hide(500);
                 $('#settings_form').show(500);
 
@@ -1841,7 +1861,7 @@ if (auth == undefined) {
                     $('#rmv_logo').show();
                 }
 
-                $("#app option").filter(function () {
+                $("#app option").filter(function() {
                     return $(this).text() == settings.app;
                 }).prop("selected", true);
             }
@@ -1855,7 +1875,7 @@ if (auth == undefined) {
     });
 
 
-    $('#rmv_logo').click(function () {
+    $('#rmv_logo').click(function() {
         $('#remove_logo').val("1");
         $('#current_logo').hide(500);
         $(this).hide(500);
@@ -1863,7 +1883,7 @@ if (auth == undefined) {
     });
 
 
-    $('#rmv_img').click(function () {
+    $('#rmv_img').click(function() {
         $('#remove_img').val("1");
         $('#current_img').hide(500);
         $(this).hide(500);
@@ -1871,7 +1891,7 @@ if (auth == undefined) {
     });
 
 
-    $('#print_list').click(function () {
+    $('#print_list').click(function() {
 
         $("#loading").show();
 
@@ -1892,12 +1912,14 @@ if (auth == undefined) {
 
 
         $('#productList').DataTable({
-            "order": [[1, "desc"]]
-            , "autoWidth": false
-            , "info": true
-            , "JQueryUI": true
-            , "ordering": true
-            , "paging": false
+            "order": [
+                [1, "desc"]
+            ],
+            "autoWidth": false,
+            "info": true,
+            "JQueryUI": true,
+            "ordering": true,
+            "paging": false
         });
 
         $(".loading").hide();
@@ -1907,7 +1929,7 @@ if (auth == undefined) {
 }
 
 
-$.fn.print = function () {
+$.fn.print = function() {
 
     printJS({ printable: receipt, type: 'raw-html' });
 
@@ -1930,7 +1952,7 @@ function loadTransactions() {
     let query = `by-date?start=${start_date}&end=${end_date}&user=${by_user}&status=${by_status}&till=${by_till}`;
 
 
-    $.get(api + query, function (transactions) {
+    $.get(api + query, function(transactions) {
 
         if (transactions.length > 0) {
 
@@ -2017,20 +2039,21 @@ function loadTransactions() {
 
                     $('#transaction_list').html(transaction_list);
                     $('#transactionList').DataTable({
-                        "order": [[1, "desc"]]
-                        , "autoWidth": false
-                        , "info": true
-                        , "JQueryUI": true
-                        , "ordering": true
-                        , "paging": true,
+                        "order": [
+                            [1, "desc"]
+                        ],
+                        "autoWidth": false,
+                        "info": true,
+                        "JQueryUI": true,
+                        "ordering": true,
+                        "paging": true,
                         "dom": 'Bfrtip',
-                        "buttons": ['csv', 'excel', 'pdf',]
+                        "buttons": ['csv', 'excel', 'pdf', ]
 
                     });
                 }
             });
-        }
-        else {
+        } else {
             Swal.fire(
                 'No data!',
                 'No transactions available within the selected criteria',
@@ -2068,7 +2091,7 @@ function loadSoldProducts() {
         items += item.qty;
         products++;
 
-        let product = allProducts.filter(function (selected) {
+        let product = allProducts.filter(function(selected) {
             return selected._id == item.id;
         });
 
@@ -2096,7 +2119,7 @@ function userFilter(users) {
     $('#users').append(`<option value="0">All</option>`);
 
     users.forEach(user => {
-        let u = allUsers.filter(function (usr) {
+        let u = allUsers.filter(function(usr) {
             return usr._id == user;
         });
 
@@ -2117,7 +2140,7 @@ function tillFilter(tills) {
 }
 
 
-$.fn.viewTransaction = function (index) {
+$.fn.viewTransaction = function(index) {
 
     transaction_index = index;
 
@@ -2138,10 +2161,12 @@ $.fn.viewTransaction = function (index) {
 
     switch (allTransactions[index].payment_type) {
 
-        case 2: type = "Card";
+        case 2:
+            type = "Card";
             break;
 
-        default: type = "Cash";
+        default:
+            type = "Cash";
 
     }
 
@@ -2247,26 +2272,26 @@ $.fn.viewTransaction = function (index) {
 }
 
 
-$('#status').change(function () {
+$('#status').change(function() {
     by_status = $(this).find('option:selected').val();
     loadTransactions();
 });
 
 
 
-$('#tills').change(function () {
+$('#tills').change(function() {
     by_till = $(this).find('option:selected').val();
     loadTransactions();
 });
 
 
-$('#users').change(function () {
+$('#users').change(function() {
     by_user = $(this).find('option:selected').val();
     loadTransactions();
 });
 
 
-$('#reportrange').on('apply.daterangepicker', function (ev, picker) {
+$('#reportrange').on('apply.daterangepicker', function(ev, picker) {
 
     start = picker.startDate.format('DD MMM YYYY hh:mm A');
     end = picker.endDate.format('DD MMM YYYY hh:mm A');
@@ -2288,7 +2313,7 @@ function authenticate() {
 }
 
 
-$('body').on("submit", "#account", function (e) {
+$('body').on("submit", "#account", function(e) {
     e.preventDefault();
     let formData = $(this).serializeObject();
 
@@ -2299,8 +2324,7 @@ $('body').on("submit", "#account", function (e) {
             auth_empty,
             'warning'
         );
-    }
-    else {
+    } else {
 
         $.ajax({
             url: api + 'users/login',
@@ -2309,13 +2333,12 @@ $('body').on("submit", "#account", function (e) {
             contentType: 'application/json; charset=utf-8',
             cache: false,
             processData: false,
-            success: function (data) {
+            success: function(data) {
                 if (data._id) {
                     storage.set('auth', { auth: true });
                     storage.set('user', data);
                     ipcRenderer.send('app-reload', '');
-                }
-                else {
+                } else {
                     Swal.fire(
                         'Oops!',
                         auth_error,
@@ -2323,7 +2346,8 @@ $('body').on("submit", "#account", function (e) {
                     );
                 }
 
-            }, error: function (data) {
+            },
+            error: function(data) {
                 console.log(data);
             }
         });
@@ -2331,7 +2355,7 @@ $('body').on("submit", "#account", function (e) {
 });
 
 
-$('#quit').click(function () {
+$('#quit').click(function() {
     Swal.fire({
         title: 'Are you sure?',
         text: "You are about to close the application.",
@@ -2347,5 +2371,3 @@ $('#quit').click(function () {
         }
     });
 });
-
-

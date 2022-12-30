@@ -4,7 +4,7 @@ let express = require("express"),
   server = http.createServer(app),
   bodyParser = require("body-parser");
 
-const PORT = process.env.PORT || 8001;
+const PORT = process.env.PORT || 0;
 
 console.log("Server started");
 app.use(bodyParser.json());
@@ -36,4 +36,4 @@ app.use("/api/settings", require("./api/settings"));
 app.use("/api/users", require("./api/users"));
 app.use("/api", require("./api/transactions"));
 
-server.listen(PORT, () => console.log(`Listening on PORT ${PORT}`));
+server.listen(PORT, () => console.log('Listening on PORT', server.address().port));

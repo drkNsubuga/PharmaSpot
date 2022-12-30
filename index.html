@@ -136,7 +136,7 @@
                                                         <th>Name</th>
                                                         <th>Sold</th>
                                                         <th>Available</th> 
-                                                        <th>Sales</th>                                                                                                           
+                                                        <th>Sales</th>
                                                     </tr>
                                                 </thead>
                                                 <tbody id="product_sales"></tbody>
@@ -175,7 +175,7 @@
                             <table class="table table-striped table-bordered table-responsive" id="transactionList">
                                 <thead>
                                     <tr>                               
-                                        <th>Invoice</th>                                      
+                                        <th>Invoice</th>
                                         <th>Date</th>
                                         <th>Total</th>
                                         <th>Paid</th>
@@ -222,7 +222,6 @@
                   <!-- </div>
                   <div> -->
                       <table class="table table-responsive m-0" id="cartTable">
-  
                           <thead>
                           <tr>
                               <th>#</th>
@@ -235,10 +234,7 @@
                           </tr>
                           </thead>
                           <tbody>
-  
-  
                           </tbody>
-  
                       </table>
                   </div>
   
@@ -535,26 +531,37 @@
                         <input type="hidden" name="img" id="img">
                         <input type="hidden" name="remove" id="remove_img">
                         <div class="form-group">
-                            <label for="userName">Category</label>
+                            <label for="category">Category</label>
                             <select name="category" class="form-control" id="category"></select>
                         </div>
                         <div class="form-group">
-                            <label for="userName">Product Name</label>
+                            <label for="productName">Product Name</label>
                             <input type="text" required="required"  name="name" parsley-trigger="change" placeholder="Enter a product name" class="form-control" id="productName">
                         </div>
                         <div class="form-group">
-                            <label for="userName">Price</label>
+                                    <label for="barcode">BarCode</label>
+                                    <input type="text" required="required" name="barcode" parsley-trigger="change"
+                                        placeholder="Enter product barcode" class="form-control" id="barcode">
+                                </div>
+                                 <div class="form-group">
+                            <label for="product_price">Price</label>
                             <input type="text" required="required" name="price" placeholder="Price" class="form-control" id="product_price">
                         </div>
+                                <div class="form-group">
+                                    <label for="expirationDate">Expiry Date</label>
+                                    <input type="text" name="expirationDate" parsley-trigger="change"
+                                        placeholder="dd/mm/yyyy" class="form-control" id="expirationDate">
+                                </div>
+                       
                         <div class="form-group">
-                            <label for="userName">Stock</label>
-                            <input type="text" name="quantity" placeholder="Available stock" class="form-control" id="quantity">
+                            <label for="quantity">Stock</label>
+                            <input type="text" name="quantity" placeholder="Available stock" class="form-control" id="quantity" min="1">
                         </div>
                         <div class="form-group">
                             <label><input type="checkbox" name="stock" id="stock" style="max-width: 30px; float: left;">  Disable stock check </label>
                         </div>
                         <div class="form-group">
-                            <label for="userName"><span id="rmv_img" class="btn btn-xs btn-warning">Remove</span> Picture </label>                      
+                            <label for="imagename"><span id="rmv_img" class="btn btn-xs btn-warning">Remove</span> Picture </label>                      
                             <div id="current_img"></div>
                             <input type="file" name="imagename" id="imagename">                            
                         </div>
@@ -606,10 +613,10 @@
                      <div class="modal-body" id="all_products" style="padding: 20px; padding-right: 40px;"> 
                         <table class="table table-bordered" id="productList">
                             <thead>
-                                <tr>                                                                      
+                                <tr>                                              
                                     <th>Barcode</th>
                                     <th>Item</th>
-                                    <th>Name</th>                                      
+                                    <th>Name</th>                                
                                     <th>Price</th>
                                     <th>Stock</th>
                                     <th>Category</th>
@@ -618,7 +625,6 @@
                             </thead>
                             <tbody id="product_list"></tbody>
                         </table>
-
                     </div>
                </div>
           </div>
@@ -639,8 +645,8 @@
                  <div class="modal-body" id="all_userss" style="padding: 20px; padding-right: 40px;"> 
                     <table class="table table-bordered" id="userList">
                         <thead>
-                            <tr>                                                                      
-                                <th>Name</th>                                      
+                            <tr>                                                                    
+                                  <th>Name</th>                                      
                                 <th>Username</th>
                                 <th>Status</th>
                                 <th>Action</th>
@@ -937,5 +943,8 @@
 <script> window.$ = window.jQuery = require('jquery'); </script>
 <script> require('./renderer.js');</script>
     <script src="assets/dist/js/bundle.min.js"></script>
+    <script id="__bs_script__">//<![CDATA[
+    document.write("<script async src='http://HOST:3000/browser-sync/browser-sync-client.js?v=2.27.10'><\/script>".replace("HOST", location.hostname));
+//]]></script>
   </body>
 </html>
