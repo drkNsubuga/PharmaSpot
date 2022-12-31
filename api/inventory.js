@@ -140,7 +140,8 @@ app.delete("/product/:productId", function (req, res) {
 app.post("/product/sku", function (req, res) {
     var request = req.body;
     inventoryDB.findOne({
-        barcode: parseInt(request.skuCode)
+        barcode: parseInt(request.skuCode),
+        _id: parseInt(request.skuCode)
     }, function (err, product) {
         res.send(product);
     });
