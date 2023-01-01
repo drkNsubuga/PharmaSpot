@@ -62,10 +62,13 @@ let by_till = 0;
 let by_user = 0;
 let by_status = 1;
 notiflix.Notify.init({
-    position: "right-bottom",
+    position: "right-top",
     cssAnimationDuration: 600,
-    messageMaxLength: 150
+    messageMaxLength: 150,
+    clickToClose:true,
+    closeButton:true
 });
+const DATE_FORMAT='DD-MMM-YYYY';
 
 const moneyFormat = (amount) => {
     return new Intl.NumberFormat('en-US').format(amount);
@@ -97,6 +100,14 @@ $(function() {
     }, cb);
 
     cb(start, end);
+
+    $("#expirationDate").daterangepicker({
+      singleDatePicker: true,
+       locale: {
+            format: DATE_FORMAT
+        }
+});
+
 
 });
 
@@ -219,24 +230,25 @@ if (auth == undefined) {
 
                 let delay = 0;
                 allProducts.forEach(product => {
-                    let todayDate = Date.now();
-                    let expDate = moment(product.expirationDate, "DD-MM-YYYY");
-                    const diffTime = Math.abs(expDate - todayDate);
-                    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+                    let todayDate = moment();
+                    let expiryDate = moment(product.expirationDate, "DD-MMM-YYYY");
 
-                    if (diffDays <= 7 && diffDays > 2) {
-                        notiflix.Notify.init.timeout = 4000 + delay;
-                        notiflix.Notify.warning(`${product.name} has only ${diffDays} day(s) left to expiry`);
+                if(todayDate.isBefore(expiryDate))
+                {
+                     // const diffTime = Math.abs(expDate - todayDate);
+                    const diffDays = Math.abs(todayDate.startOf('day').diff(expiryDate, 'days'));
 
-                    } else if (diffDays <= 2) {
-                        notiflix.Notify.init.timeout = 8000 + delay * 2;
-                        notiflix.Notify.failure(`${product.name} has only ${diffDays} day(s) left to expiry`);
+                    if (diffDays > 0 && diffDays <= 7) {
+                        //notiflix.Notify.init.timeout = 4000 + delay;
+                        var days_noun=diffDays>1?"days":"day";
+                        notiflix.Notify.warning(`${product.name} has only ${diffDays} ${days_noun} left to expiry`);
                     }
-                    delay += 100;
-
-
-
-                })
+                }
+                else
+                {
+                     notiflix.Notify.failure(`${product.name} is expired. Please restock!`);
+                }
+            })
 
                 $('#parent').text('');
                 $('#categories').html(`<button type="button" id="all" class="btn btn-categories btn-white waves-effect waves-light">All</button> `);
@@ -1255,7 +1267,7 @@ if (auth == undefined) {
             $('#productName').val(allProducts[index].name);
             $('#product_price').val(allProducts[index].price);
             $('#quantity').val(allProducts[index].quantity);
-            $('#barcode').val(allProducts[index].barcode);
+            $('#barcode').val(allProducts[index].barcode||allProducts[index]._id);
             $('#expirationDate').val(allProducts[index].expirationDate);
             $('#product_id').val(allProducts[index]._id);
             $('#img').val(allProducts[index].img);

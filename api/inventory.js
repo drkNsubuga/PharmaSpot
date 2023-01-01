@@ -90,7 +90,7 @@ app.post("/product", upload.single('imagename'), function (req, res) {
     let Product = {
         _id: parseInt(req.body.id),
         barcode: parseInt(req.body.barcode),
-        expirationDate: req.body.expirationDate == "" ? "29/08/2030" : req.body.expirationDate,
+        expirationDate: req.body.expirationDate,
         profit: parseInt(req.body.profit),
         price: req.body.price,
         category: req.body.category,
@@ -146,9 +146,6 @@ app.post("/product/sku", function (req, res) {
         res.send(product);
     });
 });
-
-
-
 
 app.decrementInventory = function (products) {
 
