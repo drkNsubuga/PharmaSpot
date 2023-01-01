@@ -560,7 +560,7 @@ if (auth == undefined) {
 
             if (product[0].stock == 1) {
                 if (item.quantity < product[0].quantity) {
-                    item.quantity += 1;
+                    item.quantity = parseInt(item.quantity)+1;
                     $(this).renderTable(cart);
                 } else {
                     Swal.fire(
@@ -570,7 +570,7 @@ if (auth == undefined) {
                     );
                 }
             } else {
-                item.quantity += 1;
+                item.quantity = parseInt(item.quantity)+1;
                 $(this).renderTable(cart);
             }
 
@@ -580,7 +580,7 @@ if (auth == undefined) {
         $.fn.qtDecrement = function(i) {
             if (item.quantity > 1) {
                 item = cart[i];
-                item.quantity -= 1;
+                item.quantity = parseInt(item.quantity)-1;
                 $(this).renderTable(cart);
             }
         }
