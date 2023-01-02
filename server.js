@@ -36,5 +36,7 @@ app.use("/api/settings", require("./api/settings"));
 app.use("/api/users", require("./api/users"));
 app.use("/api", require("./api/transactions"));
 
-
-server.listen(PORT, () => console.log('Listening on PORT', server.address().port));
+server.listen(PORT, () => {
+  process.env.PORT=server.address().port;
+  console.log('Listening on PORT', process.env.PORT);
+});
