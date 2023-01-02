@@ -61,6 +61,13 @@ let end_date = moment(end).toDate();
 let by_till = 0;
 let by_user = 0;
 let by_status = 1;
+const permissions=[
+                "perm_products",
+                "perm_categories",
+                "perm_transactions",
+                "perm_users",
+                "perm_settings"
+            ];
 notiflix.Notify.init({
     position: "right-top",
     cssAnimationDuration: 600,
@@ -1307,36 +1314,47 @@ if (auth == undefined) {
             $('#fullname').val(allUsers[index].fullname);
             $('#username').val(allUsers[index].username);
             $('#password').val(atob(allUsers[index].password));
+           
 
-            if (allUsers[index].perm_products == 1) {
-                $('#perm_products').prop("checked", true);
-            } else {
-                $('#perm_products').prop("checked", false);
+            for(perm of permissions)
+            {
+                var el="#"+perm;
+                 if (allUsers[index][perm] == 1) {
+                $(el).prop("checked", true);
+                    } else {
+                $(el).prop("checked", false);
+                }
             }
 
-            if (allUsers[index].perm_categories == 1) {
-                $('#perm_categories').prop("checked", true);
-            } else {
-                $('#perm_categories').prop("checked", false);
-            }
+            // if (allUsers[index].perm_products == 1) {
+            //     $('#perm_products').prop("checked", true);
+            // } else {
+            //     $('#perm_products').prop("checked", false);
+            // }
 
-            if (allUsers[index].perm_transactions == 1) {
-                $('#perm_transactions').prop("checked", true);
-            } else {
-                $('#perm_transactions').prop("checked", false);
-            }
+            // if (allUsers[index].perm_categories == 1) {
+            //     $('#perm_categories').prop("checked", true);
+            // } else {
+            //     $('#perm_categories').prop("checked", false);
+            // }
 
-            if (allUsers[index].perm_users == 1) {
-                $('#perm_users').prop("checked", true);
-            } else {
-                $('#perm_users').prop("checked", false);
-            }
+            // if (allUsers[index].perm_transactions == 1) {
+            //     $('#perm_transactions').prop("checked", true);
+            // } else {
+            //     $('#perm_transactions').prop("checked", false);
+            // }
 
-            if (allUsers[index].perm_settings == 1) {
-                $('#perm_settings').prop("checked", true);
-            } else {
-                $('#perm_settings').prop("checked", false);
-            }
+            // if (allUsers[index].perm_users == 1) {
+            //     $('#perm_users').prop("checked", true);
+            // } else {
+            //     $('#perm_users').prop("checked", false);
+            // }
+
+            // if (allUsers[index].perm_settings == 1) {
+            //     $('#perm_settings').prop("checked", true);
+            // } else {
+            //     $('#perm_settings').prop("checked", false);
+            // }
 
             $('#userModal').modal('show');
         }
@@ -1493,7 +1511,7 @@ if (auth == undefined) {
                     user_list += `<tr>
             <td>${user.fullname}</td>
             <td>${user.username}</td>
-            <td class="${class_name}">${state.length > 0 ? state[0] : ''} <br><span style="font-size: 11px;"> ${state.length > 0 ? moment(state[1]).format('hh:mm A DD MMM YYYY') : ''}</span></td>
+            <td class="${class_name}">${state.length > 0 ? state[0] : ''} <br><span style="font-size: 11px;"> ${state.length > 0 ? moment(state[1]).format('hh:mm DD MMM YYYY') : ''}</span></td>
             <td>${user._id == 1 ? '<span class="btn-group"><button class="btn btn-dark"><i class="fa fa-edit"></i></button><button class="btn btn-dark"><i class="fa fa-trash"></i></button></span>' : '<span class="btn-group"><button onClick="$(this).editUser(' + index + ')" class="btn btn-warning"><i class="fa fa-edit"></i></button><button onClick="$(this).deleteUser(' + user._id + ')" class="btn btn-danger"><i class="fa fa-trash"></i></button></span>'}</td></tr>`;
 
                     if (counter == users.length) {
@@ -1540,18 +1558,18 @@ if (auth == undefined) {
                 //calculate stock level
                 if(product.quantity <= product.minStock)
                 {
-                    if(product.quantity === 0)
+                    if(product.quantity == 0)
                     {
                         product.stockStatus='No Stock';
-                        icon='exclamation-triangle'
+                        icon='fa fa-exclamation-triangle'
                     }
                     else
                     {
                         product.stockStatus='Low Stock';
-                        icon='caret-down'
+                        icon='fa fa-caret-down'
                     }
                     
-                    product.stockAlert=`<p class="text-danger"><small><i class="fa fa-${icon}"></i> ${product.stockStatus}</small></p>`;
+                    product.stockAlert=`<p class="text-danger"><small><i class="${icon}"></i> ${product.stockStatus}</small></p>`;
                 }
                 //calculate days to expiry
                  product.expiryAlert='';
@@ -1561,18 +1579,18 @@ if (auth == undefined) {
 
                     if (diffDays > 0 && diffDays <= 7) {
                         var days_noun=diffDays>1?"days":"day";
-                        icon='bell-o';
-                        product.expiryStatus=`${diffDays} ${days_noun} to expire`;
-                        product.expiryAlert=`<p class="text-danger"><small><i class="fa fa-${icon}"></i> ${product.expiryStatus}</small></p>`;
+                        icon='fa fa-clock-o';
+                        product.expiryStatus=`${diffDays} ${days_noun} left`;
+                        product.expiryAlert=`<p class="text-danger"><small><i class="${icon}"></i> ${product.expiryStatus}</small></p>`;
                     }
                 }
                 else
                 {
-                     icon='bell';
+                     icon='fa fa-bell';
                      product.expiryStatus='Expired';
-                     product.expiryAlert=`<p class="text-danger"><small><i class="fa fa-${icon}"></i> ${product.expiryStatus}</small></p>`;
+                     product.expiryAlert=`<p class="text-danger"><small><i class="${icon}"></i> ${product.expiryStatus}</small></p>`;
                 }
-                
+
                //render product list
                 product_list += `<tr>
             <td><img id="` + product._id + `"></td>
@@ -1863,6 +1881,16 @@ if (auth == undefined) {
             $("#fullname").val(user.fullname);
             $("#username").val(user.username);
             $("#password").val(atob(user.password));
+
+            for(perm of permissions)
+            {
+                var el="#"+perm;
+                 if (allUsers[index][perm] == 1) {
+                $(el).prop("checked", true);
+                    } else {
+                $(el).prop("checked", false);
+                }
+            }
 
         });
 
