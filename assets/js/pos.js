@@ -467,10 +467,12 @@ if (auth == undefined) {
         $.fn.calculateCart = function() {
             let total = 0;
             let grossTotal;
-            $('#total').text(cart.length);
+            let total_items=0;
             $.each(cart, function(index, data) {
                 total += data.quantity * data.price;
+                total_items+=data.quantity;
             });
+            $('#total').text(total_items);
             total = total - $("#inputDiscount").val();
             $('#price').text(settings.symbol + moneyFormat(total.toFixed(2)));
 
