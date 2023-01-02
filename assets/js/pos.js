@@ -24,7 +24,6 @@ let product_index = 0;
 let transaction_index;
 let host = 'localhost';
 let path = require('path');
-let port = '8001';
 let moment = require('moment');
 let Swal = require('sweetalert2');
 let { ipcRenderer } = require('electron');
@@ -32,6 +31,7 @@ let dotInterval = setInterval(function() { $(".dot").text('.') }, 3000);
 let Store = require('electron-store');
 const remote = require('@electron/remote');
 const app = remote.app;
+let port =process.env.PORT;
 let img_path = app.getPath('appData') + '/POS/uploads/';
 let api = 'http://' + host + ':' + port + '/api/';
 let btoa = require('btoa');
@@ -246,6 +246,8 @@ if (auth == undefined) {
                 {
                      notiflix.Notify.failure(`${product.name} is expired. Please restock!`);
                 }
+
+
             })
 
                 $('#parent').text('');
@@ -1531,14 +1533,57 @@ if (auth == undefined) {
                     return category._id == product.category;
                 });
 
+                product.stockAlert='';
+                 let todayDate = moment();
+                 let expiryDate = moment(product.expirationDate, "DD-MMM-YYYY");
+                
+                //calculate stock level
+                if(product.quantity <= product.minStock)
+                {
+                    if(product.quantity === 0)
+                    {
+                        product.stockStatus='No Stock';
+                        icon='exclamation-triangle'
+                    }
+                    else
+                    {
+                        product.stockStatus='Low Stock';
+                        icon='caret-down'
+                    }
+                    
+                    product.stockAlert=`<p class="text-danger"><small><i class="fa fa-${icon}"></i> ${product.stockStatus}</small></p>`;
+                }
+                //calculate days to expiry
+                 product.expiryAlert='';
+                if(todayDate.isBefore(expiryDate))
+                {
+                    const diffDays = Math.abs(todayDate.startOf('day').diff(expiryDate, 'days'));
 
+                    if (diffDays > 0 && diffDays <= 7) {
+                        var days_noun=diffDays>1?"days":"day";
+                        icon='bell-o';
+                        product.expiryStatus=`${diffDays} ${days_noun} to expire`;
+                        product.expiryAlert=`<p class="text-danger"><small><i class="fa fa-${icon}"></i> ${product.expiryStatus}</small></p>`;
+                    }
+                }
+                else
+                {
+                     icon='bell';
+                     product.expiryStatus='Expired';
+                     product.expiryAlert=`<p class="text-danger"><small><i class="fa fa-${icon}"></i> ${product.expiryStatus}</small></p>`;
+                }
+                
+               //render product list
                 product_list += `<tr>
             <td><img id="` + product._id + `"></td>
             <td><img style="max-height: 50px; max-width: 50px; border: 1px solid #ddd;" src="${product.img == "" ? "./assets/images/default.jpg" : img_path + product.img}" id="product_img"></td>
             <td>${product.name}</td>
             <td>${settings.symbol}${product.price}</td>
-            <td>${product.stock == 1 ? product.quantity : 'N/A'}</td>
-            <td>${product.expirationDate}</td>
+            <td>${product.stock == 1 ? product.quantity : 'N/A'}
+            ${product.stockAlert}
+            </td>
+            <td>${product.expirationDate}
+            ${product.expiryAlert}</td>
             <td>${category.length > 0 ? category[0].name : ''}</td>
             <td class="nobr"><span class="btn-group"><button onClick="$(this).editProduct(${index})" class="btn btn-warning btn-sm"><i class="fa fa-edit"></i></button><button onClick="$(this).deleteProduct(${product._id})" class="btn btn-danger btn-sm"><i class="fa fa-trash"></i></button></span></td></tr>`;
 
