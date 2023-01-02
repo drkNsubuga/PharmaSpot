@@ -91,12 +91,12 @@ app.post("/product", upload.single('imagename'), function (req, res) {
         _id: parseInt(req.body.id),
         barcode: parseInt(req.body.barcode),
         expirationDate: req.body.expirationDate,
-        profit: parseInt(req.body.profit),
         price: req.body.price,
         category: req.body.category,
         quantity: req.body.quantity == "" ? 0 : req.body.quantity,
         name: req.body.name,
         stock: req.body.stock == "on" ? 0 : 1,
+        minStock:req.body.minStock,
         img: image
     }
 

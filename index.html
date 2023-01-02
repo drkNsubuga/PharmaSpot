@@ -506,7 +506,11 @@
                                 </div>
                                 <div class="form-group">
                                     <label for="quantity">Stock</label>
-                                    <input type="text" name="quantity" placeholder="Available stock" class="form-control" id="quantity" min="1">
+                                    <input type="number" name="quantity" placeholder="Available stock" class="form-control" id="quantity" min="1">
+                                </div>
+                                <div class="form-group">
+                                    <label for="quantity">Minimum Stock</label>
+                                    <input type="number" name="minStock" placeholder="Minimum Stock" class="form-control" id="minStock" min="1">
                                 </div>
                                 <div class="form-group">
                                     <label><input type="checkbox" name="stock" id="stock" style="max-width: 30px; float: left;"> Disable stock check </label>
@@ -563,6 +567,7 @@
                                         <th>Name</th>
                                         <th>Price</th>
                                         <th>Stock</th>
+                                        <th>Expiry Date</th>
                                         <th>Category</th>
                                         <th>Action</th>
                                     </tr>

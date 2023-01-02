@@ -235,11 +235,9 @@ if (auth == undefined) {
 
                 if(todayDate.isBefore(expiryDate))
                 {
-                     // const diffTime = Math.abs(expDate - todayDate);
                     const diffDays = Math.abs(todayDate.startOf('day').diff(expiryDate, 'days'));
 
                     if (diffDays > 0 && diffDays <= 7) {
-                        //notiflix.Notify.init.timeout = 4000 + delay;
                         var days_noun=diffDays>1?"days":"day";
                         notiflix.Notify.warning(`${product.name} has only ${diffDays} ${days_noun} left to expiry`);
                     }
@@ -1271,6 +1269,7 @@ if (auth == undefined) {
             $('#quantity').val(allProducts[index].quantity);
             $('#barcode').val(allProducts[index].barcode||allProducts[index]._id);
             $('#expirationDate').val(allProducts[index].expirationDate);
+            $('#minStock').val(allProducts[index].minStock||1);
             $('#product_id').val(allProducts[index]._id);
             $('#img').val(allProducts[index].img);
 
@@ -1539,6 +1538,7 @@ if (auth == undefined) {
             <td>${product.name}</td>
             <td>${settings.symbol}${product.price}</td>
             <td>${product.stock == 1 ? product.quantity : 'N/A'}</td>
+            <td>${product.expirationDate}</td>
             <td>${category.length > 0 ? category[0].name : ''}</td>
             <td class="nobr"><span class="btn-group"><button onClick="$(this).editProduct(${index})" class="btn btn-warning btn-sm"><i class="fa fa-edit"></i></button><button onClick="$(this).deleteProduct(${product._id})" class="btn btn-danger btn-sm"><i class="fa fa-trash"></i></button></span></td></tr>`;
 
