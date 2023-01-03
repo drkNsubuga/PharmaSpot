@@ -2175,7 +2175,7 @@ function loadSoldProducts() {
 
     sold.forEach((item, index) => {
 
-        items += item.qty;
+        items = items+parseInt(item.qty);
         products++;
 
         let product = allProducts.filter(function(selected) {
