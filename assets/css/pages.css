@@ -7,9 +7,9 @@
 #card-box th, #card-box td:first-child{ width: 10px; }
 #card-box th, #card-box td:nth-child(2){ width: 150px; }
 
-#cartTable tbody { 
+#cartTable .card-body { 
   display: block; 
-  height: calc(100vh - 393px);
+  height: calc(100vh - 450px);
   overflow: auto;
 }
 

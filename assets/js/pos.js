@@ -477,7 +477,7 @@ if (auth == undefined) {
             let total_items=0;
             $.each(cart, function(index, data) {
                 total += data.quantity * data.price;
-                total_items+=data.quantity;
+                total_items+=parseInt(data.quantity);
             });
             $('#total').text(total_items);
             total = total - $("#inputDiscount").val();
@@ -505,18 +505,18 @@ if (auth == undefined) {
 
 
         $.fn.renderTable = function(cartList) {
-            $('#cartTable > tbody').empty();
+            $('#cartTable .card-body').empty();
             $(this).calculateCart();
             $.each(cartList, function(index, data) {
-                $('#cartTable > tbody').append(
-                    $('<tr>').append(
-                        $('<td>', { text: index + 1 }),
-                        $('<td>', { text: data.product_name }),
-                        $('<td>').append(
+                $('#cartTable .card-body').append(
+                    $('<div>', { class:'row m-t-10'}).append(
+                        $('<div>', { class:'col-md-1',text: index + 1 }),
+                        $('<div>', { class:'col-md-3',text: data.product_name }),
+                        $('<div>',{ class:'col-md-3'}).append(
                             $('<div>', { class: 'input-group' }).append(
-                                $('<div>', { class: 'input-group-btn btn-xs' }).append(
+                                $('<span>', { class: 'input-group-btn' }).append(
                                     $('<button>', {
-                                        class: 'btn btn-default btn-xs',
+                                        class: 'btn btn-light',
                                         onclick: '$(this).qtDecrement(' + index + ')'
                                     }).append(
                                         $('<i>', { class: 'fa fa-minus' })
@@ -524,14 +524,15 @@ if (auth == undefined) {
                                 ),
                                 $('<input>', {
                                     class: 'form-control',
-                                    type: 'number',
+                                    type: 'text',
+                                    readonly:'',
                                     value: data.quantity,
                                     min: '1',
                                     onInput: '$(this).qtInput(' + index + ')'
                                 }),
-                                $('<div>', { class: 'input-group-btn btn-xs' }).append(
+                                $('<span>', { class: 'input-group-btn' }).append(
                                     $('<button>', {
-                                        class: 'btn btn-default btn-xs',
+                                        class: 'btn btn-light',
                                         onclick: '$(this).qtIncrement(' + index + ')'
                                     }).append(
                                         $('<i>', { class: 'fa fa-plus' })
@@ -539,10 +540,10 @@ if (auth == undefined) {
                                 )
                             )
                         ),
-                        $('<td>', { text: settings.symbol + moneyFormat((data.price * data.quantity).toFixed(2)) }),
-                        $('<td>').append(
+                        $('<div>', { class:'col-md-3',text: settings.symbol + moneyFormat((data.price * data.quantity).toFixed(2)) }),
+                        $('<div>', { class:'col-md-1'}).append(
                             $('<button>', {
-                                class: 'btn btn-danger btn-xs',
+                                class: 'btn btn-light btn-xs',
                                 onclick: '$(this).deleteFromCart(' + index + ')'
                             }).append(
                                 $('<i>', { class: 'fa fa-times' })
