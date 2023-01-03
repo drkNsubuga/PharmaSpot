@@ -9,7 +9,7 @@
 
 #cartTable tbody { 
   display: block; 
-  height: calc(100vh - 425px);
+  height: calc(100vh - 393px);
   overflow: auto;
 }
 
@@ -17,7 +17,6 @@
   display: block; 
   height: calc(100vh - 215px);
   overflow: auto;
-  overflow: hidden;
 }
 
 
@@ -189,46 +188,26 @@ margin-right: 30px;
 }
 
 #productSales {
-  height: 620px;
-  border: 1px solid #ddd;
+  height: calc(100vh - 350px);
+/*  border: 1px solid #ddd;*/
   border-radius: 5px;
-  overflow-y: scroll;
+  overflow:auto;
+}
+#transactionDetails {
+  height: calc(100vh - 350px);
+/*  border: 1px solid #ddd;*/
+  border-radius: 5px;
+  overflow:auto;
 }
 
-#total_sales { 
-  width: 100%;
-  color: #666;
-  height: 120px;
-  border: 1px solid #fff;
-  border-radius: 5px;
-  margin-bottom: 20px;
-}
-
-#total_transactions { 
-  width: 100%;
-  color: #666;
-  height: 120px;
-  border: 1px solid #fff;
-  border-radius: 5px;
-  margin-bottom: 20px;
-}
-
-#total_items {   
-  width: 100%;
-  color: #666;
-  height: 120px;
-  border: 1px solid #fff;
-  border-radius: 5px;
-  margin-bottom: 20px;
-}
-
+#total_sales,
+#total_transactions,
+#total_items,
 #total_products {   
-  width: 100%;
-  color: #666;
+  color: #fff;
   height: 120px;
   border: 1px solid #fff;
   border-radius: 5px;
-  margin-bottom: 20px;
 }
 
 #totals h5 {
@@ -238,10 +217,10 @@ margin-right: 30px;
 }
 
 #counter {
-  text-align: center !important;
-  margin-top: 10px;
+  /*text-align: center !important;
+  margin-top: 10px;*/
   font-size: 32px;
-  width: 100%;
+/*  width: 100%;*/
 }
 
 .modal-body {

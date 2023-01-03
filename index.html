@@ -73,79 +73,92 @@
             </div>
             <br>
             <div id="transactions_view">
-                <div class="row">
-                    <div class="col-md-12">
-                        <div class="card-box">
-                            <div class="row">
-                                <h3 class="col-md-2">Transactions</h3>
-                                <div class="col-md-1">
-                                    <span>Till</span>
-                                    <select id="tills" class="form-control">
-                                    </select>
-                                </div>
-                                <div class="col-md-2">
-                                    <span>Cashier</span>
-                                    <select id="users" class="form-control">
-                                    </select>
-                                </div>
-                                <div class="col-md-1">
-                                    <span>Status</span>
-                                    <select id="status" class="form-control status">
-                                        <option value="1">Paid</option>
-                                        <option value="0">Unpaid</option>
-                                    </select>
-                                </div>
-                                <div class="col-md-3">
-                                    <span style="width: 100%;">Date</span>
-                                    <div id="reportrange">
-                                        <i class="fa fa-calendar"></i>&nbsp;
-                                        <span></span> <i class="fa fa-caret-down"></i>
-                                    </div>
+                <!--  <div class="row">
+                    <div class="col-md-12">-->
+                <div class="container">
+                    <div class="row text-center" id="totals">
+                        <div id="total_sales" class="col-md-3 py-2 bg-success">
+                            <h5>SALES</h5>
+                            <span id="counter">0</span>
+                        </div>
+                        <div id="total_transactions" class="col-md-3 py-2 bg-warning">
+                            <h5>TRANSACTIONS</h5>
+                            <span id="counter">0</span>
+                        </div>
+                        <div id="total_items" class="col-md-3 py-2 bg-info">
+                            <h5>ITEMS</h5>
+                            <span id="counter">0</span>
+                        </div>
+                        <div id="total_products" class="col-md-3 py-2 bg-success">
+                            <h5>PRODUCTS</h5>
+                            <span id="counter">0</span>
+                        </div>
+                    </div>
+                    <div class="row p-t-10 p-b-10" style="background-color: #fff; margin-top:10px;margin-bottom: 20px;">
+                        <!-- <div class="card-box"> -->
+                        <h3 class="col-md-2">Transactions</h3>
+                        <div class="col-md-2">
+                            <div class="input-group">
+                                <span class="input-group-addon" id="till-addon">Till</span>
+                                <select id="tills" class="form-control" aria-describedby="till-addon">
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <div class="input-group">
+                                <span class="input-group-addon" id="cashier-addon">Cashier</span>
+                                <select id="users" class="form-control" aria-describedby="cashier-addon">
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <div class="input-group">
+                                <span class="input-group-addon" id="status-addon">Status</span>
+                                <select id="status" class="form-control" aria-describedby="">
+                                    <option value="1">Paid</option>
+                                    <option value="0">Unpaid</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="input-group">
+                                <span class="input-group-addon" id="date-addon">Date</span>
+                                <div id="reportrange">
+                                    <i class="fa fa-calendar"></i>&nbsp;
+                                    <span></span> <i class="fa fa-caret-down"></i>
                                 </div>
                             </div>
-                            <hr>
-                            <div class="row">
-                                <div class="col-md-5">
-                                    <div class="row">
-                                        <div class="col-md-8" id="productSales">
-                                            <h4>Products</h4>
-                                            <hr>
-                                            <table class="table tablesaw-enhanced" id="productsSold">
-                                                <thead>
-                                                    <tr>
-                                                        <th>Name</th>
-                                                        <th>Sold</th>
-                                                        <th>Available</th>
-                                                        <th>Sales</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody id="product_sales"></tbody>
-                                            </table>
-                                        </div>
-                                        <div class="col-md-4" id="totals">
-                                            <h4>Total</h4>
-                                            <hr>
-                                            <div id="total_sales" class="btn-success">
-                                                <h5>SALES</h5>
-                                                <div id="counter">0</div>
-                                            </div>
-                                            <div id="total_transactions" class="btn-warning">
-                                                <h5>TRANSACTIONS</h5>
-                                                <div id="counter">0</div>
-                                            </div>
-                                            <div id="total_items" class="btn-info">
-                                                <h5>ITEMS</h5>
-                                                <div id="counter">0</div>
-                                            </div>
-                                            <div id="total_products" class="btn-success">
-                                                <h5>PRODUCTS</h5>
-                                                <div id="counter">0</div>
-                                            </div>
-                                        </div>
-                                    </div>
+                        </div>
+                        <!-- </div> -->
+                    </div>
+                    <div class="row">
+                        <div class="col-md-4 bg-white" id="productSales">
+                            <div class="card-box">
+                                <div class="card-title">
+                                    <h4>Products</h4>
                                 </div>
-                                <div class="col-md-7">
-                                    <table class="table table-striped table-bordered table-responsive" id="transactionList">
+                                <div class="card-body">
+                                    <table class="table tablesaw-enhanced table-responsive" id="productsSold">
+                                        <thead>
+                                            <tr>
+                                                <th>Name</th>
+                                                <th>Sold</th>
+                                                <th>Available</th>
+                                                <th>Sales</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="product_sales"></tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-8" id="transactionDetails">
+                            <div class="card-box">
+                                <div class="card-title">
+                                    <h4>Transaction Details</h4>
+                                </div>
+                                <div class="card-body">
+                                    <table class="table table-striped table-bordered table-responsive" id="transactionList" style="width:100%">
                                         <thead>
                                             <tr>
                                                 <th>Invoice</th>

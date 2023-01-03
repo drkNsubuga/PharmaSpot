@@ -2072,7 +2072,7 @@ function loadTransactions() {
                 counter++;
                 transaction_list += `<tr>
                                 <td>${trans.order}</td>
-                                <td class="nobr">${moment(trans.date).format('YYYY MMM DD hh:mm:ss')}</td>
+                                <td class="nobr">${moment(trans.date).format('DD-MM-YYYY')}</td>
                                 <td>${settings.symbol + moneyFormat(trans.total)}</td>
                                 <td>${trans.paid == "" ? "" : settings.symbol + moneyFormat(trans.paid)}</td>
                                 <td>${trans.change ? settings.symbol + moneyFormat(Math.abs(trans.change).toFixed(2)) : ''}</td>
@@ -2103,7 +2103,7 @@ function loadTransactions() {
                         result[item].forEach(i => {
                             id = i.id;
                             price = i.price;
-                            quantity += i.quantity;
+                            quantity = quantity+parseInt(i.quantity);
                         });
 
                         sold.push({
