@@ -129,7 +129,7 @@ app.post("/post", function(req, res) {
         });
     } else {
         usersDB.update({
-            _id: parseInt(req.body._id);
+            _id: parseInt(req.body._id)
         }, {
 
             $set: {
