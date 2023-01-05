@@ -38,9 +38,7 @@
                             <span class="btn-label"><i class="fa fa-shopping-cart"></i></span> Orders
                         </button>
                     </div>
-                   
-                        <img class="loading m-t-5" src="assets/images/loading.gif" alt="">
-                    
+                    <img class="loading m-t-5" src="assets/images/loading.gif" alt="">
                     <div class="button-list pull-right m-t-15">
                         <button id="settings" data-toggle="modal" data-target="#settingsModal" type="button" class="btn btn-success waves-effect waves-light p_five">
                             <i class="glyphicon glyphicon-cog"></i>
@@ -198,28 +196,26 @@
                                     <form action="" id="searchBarCode">
                                         <input type="text" required id="skuCode" name="skuCode" class="form-control" placeholder="Scan barcode or type the number then hit enter" aria-label="Recipient's username" aria-describedby="basic-addon2">
                                         <!-- <input type="submit"> -->
-                                         <span class="input-group-addon" id="basic-addon2">
-                                        <i class="glyphicon glyphicon-ok"></i>
-                                    </span>
+                                        <span class="input-group-addon" id="basic-addon2">
+                                            <i class="glyphicon glyphicon-ok"></i>
+                                        </span>
                                     </form>
-                                   
                                 </div>
-    
-                                 <div class="row p-t-10" id="cartTable">
-                               <div class="card-box">
-                                    <div class="card-title">
-                                         <div class="row">
-                                    <div class="col-md-1"><strong>#</strong></div>
-                                    <div class="col-md-3"><strong>Item</strong></div>
-                                    <div class="col-md-3"><strong>Qty</strong></div>
-                                    <div class="col-md-3"><strong>Price</strong></div>
-                                    <div class="col-md-1"><button onclick="$(this).cancelOrder()" class="btn btn-light btn-xs"><i class="fa fa-times"></i></button>
+                                <div class="row p-t-10" id="cartTable">
+                                    <div class="card-box">
+                                        <div class="card-title">
+                                            <div class="row">
+                                                <div class="col-md-1"><strong>#</strong></div>
+                                                <div class="col-md-3"><strong>Item</strong></div>
+                                                <div class="col-md-3"><strong>Qty</strong></div>
+                                                <div class="col-md-3"><strong>Price</strong></div>
+                                                <div class="col-md-1"><button onclick="$(this).cancelOrder()" class="btn btn-light btn-xs"><i class="fa fa-times"></i></button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="card-body"></div>
                                     </div>
-                                    </div>
                                 </div>
-                                <div class="card-body"></div>
-                                </div>
-                            </div>
                             </div>
                             <hr>
                             <div class="m-t-5">
@@ -259,12 +255,12 @@
                     <div class="col-md-6">
                         <div class="card-box">
                             <div class="row">
-                                <div class="col-md-4">
+                                <div class="col-md-6">
                                     <input type="text" id="search" class="form-control" placeholder="Search product by name or sku">
                                 </div>
-                                <div class="col-md-8">
-                                    <div class="" id="categories">
-                                    </div>
+                                <div class="col-md-6">
+                                    <select id="categories" class="form-control">
+                                    </select>
                                 </div>
                             </div>
                             <hr>
@@ -456,7 +452,7 @@
                         <div class="modal-header">
                             <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
                             <h4 class="modal-title" id="mySmallModalLabel">New Customer
-                                <img class="loading m-t-5"  src="assets/images/loading.gif" alt="">
+                                <img class="loading m-t-5" src="assets/images/loading.gif" alt="">
                             </h4>
                         </div>
                         <div class="modal-body">
@@ -489,7 +485,7 @@
                         <div class="modal-header">
                             <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
                             <h4 class="modal-title" id="mySmallModalLabel">Product
-                                <img class="loading m-t-5"  src="assets/images/loading.gif" alt="">
+                                <img class="loading m-t-5" src="assets/images/loading.gif" alt="">
                             </h4>
                         </div>
                         <div class="modal-body">
@@ -545,7 +541,7 @@
                         <div class="modal-header">
                             <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
                             <h4 class="modal-title" id="mySmallModalLabel">Category
-                                <img class="loading m-t-5"  src="assets/images/loading.gif" alt="">
+                                <img class="loading m-t-5" src="assets/images/loading.gif" alt="">
                             </h4>
                         </div>
                         <div class="modal-body">
@@ -597,7 +593,7 @@
                         <div class="modal-header">
                             <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
                             <h4 class="modal-title" id="mySmallModalLabel">Users
-                                <img class="loading m-t-5"  src="assets/images/loading.gif" alt="">
+                                <img class="loading m-t-5" src="assets/images/loading.gif" alt="">
                             </h4>
                         </div>
                         <div class="modal-body p-20 p-r-20" id="all_userss">
@@ -645,7 +641,7 @@
                         <div class="modal-header">
                             <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
                             <h4 class="modal-title" id="mySmallModalLabel">Account Infomarion
-                                <img class="loading m-t-5"  src="assets/images/loading.gif" alt="">
+                                <img class="loading m-t-5" src="assets/images/loading.gif" alt="">
                             </h4>
                         </div>
                         <div class="modal-body">
@@ -669,22 +665,22 @@
                                 </div>
                                 <div class="perms">
                                     <h3 class="m-t-20">Permissions</h4>
-                                    <hr>
-                                    <div class="form-group">
-                                        <span><input type="checkbox" name="perm_products" id="perm_products"> Manage Products and Stock </span>
-                                    </div>
-                                    <div class="form-group">
-                                        <span><input type="checkbox" name="perm_categories" id="perm_categories"> Manage Product Categories </span>
-                                    </div>
-                                    <div class="form-group">
-                                        <span><input type="checkbox" name="perm_transactions" id="perm_transactions"> View Transactions </span>
-                                    </div>
-                                    <div class="form-group">
-                                        <span><input type="checkbox" name="perm_users" id="perm_users"> Manage Users and Permissions </span>
-                                    </div>
-                                    <div class="form-group">
-                                        <span><input type="checkbox" name="perm_settings" id="perm_settings"> Manage Settings </span>
-                                    </div>
+                                        <hr>
+                                        <div class="form-group">
+                                            <span><input type="checkbox" name="perm_products" id="perm_products"> Manage Products and Stock </span>
+                                        </div>
+                                        <div class="form-group">
+                                            <span><input type="checkbox" name="perm_categories" id="perm_categories"> Manage Product Categories </span>
+                                        </div>
+                                        <div class="form-group">
+                                            <span><input type="checkbox" name="perm_transactions" id="perm_transactions"> View Transactions </span>
+                                        </div>
+                                        <div class="form-group">
+                                            <span><input type="checkbox" name="perm_users" id="perm_users"> Manage Users and Permissions </span>
+                                        </div>
+                                        <div class="form-group">
+                                            <span><input type="checkbox" name="perm_settings" id="perm_settings"> Manage Settings </span>
+                                        </div>
                                 </div>
                                 <input type="submit" class="btn btn-primary btn-block waves-effect waves-light">
                             </form>
@@ -746,26 +742,25 @@
                         <div class="modal-header">
                             <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
                             <h4 class="modal-title" id="mySmallModalLabel">Settings
-                                <img class="loading m-t-5"  src="assets/images/loading.gif" alt="">
+                                <img class="loading m-t-5" src="assets/images/loading.gif" alt="">
                             </h4>
                         </div>
                         <div class="modal-body">
-                             <div class="row">
-                            <div class="form-group">
-                                <label for="app">Application</label>
-                                <select name="app" id="app" class="form-control">
-                                    <option>Standalone Point of Sale</option>
-                                    <option>Network Point of Sale Terminal</option>
-                                    <option>Network Point of Sale Server</option>
-                                </select>
-                            </div>
-                            <form id="net_settings_form">
-                                <!-- <div class="row"> -->
+                            <div class="container">
+                                <div class="row">
                                     <div class="form-group">
-                                        <label for="ip">Server IP Address*</label>
-                                        <input type="text" required="required" placeholder="Enter the IP address of the admin computer." name="ip" class="form-control" id="ip">
+                                        <label for="app">Application</label>
+                                        <select name="app" id="app" class="form-control">
+                                            <option>Standalone Point of Sale</option>
+                                            <option>Network Point of Sale Terminal</option>
+                                            <option>Network Point of Sale Server</option>
+                                        </select>
                                     </div>
-                                    <!-- <div class="row"> -->
+                                    <form id="net_settings_form">
+                                        <div class="form-group">
+                                            <label for="ip">Server IP Address*</label>
+                                            <input type="text" required="required" placeholder="Enter the IP address of the admin computer." name="ip" class="form-control" id="ip">
+                                        </div>
                                         <div class="col-md-5">
                                             <div class="form-group">
                                                 <label for="till">Till Number*</label>
@@ -778,75 +773,74 @@
                                                 <input type="text" required="required" name="mac" class="form-control" id="mac" readonly="readonly">
                                             </div>
                                         </div>
-                                    <!-- </div> -->
+                                        <div class="form-group">
+                                            <input id="save_settings" type="submit" class="btn btn-success btn-block waves-effect waves-light" value="Save Settings">
+                                        </div>
+                                    </form>
+                                </div>
+                                <form id="settings_form" encType="multipart/form-data">
+                                    <input type="hidden" name="id" id="settings_id">
+                                    <input type="hidden" name="img" id="logo_img">
+                                    <input type="hidden" name="remove" id="remove_logo">
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label for="userName">Store Name</label>
+                                                <input type="text" required="required" name="store" class="form-control" id="store">
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="userName">Address Line 1</label>
+                                                <input type="text" required="required" name="address_one" class="form-control" id="address_one">
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="userName">Address Line 2</label>
+                                                <input type="text" required="required" name="address_two" class="form-control" id="address_two">
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="userName">Contact Number</label>
+                                                <input type="text" name="contact" class="form-control" id="contact">
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="userName">Vat Number</label>
+                                                <input type="text" name="tax" parsley-trigger="change" class="form-control" id="tax">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label for="userName">Currency Symbol</label>
+                                                <input type="text" required="required" name="symbol" class="form-control" id="symbol">
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="userName">Vat Percentage</label>
+                                                <div class="pull-left">
+                                                    <div class="col-md-6">
+                                                        <div class="input-group">
+                                                            <input type="text" required="required" name="percentage" class="form-control" id="percentage">
+                                                            <span class="input-group-addon">%</span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <br><br>
+                                            <div class="form-group">
+                                                <label><input type="checkbox" name="charge_tax" id="charge_tax"> Charge Vat</label>
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="userName"><span id="rmv_logo" class="btn btn-xs btn-warning">Remove</span> Logo </label>
+                                                <div id="current_logo"></div>
+                                                <input type="file" name="imagename" id="logoname">
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="userName">Receipt Footer</label>
+                                                <textarea name="footer" class="form-control" id="footer"></textarea>
+                                            </div>
+                                        </div>
+                                    </div>
                                     <div class="form-group">
                                         <input id="save_settings" type="submit" class="btn btn-success btn-block waves-effect waves-light" value="Save Settings">
                                     </div>
-                            </form>
-                        </div>
-                            <form id="settings_form" encType="multipart/form-data">
-                                <input type="hidden" name="id" id="settings_id">
-                                <input type="hidden" name="img" id="logo_img">
-                                <input type="hidden" name="remove" id="remove_logo">
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        <div class="form-group">
-                                            <label for="userName">Store Name</label>
-                                            <input type="text" required="required" name="store" class="form-control" id="store">
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="userName">Address Line 1</label>
-                                            <input type="text" required="required" name="address_one" class="form-control" id="address_one">
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="userName">Address Line 2</label>
-                                            <input type="text" required="required" name="address_two" class="form-control" id="address_two">
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="userName">Contact Number</label>
-                                            <input type="text" name="contact" class="form-control" id="contact">
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="userName">Vat Number</label>
-                                            <input type="text" name="tax" parsley-trigger="change" class="form-control" id="tax">
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <div class="form-group">
-                                            <label for="userName">Currency Symbol</label>
-                                            <input type="text" required="required" name="symbol" class="form-control" id="symbol">
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="userName">Vat Percentage</label>
-                                            <div class="pull-left">
-                                                <div class="col-md-6">
-                                                <div class="input-group">
-                                                <input type="text" required="required" name="percentage" class="form-control" id="percentage">
-                                                <span class="input-group-addon">%</span>
-                                            </div>
-                                            </div>
-                                            </div>
-                                            
-                                        </div>
-                                        <br><br>
-                                        <div class="form-group">
-                                            <label><input type="checkbox" name="charge_tax" id="charge_tax"> Charge Vat</label>
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="userName"><span id="rmv_logo" class="btn btn-xs btn-warning">Remove</span> Logo </label>
-                                            <div id="current_logo"></div>
-                                            <input type="file" name="imagename" id="logoname">
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="userName">Receipt Footer</label>
-                                            <textarea name="footer" class="form-control" id="footer"></textarea>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    <input id="save_settings" type="submit" class="btn btn-success btn-block waves-effect waves-light" value="Save Settings">
-                                </div>
-                            </form>
+                                </form>
+                            </div>
                         </div>
                     </div>
                 </div>

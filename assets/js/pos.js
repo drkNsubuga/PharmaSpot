@@ -259,8 +259,7 @@ if (auth == undefined) {
             })
 
                 $('#parent').text('');
-                $('#categories').html(`<button type="button" id="all" class="btn btn-categories btn-white waves-effect waves-light">All</button> `);
-
+                
                 data.forEach(item => {
 
                     if (!categories.includes(item.category)) {
@@ -281,16 +280,8 @@ if (auth == undefined) {
                     $('#parent').append(item_info);
                 });
 
-                categories.forEach(category => {
-
-                    let c = allCategories.filter(function(ctg) {
-                        return ctg._id == category;
-                    })
-
-                    $('#categories').append(`<button type="button" id="${category}" class="btn btn-categories btn-white waves-effect waves-light">${c.length > 0 ? c[0].name : ''}</button> `);
-                });
-
-            });
+            
+                 });
 
         }
 
@@ -298,9 +289,9 @@ if (auth == undefined) {
             $.get(api + 'categories/all', function(data) {
                 allCategories = data;
                 loadCategoryList();
-                $('#category').html(`<option value="0">Select</option>`);
+                $('#category,#categories').html(`<option value="0">Select</option>`);
                 allCategories.forEach(category => {
-                    $('#category').append(`<option value="${category._id}">${category.name}</option>`);
+                    $('#category,#categories').append(`<option value="${category._id}">${category.name}</option>`);
                 });
             });
         }

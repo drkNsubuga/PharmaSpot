@@ -185,10 +185,9 @@ overflow-y:scroll
 }
 
 #loading {
-/*  background: rgb(221,221,221);*/
 /*  background: radial-gradient(circle, rgba(153,153,153,1) 0%, rgba(221,221,221,1)  100%); */
   background:radial-gradient(circle, #81c868 0%, #eee 100%);
-  background-image: url(../../assets/images/logo.svg);
+/*  background-image: url(../../assets/images/logo.svg);*/
   position: absolute;
   height: 100%;
   width: 100%;
@@ -267,5 +266,5 @@ overflow-y:scroll
 
 .modal-body {
     max-height: calc(100vh - 143px);
-/*    overflow-y: auto; */
+    overflow: auto; 
   }

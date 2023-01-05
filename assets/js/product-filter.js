@@ -1,22 +1,20 @@
 $(document).ready(function(){
 
-    $('#categories').on('click', '.btn-categories', function(){
+    $('#categories').on('change', function(){
 
-        if (this.id == 'all') {
+        let selected = $('#categories option:selected').val();
+        if (selected == '0') {
             $('#parent > div').fadeIn(450);
         } else {
-            var $el = $('.' + this.id).fadeIn(450);
+            var $el = $('.' + selected).fadeIn(450);
             $('#parent > div').not($el).hide();
         }
- 
-        $("#categories .btn-categories").removeClass("active");
-        $(this).addClass('active');
 
     });
 
  
     function searchProducts () {        
-        $("#categories .btn-categories").removeClass("active");
+        //$("#categories .btn-categories").removeClass("active");
         var matcher = new RegExp($("#search").val(), 'gi');
         $('.box').show().not(function(){
             return matcher.test($(this).find('.name, .sku').text())
