@@ -3,6 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
+    <!-- <meta http-equiv="Content-Security-Policy" content="default-src 'none';script-src 'self'; connect-src 'self'; img-src 'self'; style-src 'self';font-src 'self';base-uri 'self'; form-action 'self';"> -->
     <title>Point Of Sale</title>
     <link href="assets/dist/css/bundle.min.css" rel="stylesheet" type="text/css" />
 </head>
@@ -38,7 +39,7 @@
                         </button>
                     </div>
                     <div class="loading">
-                        <img class="loading m-t-5" style="margin-left: 35%" height="50px" src="assets/images/loading.gif" alt="">
+                        <img class="loading m-t-5" src="assets/images/loading.gif" alt="">
                     </div>
                     <div class="button-list pull-right m-t-15">
                         <button id="settings" data-toggle="modal" data-target="#settingsModal" type="button" class="btn btn-success waves-effect waves-light p_five">
@@ -85,7 +86,7 @@
                             <span id="counter">0</span>
                         </div>
                         <div id="total_items" class="col-md-3 py-2 bg-info">
-                            <h5>ITEMS</h5>
+                            <h5>ITEMS SOLD</h5>
                             <span id="counter">0</span>
                         </div>
                         <div id="total_products" class="col-md-3 py-2 bg-success">
@@ -93,7 +94,7 @@
                             <span id="counter">0</span>
                         </div>
                     </div>
-                    <div class="row p-t-10 p-b-10" style="background-color: #fff; margin-top:10px;margin-bottom: 20px;">
+                    <div class="row p-t-10 p-b-10 bg-white m-t-10 m-b-20">
                         <!-- <div class="card-box"> -->
                         <h3 class="col-md-2">Transactions</h3>
                         <div class="col-md-2">
@@ -157,7 +158,7 @@
                                     <h4>Transaction Details</h4>
                                 </div>
                                 <div class="card-body">
-                                    <table class="table table-striped table-bordered table-responsive" id="transactionList" style="width:100%">
+                                    <table class="table table-striped table-bordered table-responsive" id="transactionList">
                                         <thead>
                                             <tr>
                                                 <th>Invoice</th>
@@ -196,7 +197,7 @@
                                 <div class="input-group m-t-5">
                                     <form action="" id="searchBarCode">
                                         <input type="text" required id="skuCode" name="skuCode" class="form-control" placeholder="Scan barcode or type the number then hit enter" aria-label="Recipient's username" aria-describedby="basic-addon2">
-                                        <input type="submit" style="display:none;">
+                                        <input type="submit">
                                     </form>
                                     <span class="input-group-addon" id="basic-addon2">
                                         <i class="glyphicon glyphicon-ok"></i>
@@ -272,13 +273,13 @@
                     </div>
                 </div>
             </div>
-            <div id="dueModal" class="modal fade bs-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true" style="display: none;">
+            <div id="dueModal" class="modal fade bs-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
                 <div class="modal-dialog modal-sm">
                     <div class="modal-content">
                         <div class="modal-header">
                             <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
                             <h4 class="modal-title" id="mySmallModalLabel">Hold Order
-                                <img class="loading m-t-5" style="margin-left: 35%" height="50px" src="assets/images/loading.gif" alt="">
+                                <img class="loading m-t-5" src="assets/images/loading.gif" alt="loading...">
                             </h4>
                         </div>
                         <div class="modal-body">
@@ -341,7 +342,7 @@
                 </div><!-- /.modal-dialog -->
             </div><!-- /.modal -->
             <!--  Modal content for the above example -->
-            <div id="paymentModel" class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true" style="display: none;">
+            <div id="paymentModel" class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
                 <div class="modal-dialog modal-lg">
                     <div class="modal-content">
                         <div class="modal-header">
@@ -448,13 +449,13 @@
                     </div><!-- /.modal-content -->
                 </div><!-- /.modal-dialog -->
             </div><!-- /.modal -->
-            <div id="newCustomer" class="modal fade bs-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true" style="display: none;">
+            <div id="newCustomer" class="modal fade bs-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
                 <div class="modal-dialog modal-sm">
                     <div class="modal-content">
                         <div class="modal-header">
                             <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
                             <h4 class="modal-title" id="mySmallModalLabel">New Customer
-                                <img class="loading m-t-5" style="margin-left: 35%" height="50px" src="assets/images/loading.gif" alt="">
+                                <img class="loading m-t-5"  src="assets/images/loading.gif" alt="">
                             </h4>
                         </div>
                         <div class="modal-body">
@@ -481,13 +482,13 @@
                     </div>
                 </div>
             </div>
-            <div id="newProduct" class="modal fade bs-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true" style="display: none;">
+            <div id="newProduct" class="modal fade bs-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
                 <div class="modal-dialog modal-sm">
                     <div class="modal-content">
                         <div class="modal-header">
                             <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
                             <h4 class="modal-title" id="mySmallModalLabel">Product
-                                <img class="loading m-t-5" style="margin-left: 35%" height="50px" src="assets/images/loading.gif" alt="">
+                                <img class="loading m-t-5"  src="assets/images/loading.gif" alt="">
                             </h4>
                         </div>
                         <div class="modal-body">
@@ -524,7 +525,7 @@
                                     <input type="number" name="minStock" placeholder="Minimum Stock" class="form-control" id="minStock" min="1">
                                 </div>
                                 <div class="form-group">
-                                    <label><input type="checkbox" name="stock" id="stock" style="max-width: 30px; float: left;"> Disable stock check </label>
+                                    <label><input type="checkbox" name="stock" id="stock"> Disable stock check </label>
                                 </div>
                                 <div class="form-group">
                                     <label for="imagename"><span id="rmv_img" class="btn btn-xs btn-warning">Remove</span> Picture </label>
@@ -537,13 +538,13 @@
                     </div>
                 </div>
             </div>
-            <div id="newCategory" class="modal fade bs-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true" style="display: none;">
+            <div id="newCategory" class="modal fade bs-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
                 <div class="modal-dialog modal-md">
                     <div class="modal-content">
                         <div class="modal-header">
                             <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
                             <h4 class="modal-title" id="mySmallModalLabel">Category
-                                <img class="loading m-t-5" style="margin-left: 35%" height="50px" src="assets/images/loading.gif" alt="">
+                                <img class="loading m-t-5"  src="assets/images/loading.gif" alt="">
                             </h4>
                         </div>
                         <div class="modal-body">
@@ -559,17 +560,17 @@
                     </div>
                 </div>
             </div>
-            <div id="Products" class="modal fade bs-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true" style="display: none;">
+            <div id="Products" class="modal fade bs-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
                 <div class="modal-dialog modal-lg">
                     <div class="modal-content">
                         <div class="modal-header">
                             <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
                             <h4 class="modal-title" id="mySmallModalLabel">Products
-                                <img class="loading m-t-5" style="margin-left: 35%" height="50px" src="assets/images/loading.gif" alt="">
+                                <img class="loading m-t-5" src="assets/images/loading.gif" alt="">
                                 <button class="btn btn-white pull-right" id="print_list">Download</button>
                             </h4>
                         </div>
-                        <div class="modal-body" id="all_products" style="padding: 20px; padding-right: 40px;">
+                        <div class="modal-body p-20 p-r-40" id="all_products">
                             <table class="table table-bordered" id="productList">
                                 <thead>
                                     <tr>
@@ -589,16 +590,16 @@
                     </div>
                 </div>
             </div>
-            <div id="Users" class="modal fade bs-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true" style="display: none;">
+            <div id="Users" class="modal fade bs-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
                 <div class="modal-dialog modal-lg">
                     <div class="modal-content">
                         <div class="modal-header">
                             <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
                             <h4 class="modal-title" id="mySmallModalLabel">Users
-                                <img class="loading m-t-5" style="margin-left: 35%" height="50px" src="assets/images/loading.gif" alt="">
+                                <img class="loading m-t-5"  src="assets/images/loading.gif" alt="">
                             </h4>
                         </div>
-                        <div class="modal-body" id="all_userss" style="padding: 20px; padding-right: 40px;">
+                        <div class="modal-body p-20 p-r-20" id="all_userss">
                             <table class="table table-bordered" id="userList">
                                 <thead>
                                     <tr>
@@ -614,13 +615,13 @@
                     </div>
                 </div>
             </div>
-            <div id="Categories" class="modal fade bs-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true" style="display: none;">
+            <div id="Categories" class="modal fade bs-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
                 <div class="modal-dialog modal-md">
                     <div class="modal-content">
                         <div class="modal-header">
                             <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
                             <h4 class="modal-title" id="mySmallModalLabel">Categories
-                                <img class="loading m-t-5" style="margin-left: 35%" height="50px" src="assets/images/loading.gif" alt="">
+                                <img class="loading m-t-5" src="assets/images/loading.gif" alt="">
                             </h4>
                         </div>
                         <div class="modal-body">
@@ -637,13 +638,13 @@
                     </div>
                 </div>
             </div>
-            <div id="userModal" class="modal fade bs-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true" style="display: none;">
+            <div id="userModal" class="modal fade bs-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
                 <div class="modal-dialog modal-sm">
                     <div class="modal-content">
                         <div class="modal-header">
                             <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
                             <h4 class="modal-title" id="mySmallModalLabel">Account Infomarion
-                                <img class="loading m-t-5" style="margin-left: 35%" height="50px" src="assets/images/loading.gif" alt="">
+                                <img class="loading m-t-5"  src="assets/images/loading.gif" alt="">
                             </h4>
                         </div>
                         <div class="modal-body">
@@ -666,7 +667,7 @@
                                     <input type="password" name="pass" parsley-trigger="change" placeholder="Repeat" class="form-control" id="pass">
                                 </div>
                                 <div class="perms">
-                                    <h4 style="font-size: 22px; margin-top: 20px;">Permissions</h4>
+                                    <h3 class="m-t-20">Permissions</h4>
                                     <hr>
                                     <div class="form-group">
                                         <span><input type="checkbox" name="perm_products" id="perm_products"> Manage Products and Stock </span>
@@ -690,7 +691,7 @@
                     </div>
                 </div>
             </div>
-            <div id="holdOrdersModal" class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true" style="display: none;">
+            <div id="holdOrdersModal" class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
                 <div class="modal-dialog modal-lg">
                     <div class="modal-content">
                         <div class="modal-header">
@@ -701,14 +702,14 @@
                             <input type="text" id="holdOrderInput" placeholder="Search order by reference" class="holdOrderInput form-control">
                             <div class="holdOrderKeyboard"></div>
                             <br>
-                            <div class="row" style="height: 460px;overflow-x: hidden;overflow-y:scroll" id="randerHoldOrders">
+                            <div class="row" id="randerHoldOrders">
                                 <p>please wait <span class="dot"></span> </p>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-            <div id="customerModal" class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true" style="display: none;">
+            <div id="customerModal" class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
                 <div class="modal-dialog modal-lg">
                     <div class="modal-content">
                         <div class="modal-header">
@@ -719,14 +720,14 @@
                             <input type="text" id="holdCustomerOrderInput" placeholder="Search order by customer name" class="holdCustomerOrderInput form-control">
                             <div class="customerOrderKeyboard"></div>
                             <br>
-                            <div class="row" style="height: 460px; overflow: scroll;" id="randerCustomerOrders">
+                            <div class="row" id="randerCustomerOrders">
                                 <p>please wait <span class="dot"></span> </p>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-            <div id="orderModal" class="modal fade bs-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true" style="display: none;">
+            <div id="orderModal" class="modal fade bs-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
                 <div class="modal-dialog modal-sm">
                     <div class="modal-content">
                         <div class="modal-header">
@@ -734,17 +735,17 @@
                         </div>
                         <div class="modal-body" id="viewTransaction">
                         </div>
-                        <div class="alert alert-danger" style="font-size:11px;">Right-Click and Reload if you get stuck after cancelling a print.</div>
+                        <div class="alert alert-danger">Right-Click and Reload if you get stuck after cancelling a print.</div>
                     </div>
                 </div>
             </div>
-            <div id="settingsModal" class="modal fade bs-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true" style="display: none;">
+            <div id="settingsModal" class="modal fade bs-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
                 <div class="modal-dialog modal-md">
                     <div class="modal-content">
                         <div class="modal-header">
                             <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
                             <h4 class="modal-title" id="mySmallModalLabel">Settings
-                                <img class="loading m-t-5" style="margin-left: 35%" height="50px" src="assets/images/loading.gif" alt="">
+                                <img class="loading m-t-5"  src="assets/images/loading.gif" alt="">
                             </h4>
                         </div>
                         <div class="modal-body">
@@ -816,7 +817,7 @@
                                         </div>
                                         <div class="form-group">
                                             <label for="userName">Vat Percentage</label>
-                                            <div style="width: 80%; float:left;">
+                                            <div class="pull-left">
                                                 <input type="text" required="required" name="percentage" class="form-control" id="percentage">
                                             </div>
                                             <div class="pull-right p-t-10"> % </div>
@@ -846,18 +847,7 @@
             </div>
         </div>
     </div>
-    <script>
-    window.$ = window.jQuery = require('jquery');
-    </script>
-    <script>
-    require('./renderer.js');
-    </script>
     <script src="assets/dist/js/bundle.min.js"></script>
-    <script id="__bs_script__">
-    //<![CDATA[
-    document.write("<script async src='http://HOST:3000/browser-sync/browser-sync-client.js?v=2.27.10'><\/script>".replace("HOST", location.hostname));
-    //]]>
-    </script>
 </body>
 
 </html>

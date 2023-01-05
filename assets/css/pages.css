@@ -9,7 +9,9 @@
 
 #cartTable .card-body { 
   display: block; 
-  height: calc(100vh - 450px);
+  max-height: calc(100vh - 413px);
+  min-height: calc(100vh - 431px);
+  height:calc(100vh - 385px);
   overflow: auto;
 }
 
@@ -63,6 +65,37 @@ margin-right: 30px;
   height: 40px;
   overflow: hidden;
   border-bottom: 1px solid #f1f1f1;
+}
+
+#searchBarCode,
+#paymentModel,
+#newCustomer,
+#newProduct,
+#newCategory,
+#Products,
+#Categories,
+#userModal,
+#holdOrdersModal,
+#customerModal,
+#orderModal,
+#settingsModal,
+#dueModal,
+#Users
+{
+display:none;
+}
+
+#stock{
+  max-width: 30px; 
+  float: left;
+}
+
+#randerHoldOrders,
+#randerCustomerOrders
+{
+height: 460px;
+overflow-x: hidden;
+overflow-y:scroll
 }
 
 .stock {
@@ -152,15 +185,21 @@ margin-right: 30px;
 }
 
 #loading {
-  background: rgb(221,221,221);
+/*  background: rgb(221,221,221);*/
 /*  background: radial-gradient(circle, rgba(153,153,153,1) 0%, rgba(221,221,221,1)  100%); */
-  background:radial-gradient(circle, #81c868 0%, #eee  100%);
+  background:radial-gradient(circle, #81c868 0%, #eee 100%);
+  background-image: url(../../assets/images/logo.svg);
   position: absolute;
   height: 100%;
   width: 100%;
   z-index: 999; 
   overflow: hidden;
-  display: none;  
+  display: none; 
+}
+
+.loading{
+  margin-left: 35%;
+  height:50px;
 }
 
 #quit {
@@ -188,16 +227,19 @@ margin-right: 30px;
 }
 
 #productSales {
-  height: calc(100vh - 350px);
+  height: calc(100vh - 315px);
 /*  border: 1px solid #ddd;*/
   border-radius: 5px;
   overflow:auto;
 }
 #transactionDetails {
-  height: calc(100vh - 350px);
+  height: calc(100vh - 315px);
 /*  border: 1px solid #ddd;*/
   border-radius: 5px;
   overflow:auto;
+}
+#transactionList{
+  width:100%;
 }
 
 #total_sales,
@@ -225,4 +267,5 @@ margin-right: 30px;
 
 .modal-body {
     max-height: calc(100vh - 143px);
-    overflow-y: auto; }
+/*    overflow-y: auto; */
+  }
