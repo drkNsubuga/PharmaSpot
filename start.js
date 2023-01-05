@@ -18,12 +18,12 @@ function createWindow() {
   mainWindow = new BrowserWindow({
     width: 1500,
     height: 1200,
-    frame: false,
+    frame: true,
     minWidth: 1200, 
     minHeight: 750,
     webPreferences: {
       nodeIntegration: true,
-      enableRemoteModule: true,
+      enableRemoteModule: false,
       contextIsolation: false
     },
   });
@@ -52,17 +52,12 @@ app.on('window-all-closed', () => {
     app.quit()
   }
 })
-// app.on('browser-window-created', (_, window) => {
-//     require("@electron/remote/main").enable(window.webContents)
-// });
 
 app.on('activate', () => {
   if (mainWindow === null) {
     createWindow()
   }
 })
-
-
 
 ipcMain.on('app-quit', (evt, arg) => {
   app.quit()

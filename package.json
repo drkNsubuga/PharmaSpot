@@ -37,7 +37,6 @@
     "nedb": "^1.8.0",
     "nodemon": "^2.0.20",
     "notiflix": "^3.2.5",
-    "path": "^0.12.7",
     "print-js": "^1.6.0",
     "socket.io": "^4.5.4",
     "sweetalert2": "^11.6.16",
@@ -49,7 +48,8 @@
     "package-win": "electron-packager . PharmaSpot --overwrite --asar=false --platform=win32 --arch=x64 --icon=assets/images/icon.ico --prune=true --out=release-builds --version-string.ProductName=\"PharmaSpot\"",
     "start": "electron-forge start",
     "package": "electron-forge package",
-    "make": "electron-forge make"
+    "make": "electron-forge make",
+    "publish":"electron-forge publish"
   },
   "browserslist": {
     "production": [
@@ -82,6 +82,7 @@
     "gulp-rename": "^2.0.0",
     "gulp-uglify": "^3.0.2",
     "merge-stream": "^2.0.0",
-    "nodemon": "^2.0.20"
+    "nodemon": "^2.0.20",
+    "path": "^0.12.7"
   }
 }

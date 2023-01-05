@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <!-- <meta http-equiv="Content-Security-Policy" content="default-src 'none';script-src 'self'; connect-src 'self'; img-src 'self'; style-src 'self';font-src 'self';base-uri 'self'; form-action 'self';"> -->
-    <title>Point Of Sale</title>
+    <title>PharmaSpot</title>
     <link href="assets/dist/css/bundle.min.css" rel="stylesheet" type="text/css" />
 </head>
 
@@ -38,9 +38,9 @@
                             <span class="btn-label"><i class="fa fa-shopping-cart"></i></span> Orders
                         </button>
                     </div>
-                    <div class="loading">
+                   
                         <img class="loading m-t-5" src="assets/images/loading.gif" alt="">
-                    </div>
+                    
                     <div class="button-list pull-right m-t-15">
                         <button id="settings" data-toggle="modal" data-target="#settingsModal" type="button" class="btn btn-success waves-effect waves-light p_five">
                             <i class="glyphicon glyphicon-cog"></i>
@@ -197,11 +197,12 @@
                                 <div class="input-group m-t-5">
                                     <form action="" id="searchBarCode">
                                         <input type="text" required id="skuCode" name="skuCode" class="form-control" placeholder="Scan barcode or type the number then hit enter" aria-label="Recipient's username" aria-describedby="basic-addon2">
-                                        <input type="submit">
-                                    </form>
-                                    <span class="input-group-addon" id="basic-addon2">
+                                        <!-- <input type="submit"> -->
+                                         <span class="input-group-addon" id="basic-addon2">
                                         <i class="glyphicon glyphicon-ok"></i>
                                     </span>
+                                    </form>
+                                   
                                 </div>
     
                                  <div class="row p-t-10" id="cartTable">
@@ -818,9 +819,14 @@
                                         <div class="form-group">
                                             <label for="userName">Vat Percentage</label>
                                             <div class="pull-left">
+                                                <div class="col-md-6">
+                                                <div class="input-group">
                                                 <input type="text" required="required" name="percentage" class="form-control" id="percentage">
+                                                <span class="input-group-addon">%</span>
                                             </div>
-                                            <div class="pull-right p-t-10"> % </div>
+                                            </div>
+                                            </div>
+                                            
                                         </div>
                                         <br><br>
                                         <div class="form-group">
