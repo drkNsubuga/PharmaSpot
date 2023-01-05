@@ -75,7 +75,7 @@ app.post("/login", function(req, res) {
                                     _id: docs._id
                                 }, {
                                     $set: {
-                                        status: 'Logged In_' + new Date()
+                                        status: 'Logged In_' + moment()
                                     }
                                 }, {},
                 

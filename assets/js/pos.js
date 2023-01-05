@@ -1306,7 +1306,7 @@ if (auth == undefined) {
             $("#user_id").val(allUsers[index]._id);
             $('#fullname').val(allUsers[index].fullname);
             $('#username').val(allUsers[index].username);
-            $('#password').val(atob(allUsers[index].password));
+            $('#password').attr('placeholder','New Password');
             // $('#password').val(secure.getDecrypted(allUsers[index].username));
            
 
