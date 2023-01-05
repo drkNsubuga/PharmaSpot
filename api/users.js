@@ -2,7 +2,9 @@ const app = require("express")();
 const server = require("http").Server(app);
 const bodyParser = require("body-parser");
 const Datastore = require("nedb");
-const btoa = require('btoa');
+const bcrypt=require('bcrypt');
+const saltRounds =10;
+
 app.use(bodyParser.json());
 
 module.exports = app;
@@ -14,8 +16,7 @@ let usersDB = new Datastore({
 });
 
 
-usersDB.ensureIndex({ fieldName: '_id', unique: true });
-
+usersDB.ensureIndex({fieldName: '_id', unique: true });
 
 app.get("/", function(req, res) {
     res.send("Users API");
@@ -30,6 +31,7 @@ app.get("/user/:userId", function(req, res) {
         usersDB.findOne({
             _id: parseInt(req.params.userId)
         }, function(err, docs) {
+
             res.send(docs);
         });
     }
@@ -58,22 +60,39 @@ app.get("/logout/:userId", function(req, res) {
 
 app.post("/login", function(req, res) {
     usersDB.findOne({
-        username: req.body.username,
-        password: btoa(req.body.password)
+        username: req.body.username
+    }, 
+    function(err, docs) {
 
-    }, function(err, docs) {
         if (docs) {
-            usersDB.update({
-                    _id: docs._id
-                }, {
-                    $set: {
-                        status: 'Logged In_' + new Date()
-                    }
-                }, {},
-
-            );
+            //verify password
+            bcrypt.compare(req.body.password,docs.password)
+            .then(result=>
+            {
+                if(result)
+                {
+                    usersDB.update({
+                                    _id: docs._id
+                                }, {
+                                    $set: {
+                                        status: 'Logged In_' + new Date()
+                                    }
+                                }, {},
+                
+                            );
+                 res.send({...docs,'auth':true});
+                 
+                }
+                else
+                //Invalid password
+                 res.send({'auth':false});
+            
+            })
+            .catch((err)=>res.send({'auth':false,'message':err}));
         }
-        res.send(docs);
+        else
+            //No user Account
+            res.send({'auth':false});
     });
 
 });
@@ -98,11 +117,12 @@ app.delete("/user/:userId", function(req, res) {
 
 
 app.post("/post", function(req, res) {
-    //rename id in request
-    req.body["_id"] = req.body["id"];
-    delete obj['id'];
-
-    const perms = [
+   
+    //encrypt password
+    bcrypt.hash(req.body.password,saltRounds)
+        .then((hash)=>{
+            req.body.password=hash;
+           const perms = [
         "perm_products",
         "perm_categories",
         "perm_transactions",
@@ -111,42 +131,38 @@ app.post("/post", function(req, res) {
     ];
 
     for (const perm of perms) {
-        if (req.body[perm] != 'undefined') {
-            req.body[perm] == "on" ? 1 : 0;
+        if (!!req.body[perm]) {
+            req.body[perm]=req.body[perm] == "on" ? 1 : 0;
         }
     }
+    
     let User = {
         ...req.body,
-        "password": btoa(req.body.password),
         "status": ""
     }
-    res.send("console");
-    if (req.body._id == "") {
+    if (req.body.id == "") {
         req.body._id = Math.floor(Date.now() / 1000);
         usersDB.insert(User, function(err, user) {
-            if (err) res.status(500).send(req);
-            else res.sendStatus(200);
+            if (err) res.status(500).send(err);
         });
     } else {
         usersDB.update({
-            _id: parseInt(req.body._id)
+            _id: parseInt(req.body.id)
         }, {
 
-            $set: {
-                ...req.body,
-                password: btoa(req.body.password)
-            }
+            $set: User
         }, {}, function(
             err,
             numReplaced,
             user
         ) {
-            if (err) res.status(500).send(err);
-            else res.sendStatus(200);
+            if (err) res.sendStatus(500).send(err)
+            else res.sendStatus(200)
         });
 
     }
 
+        }).catch(err=>res.sendStatus(500).send(err));
 });
 
 
@@ -155,10 +171,9 @@ app.get("/check", function(req, res) {
         _id: 1
     }, function(err, docs) {
         if (!docs) {
-            let User = {
+            let user = {
                 "_id": 1,
                 "username": "admin",
-                "password": btoa("admin"),
                 "fullname": "Administrator",
                 "perm_products": 1,
                 "perm_categories": 1,
@@ -167,7 +182,15 @@ app.get("/check", function(req, res) {
                 "perm_settings": 1,
                 "status": ""
             }
-            usersDB.insert(User, function(err, user) {});
-        }
+
+            bcrypt
+             .hash("admin", saltRounds)
+             .then((err, hash)=> {
+              user.password=hash;
+              usersDB.insert(user, function(err, user) {
+              });
+            })
+              .catch(err=>res.sendStatus(500).send(err));
+                }
     });
 });

@@ -34,7 +34,8 @@ const app = remote.app;
 let port =process.env.PORT;
 let img_path = app.getPath('appData') + '/POS/uploads/';
 let api = 'http://' + host + ':' + port + '/api/';
-let btoa = require('btoa');
+const bcrypt=require('bcrypt');
+const saltRounds = 24;
 let jsPDF = require('jspdf');
 let html2canvas = require('html2canvas');
 let JsBarcode = require('jsbarcode');
@@ -1315,6 +1316,7 @@ if (auth == undefined) {
             $('#fullname').val(allUsers[index].fullname);
             $('#username').val(allUsers[index].username);
             $('#password').val(atob(allUsers[index].password));
+            // $('#password').val(secure.getDecrypted(allUsers[index].username));
            
 
             for(perm of permissions)
@@ -1326,37 +1328,7 @@ if (auth == undefined) {
                 $(el).prop("checked", false);
                 }
             }
-
-            // if (allUsers[index].perm_products == 1) {
-            //     $('#perm_products').prop("checked", true);
-            // } else {
-            //     $('#perm_products').prop("checked", false);
-            // }
-
-            // if (allUsers[index].perm_categories == 1) {
-            //     $('#perm_categories').prop("checked", true);
-            // } else {
-            //     $('#perm_categories').prop("checked", false);
-            // }
-
-            // if (allUsers[index].perm_transactions == 1) {
-            //     $('#perm_transactions').prop("checked", true);
-            // } else {
-            //     $('#perm_transactions').prop("checked", false);
-            // }
-
-            // if (allUsers[index].perm_users == 1) {
-            //     $('#perm_users').prop("checked", true);
-            // } else {
-            //     $('#perm_users').prop("checked", false);
-            // }
-
-            // if (allUsers[index].perm_settings == 1) {
-            //     $('#perm_settings').prop("checked", true);
-            // } else {
-            //     $('#perm_settings').prop("checked", false);
-            // }
-
+            
             $('#userModal').modal('show');
         }
 
@@ -1793,31 +1765,17 @@ if (auth == undefined) {
 
             console.log(formData);
 
-            if (ownUserEdit) {
-                if (formData.password != atob(user.password)) {
-                    if (formData.password != formData.pass) {
+          
+               if (formData.password != formData.pass) {
                         Swal.fire(
                             'Oops!',
                             'Passwords do not match!',
                             'warning'
                         );
-                    }
                 }
-            } else {
-                if (formData.password != atob(allUsers[user_index].password)) {
-                    if (formData.password != formData.pass) {
-                        Swal.fire(
-                            'Oops!',
-                            'Passwords do not match!',
-                            'warning'
-                        );
-                    }
-                }
-            }
+            
 
-
-
-            if (formData.password == atob(user.password) || formData.password == atob(allUsers[user_index].password) || formData.password == formData.pass) {
+            if (bcrypt.compare(formData.password,user.password) || bcrypt.compare(formData.password,allUsers[user_index].password)) {
                 $.ajax({
                     url: api + 'users/post',
                     type: 'POST',
@@ -1826,7 +1784,6 @@ if (auth == undefined) {
                     cache: false,
                     processData: false,
                     success: function(data) {
-
                         if (ownUserEdit) {
                             ipcRenderer.send('app-reload', '');
                         } else {
@@ -1881,7 +1838,7 @@ if (auth == undefined) {
             $("#user_id").val(user._id);
             $("#fullname").val(user.fullname);
             $("#username").val(user.username);
-            $("#password").val(atob(user.password));
+            $("#password").attr('placeholder','New Password');
 
             for(perm of permissions)
             {
@@ -2422,16 +2379,18 @@ $('body').on("submit", "#account", function(e) {
             cache: false,
             processData: false,
             success: function(data) {
-                if (data._id) {
+                if (data.auth===true) {
                     storage.set('auth', { auth: true });
                     storage.set('user', data);
                     ipcRenderer.send('app-reload', '');
                 } else {
+                    //console.log(data)
                     Swal.fire(
                         'Oops!',
                         auth_error,
                         'warning'
                     );
+                    
                 }
 
             },
