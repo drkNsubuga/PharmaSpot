@@ -69,6 +69,7 @@
     "@electron-forge/maker-rpm": "^6.0.4",
     "@electron-forge/maker-squirrel": "^6.0.4",
     "@electron-forge/maker-zip": "^6.0.4",
+    "@electron-forge/publisher-github": "^6.0.4",
     "browser-sync": "^2.27.11",
     "cross-env": "^7.0.3",
     "electron": "22.0.0",
