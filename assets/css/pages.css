@@ -66,7 +66,7 @@ margin-right: 30px;
   overflow: hidden;
   border-bottom: 1px solid #f1f1f1;
 }
-
+#login,
 #searchBarCode,
 #paymentModel,
 #newCustomer,
@@ -134,8 +134,6 @@ overflow-y:scroll
 
 }
 
- 
- 
  .chosen-container-single .chosen-single {
    padding-top: 3px;
      height: 33px;
@@ -184,16 +182,16 @@ overflow-y:scroll
   display: none;
 }
 
-#loading {
+#login {
 /*  background: radial-gradient(circle, rgba(153,153,153,1) 0%, rgba(221,221,221,1)  100%); */
-  background:radial-gradient(circle, #81c868 0%, #eee 100%);
 /*  background-image: url(../../assets/images/logo.svg);*/
-  position: absolute;
-  height: 100%;
-  width: 100%;
-  z-index: 999; 
-  overflow: hidden;
-  display: none; 
+    min-height: 250px;
+    padding: 15px;
+    margin-right: auto;
+    margin-left: auto;
+    padding-left: 15px;
+    padding-right: 15px;
+    z-index: 999;
 }
 
 .loading{
@@ -213,16 +211,26 @@ overflow-y:scroll
   display: none;
 }
 
-
+.login-box {
+    width: 360px;
+    margin: 15% auto;
+}
+.login-page {
+   height: 100vh;
+    min-height: 100%;
+    background:radial-gradient(circle, #81c868 0%, #eee 100%);
+}
 #load {
-  width: 500px;
-  margin: 300px auto;
+  /* width: 500px;
+  margin: 300px auto; */
   border: 1px solid #ddd;
   font-size: 16px;
-  padding: 40px;
   background: #f1f1f1;
   color: #f2f8fb;
   border-radius: 8px;
+  padding: 40px;
+  border-top: 0;
+  color: #666;
 }
 
 #productSales {

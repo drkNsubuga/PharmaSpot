@@ -75,8 +75,7 @@ app.post("/login", function(req, res) {
                                     _id: docs._id
                                 }, {
                                     $set: {
-                                        status: 'Logged In_' + moment()
-                                    }
+                                        status: 'Logged In_' + new Date()                                    }
                                 }, {},
                 
                             );
@@ -88,7 +87,7 @@ app.post("/login", function(req, res) {
                  res.send({'auth':false});
             
             })
-            .catch((err)=>res.send({'auth':false,'message':err}));
+            .catch((err)=>res.send({'auth':false,'message':err.message}));
         }
         else
             //No user Account

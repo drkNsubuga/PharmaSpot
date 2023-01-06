@@ -2,7 +2,7 @@
 @import url(https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,600,700,300);
 
 body {
-    background: #ebeff2;
+    background:radial-gradient(circle, #81c868 0%, #eee 100%);
     font-family: 'Noto Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif;
     margin: 0;
     overflow-x: hidden;
@@ -117,12 +117,12 @@ a:focus {
 /* Footer */
 .footer {
     border-top: 1px solid rgba(0, 0, 0, 0.1);
-    bottom: 0px;
+    bottom:0;
     color: #58666e;
     text-align: left !important;
     padding: 20px 30px;
     position: absolute;
-    right: 0px;
+    right:0;
     left: 240px;
     font-size: 13px;
 }
@@ -144,7 +144,7 @@ a:focus {
 .page-title {
     font-size: 20px;
     font-weight: 600;
-    margin-bottom: 0px;
+    margin-bottom:0;
     margin-top: 7px;
 }
 
@@ -451,7 +451,7 @@ padding-bottom: 40px !important;
 }
 
 .icon-list-demo div p {
-    margin-bottom: 0px;
+    margin-bottom:0;
     line-height: inherit;
 }
 
@@ -556,7 +556,7 @@ padding-bottom: 40px !important;
     background-color: transparent;
     margin-bottom: 15px;
     padding-top: 10px;
-    padding-left: 0px;
+    padding-left:0
 }
 
 /* Dropdown */
@@ -917,7 +917,7 @@ textarea.form-control {
 .tabs {
     background-color: #ffffff;
     margin: 0 auto;
-    padding: 0px;
+    padding:0;
     position: relative;
     white-space: nowrap;
     width: 100%;
@@ -1044,7 +1044,7 @@ textarea.form-control {
 }
 
 .nav.nav-tabs>li:last-of-type a {
-    margin-right: 0px;
+    margin-right:0
 }
 
 .nav.nav-tabs {
@@ -1157,11 +1157,11 @@ textarea.form-control {
 }
 
 .modal-content .nav.nav-tabs+.tab-content {
-    margin-bottom: 0px;
+    margin-bottom:0
 }
 
 .modal-content .panel-group {
-    margin-bottom: 0px;
+    margin-bottom:0
 }
 
 .modal-content .panel {
@@ -1193,7 +1193,7 @@ textarea.form-control {
     background-color: #36404a;
     color: #ffffff;
     text-align: left;
-    margin: 0px;
+    margin:0
 }
 
 .custom-modal-text {
@@ -1208,7 +1208,7 @@ textarea.form-control {
 
 /* Tabs-Accordions */
 .tabs-vertical-env .tab-content {
-    margin-bottom: 0px;
+    margin-bottom:0
 }
 
 .list-group-item.active,
@@ -1322,17 +1322,17 @@ pre {
 }
 
 .media:last-of-type {
-    margin-bottom: 0px;
+    margin-bottom:0
 }
 
 /*===================================
    Topbar,Left-sidebar,Right-sidebar
   ===================================*/
 .topbar {
-    left: 0px;
+    left:0;
     position: fixed;
     right: 0;
-    top: 0px;
+    top:0;
     z-index: 999;
 }
 
@@ -1377,9 +1377,9 @@ pre {
 
 .navbar-default {
     background-color: #ffffff;
-    border-radius: 0px;
+    border-radius:0;
     border: none;
-    margin-bottom: 0px;
+    margin-bottom:0;
     box-shadow: 0 2px 3px -2px rgba(0, 0, 0, 0.15);
 }
 
@@ -1423,7 +1423,7 @@ pre {
 }
 
 .dropdown-menu-lg .list-group {
-    margin-bottom: 0px;
+    margin-bottom:0
 }
 
 .dropdown-menu-lg .list-group-item {
@@ -1549,7 +1549,7 @@ body.fixed-left .side-menu.left {
     bottom: 50px;
     height: 100%;
     margin-bottom: -70px;
-    margin-top: 0px;
+    margin-top:0;
     padding-bottom: 70px;
     position: fixed;
 }
@@ -1654,7 +1654,7 @@ body.fixed-left .side-menu.left {
     color: #98a6ad;
     display: block;
     padding: 12px 20px;
-    margin: 4px 0px;
+    margin: 4px 0;
     border-left: 3px solid transparent;
 }
 
@@ -1743,7 +1743,7 @@ body.fixed-left .side-menu.left {
     font-size: 18px;
     line-height: 24px;
     width: 100%;
-    margin: 0px;
+    margin:0
 }
 
 .side-menu-sm #sidebar-menu ul ul a {
@@ -1966,7 +1966,7 @@ body.fixed-left .side-menu.left {
 
 .user-details {
     padding: 20px;
-    padding-bottom: 0px;
+    padding-bottom:0;
     position: relative;
 }
 
@@ -2605,8 +2605,8 @@ body.fixed-left .side-menu.left {
     .page-title,
     .footer {
         display: none;
-        margin: 0px;
-        padding: 0px;
+        margin:0;
+        padding:0;
     }
 
     .left,
@@ -2615,12 +2615,12 @@ body.fixed-left .side-menu.left {
     }
 
     .content {
-        margin-top: 0px;
-        padding-top: 0px;
+        margin-top:0;
+        padding-top:0;
     }
 
     .content-page {
-        margin-left: 0px;
-        margin-top: 0px;
+        margin-left:0;
+        margin-top:0;
     }
 }
