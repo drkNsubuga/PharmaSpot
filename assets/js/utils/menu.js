@@ -83,7 +83,7 @@ const template = [
         label: 'Check for updates...'
       },
       {
-        label: `About ${app.getName}`,
+        label: `About ${app.getName()}`,
         click: ()=>showAbout()
       },
       
