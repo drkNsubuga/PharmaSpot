@@ -4,3 +4,5 @@ package.*.json
 TODO
 gulpfile.js
 out/
+.gitignore
+LICENSE
