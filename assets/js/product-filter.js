@@ -93,10 +93,12 @@ $(document).ready(function(){
     $.fn.go = function (value,isDueInput) {
         let paymentAmount=$("#payment").val();
         if(isDueInput){
+
             $("#refNumber").val($("#refNumber").val()+""+value)
         }else{
+            paymentAmount=paymentAmount+""+value
             $("#paymentText").val(moneyFormat(paymentAmount));
-            $("#payment").val(paymentAmount+""+value);
+            $("#payment").val(paymentAmount);
             $(this).calculateChange();
         }
     }
@@ -111,20 +113,17 @@ $(document).ready(function(){
 
     $.fn.calculateChange = function () {
         //add commas to #payment
-        $('#payment').val
         var payablePrice = $("#payablePrice").val().replace(',','');
         var payment = $("#payment").val().replace(',','');
         var change = payablePrice - payment;
         if(change <= 0){
-            $("#change").text(moneyFormat(change.toFixed(2)));
-        }else{
-            $("#change").text('0')
-        }
-        if(change <= 0){
+            $("#change").text(moneyFormat(Math.abs(change.toFixed(2))));
             $("#confirmPayment").show();
         }else{
-            $("#confirmPayment").hide();
+            $("#change").text('0')
+             $("#confirmPayment").hide();
         }
+        
     }
 
 })

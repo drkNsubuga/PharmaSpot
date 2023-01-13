@@ -478,7 +478,7 @@
                                         <div class="row">
                                             <div class="col-md-3">
                                                 <button
-                                                    onclick="$('#payment').val($('#payment').val().substr(0,$('#payment').val().length -1));$(this).calculateChange();"
+                                                    onclick="$('#payment,#paymentText').val($('#payment').val().substr(0,$('#payment').val().length -1));$(this).calculateChange();"
                                                     class="btn btn-success btn-lg btn-block">⌫</button>
                                             </div>
                                             <div class="col-md-3">
@@ -493,7 +493,7 @@
                                         </div>
                                     </div>
                                     <div class="col-md-3">
-                                        <button onclick="$('#payment').val('');$(this).calculateChange();"
+                                        <button onclick="$('#payment,#paymentText').val('');$(this).calculateChange();"
                                             class="btn btn-danger btn-block btn-lg">AC</button>
                                     </div>
                                 </div>
