@@ -130,7 +130,7 @@ app.delete("/product/:productId", function (req, res) {
     inventoryDB.remove({
         _id: parseInt(req.params.productId)
     }, function (err, numRemoved) {
-        if (err) res.status(500).send(err);
+        if (err) res.sendStatus(500).send(err);
         else res.sendStatus(200);
     });
 });
@@ -138,12 +138,12 @@ app.delete("/product/:productId", function (req, res) {
 
 
 app.post("/product/sku", function (req, res) {
-    var request = req.body;
+    let sku = req.body.skuCode;
     inventoryDB.findOne({
-        barcode: parseInt(request.skuCode),
-        _id: parseInt(request.skuCode)
-    }, function (err, product) {
-        res.send(product);
+        barcode: parseInt(sku)
+    }, function (err, doc) {
+         if (err) res.sendStatus(500).send(err);
+         else res.send(doc);
     });
 });
 
