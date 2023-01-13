@@ -1,3 +1,5 @@
+const moneyFormat = (amount,locale='en-US')=>Intl.NumberFormat(locale).format(amount)
+
 $(document).ready(function(){
 
     $('#categories').on('change', function(){
@@ -89,24 +91,32 @@ $(document).ready(function(){
 
 
     $.fn.go = function (value,isDueInput) {
+        let paymentAmount=$("#payment").val();
         if(isDueInput){
             $("#refNumber").val($("#refNumber").val()+""+value)
         }else{
-            $("#payment").val($("#payment").val()+""+value);
+            $("#paymentText").val(moneyFormat(paymentAmount));
+            $("#payment").val(paymentAmount+""+value);
             $(this).calculateChange();
         }
     }
 
 
     $.fn.digits = function(){
-        $("#payment").val($("#payment").val()+".");
+        let paymentAmount=$("#payment").val();
+        $("#paymentText").val(moneyFormat(paymentAmount));
+        $("#payment").val(paymentAmount+".");
         $(this).calculateChange();
     }
 
     $.fn.calculateChange = function () {
-        var change = $("#payablePrice").val() - $("#payment").val();
+        //add commas to #payment
+        $('#payment').val
+        var payablePrice = $("#payablePrice").val().replace(',','');
+        var payment = $("#payment").val().replace(',','');
+        var change = payablePrice - payment;
         if(change <= 0){
-            $("#change").text(change.toFixed(2));
+            $("#change").text(moneyFormat(change.toFixed(2)));
         }else{
             $("#change").text('0')
         }

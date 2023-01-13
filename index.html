@@ -91,9 +91,9 @@
                         <button id="log-out" type="button" class="btn btn-warning waves-effect waves-light">
                             <i class="glyphicon glyphicon-log-out"></i>
                         </button>
-                        <button id="quit" type="button" class="btn btn-danger waves-effect waves-light">
+                       <!--  <button id="quit" type="button" class="btn btn-danger waves-effect waves-light">
                             <i class="glyphicon glyphicon-off"></i>
-                        </button>
+                        </button> -->
                     </div>
                 </div>
             </div>
@@ -211,25 +211,25 @@
                         <div class="col-md-12">
                             <div class="row">
                                 <div class="col-md-10">
+                                    <div class="input-group">
                                     <select name="" id="customer" class="form-control">
                                     </select>
+                                     <span class="input-group-btn">
+                                    <button data-toggle="modal" data-target="#newCustomer" class="btn btn-success"><i class="fa fa-plus"></i></button>
+                                            </span>
+                                </div>            
                                 </div>
-                                <div class="col-md-2">
-                                    <button data-toggle="modal" data-target="#newCustomer" class="btn btn-success"><i
-                                            class="fa fa-plus"></i></button>
-                                </div>
-                            </div>
-                            <div class="input-group m-t-5">
+                            <div class="col-md-10 m-t-5">
                                 <form action="" id="searchBarCode">
-                                    <input type="text" required id="skuCode" name="skuCode" class="form-control"
-                                        placeholder="Scan barcode or type the number then hit enter"
-                                        aria-label="Recipient's username" aria-describedby="basic-addon2">
-                                    <!-- <input type="submit"> -->
-                                    <span class="input-group-addon" id="basic-addon2">
-                                        <i class="glyphicon glyphicon-ok"></i>
+                                    <div class="input-group">
+                                    <input type="text" required id="skuCode" name="skuCode" class="form-control" placeholder="Scan barcode or type the number then hit enter" aria-label="barcode" aria-describedby="basic-addon2">
+                                    <span class="input-group-btn">
+                                        <button type="submit" class="btn btn-default search-barcode-btn"><i class="glyphicon glyphicon-ok"></i></button>
                                     </span>
+                                </div>
                                 </form>
                             </div>
+                             </div>
                             <div class="row p-t-10" id="cartTable">
                                 <div class="card-box">
                                     <div class="card-title">
@@ -258,8 +258,7 @@
                             </div>
                             <div class="row">
                                 <div class="col-md-3">Discount</div>
-                                <div class="col-md-3"><input class="form-control" type="number" id="inputDiscount"
-                                        placeholder="amount" oninput="$(this).calculateCart();"></div>
+                                <div class="col-md-3"><input class="form-control" type="number" id="inputDiscount" minimum="0" placeholder="amount" oninput="$(this).calculateCart();"></div>
                                 <div class="col-md-3">Gross Price (inc <span id="taxInfo"></span>% Tax)</div>
                                 <div class="col-md-3">
                                     <h3 id="gross_price">0.00</h3>
@@ -414,15 +413,16 @@
                                 <div class="input-group">
                                     <span class="input-group-addon" id="basic-addon3">Price <span
                                             id="price_curr"></span></span>
-                                        <input id="payablePrice" readonly type="number" class="form-control"
+                                        <input id="payablePrice" readonly type="text" class="form-control"
                                             aria-describedby="basic-addon3">
                                 </div>
                                 <br>
                                 <div class="input-group">
                                     <span class="input-group-addon" id="basic-addon3">Payment <span
                                             id="payment_curr"></span> </span>
-                                    <input type="text" placeholder="0.0" class="form-control" id="payment"
-                                        aria-describedby="basic-addon3">
+
+                                    <input type="text" placeholder="0.0" class="form-control" id="paymentText" aria-describedby="basic-addon3">
+                                    <input type="hidden" placeholder="0.0" class="form-control" id="payment" aria-describedby="basic-addon3">
                                 </div>
                                 <hr>
                                 <div class="row">

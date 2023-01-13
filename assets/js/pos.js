@@ -78,9 +78,12 @@ notiflix.Notify.init({
 });
 const DATE_FORMAT = 'DD-MMM-YYYY';
 
-const moneyFormat = (amount) => {
-    return new Intl.NumberFormat('en-US').format(amount);
+const moneyFormat = (amount,locale='en-US') => {
+    return new Intl.NumberFormat(locale).format(amount);
 };
+
+module.exports={moneyFormat}
+
 $(function () {
 
     function cb(start, end) {
@@ -266,9 +269,9 @@ if (auth == undefined) {
                             <div id="image"><img src="${item.img == "" ? "./assets/images/default.jpg" : img_path + item.img}" id="product_img" alt=""></div>                    
                                         <div class="text-muted m-t-5 text-center">
                                         <div class="name" id="product_name">${item.name}</div> 
-                                        <span class="sku">${item.sku}</span>
+                                        <span class="sku">${item.barcode||item._id}</span>
                                         <span class="stock">STOCK </span><span class="count">${item.stock == 1 ? item.quantity : 'N/A'}</span></div>
-                                        <sp class="text-success text-center"><b data-plugin="counterup">${settings.symbol + moneyFormat(item.price)}</b> </sp>
+                                        <span class="text-success text-center"><b data-plugin="counterup">${settings.symbol + moneyFormat(item.price)}</b> </span>
                             </div>
                         </div>`;
                     $('#parent').append(item_info);
@@ -336,8 +339,9 @@ if (auth == undefined) {
         function barcodeSearch(e) {
 
             e.preventDefault();
-            $("#basic-addon2").empty();
-            $("#basic-addon2").append(
+            let searchBarCodeIcon=$(".search-barcode-btn").html();
+            $(".search-barcode-btn").empty();
+            $(".search-barcode-btn").append(
                 $('<i>', { class: 'fa fa-spinner fa-spin' })
             );
 
@@ -353,7 +357,7 @@ if (auth == undefined) {
                 cache: false,
                 processData: false,
                 success: function (data) {
-
+                    $(".search-barcode-btn").html(searchBarCodeIcon);
                     if (data._id != undefined && data.quantity >= 1) {
                         $(this).addProductToCart(data);
                         $("#searchBarCode").get(0).reset();
@@ -484,8 +488,9 @@ if (auth == undefined) {
 
             orderTotal = grossTotal.toFixed(2);
 
-            $("#gross_price").text(settings.symbol + moneyFormat(grossTotal.toFixed(2)));
-            $("#payablePrice").val(grossTotal);
+            $("#gross_price").text(settings.symbol + moneyFormat(orderTotal));
+            $("#payablePrice").val(moneyFormat(grossTotal));
+
         };
 
 
@@ -665,8 +670,10 @@ if (auth == undefined) {
             let discount = $("#inputDiscount").val();
             let customer = JSON.parse($("#customer").val());
             let date = moment(currentTime).format("YYYY-MM-DD HH:mm:ss");
-            let paid = $("#payment").val() == "" ? "" : parseFloat($("#payment").val()).toFixed(2);
-            let change = $("#change").text() == "" ? "" : parseFloat($("#change").text()).toFixed(2);
+            let paymentAmount=$("#payment").val().replace(',','');
+            let changeAmount=$("#change").text().replace(',','');
+            let paid = $("#payment").val() == "" ? "" : parseFloat(paymentAmount).toFixed(2);
+            let change = $("#change").text() == "" ? "" : parseFloat(changeAmount).toFixed(2);
             let refNumber = $("#refNumber").val();
             let orderNumber = holdOrder;
             let type = "";
@@ -1533,7 +1540,7 @@ if (auth == undefined) {
                 if (todayDate.isBefore(expiryDate)) {
                     const diffDays = Math.abs(todayDate.startOf('day').diff(expiryDate, 'days'));
 
-                    if (diffDays > 0 && diffDays <= 7) {
+                    if (diffDays > 0 && diffDays <= 30) {
                         var days_noun = diffDays > 1 ? "days" : "day";
                         icon = 'fa fa-clock-o';
                         product.expiryStatus = `${diffDays} ${days_noun} left`;
