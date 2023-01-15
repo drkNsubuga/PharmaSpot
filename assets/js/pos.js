@@ -146,7 +146,7 @@ user = storage.get('user');
  $("#main_app").hide();
 if (auth == undefined) {
     $.get(api + 'users/check/', function (data) { });
-    // $("#login").show();
+ 
     authenticate();
 
 } else {
@@ -2340,7 +2340,7 @@ $('#reportrange').on('apply.daterangepicker', function (ev, picker) {
 
 
 function authenticate() {
-
+    $('.loading').hide();
     $('body').attr('class','login-page');
     $('#login').show();
     

@@ -9,6 +9,9 @@
 </head>
 
 <body>
+    <div class="splash loading">
+    <h1 class="text-white pull-right"><i class="fa fa-spinner fa-spin"></i> Loading...</h1>
+</div>
     <div id="login">
         <div class="login-box">
             <div id="load" class="login-box-body">
@@ -27,7 +30,7 @@
     <div id="main_app">
         <div class="container">
             <div class="row">
-                <div class="col-sm-12">
+                <div class="col-md-6">
                     <div class="button-list pull-left m-t-15 m-l-10">
                         <div class="btn-group p_one">
                             <button id="productModal" data-toggle="modal" data-target="#Products" type="button"
@@ -58,8 +61,10 @@
                             <span class="btn-label"><i class="fa fa-shopping-cart"></i></span> Orders
                         </button>
                     </div>
-                    <img class="loading m-t-5" src="assets/images/loading.gif" alt="">
-                    <div class="button-list pull-right m-t-15">
+                </div>
+               
+                <div class="col-md-6">
+                    <div class="button-list m-t-15">
                         <button id="settings" data-toggle="modal" data-target="#settingsModal" type="button"
                             class="btn btn-success waves-effect waves-light p_five">
                             <i class="glyphicon glyphicon-cog"></i>
@@ -89,7 +94,7 @@
                                 id="loggedin-user"></span>
                         </button>
                         <button id="log-out" type="button" class="btn btn-warning waves-effect waves-light">
-                            <i class="glyphicon glyphicon-log-out"></i>
+                            <i class="glyphicon glyphicon-log-out"></i> <span>Log out</span>
                         </button>
                        <!--  <button id="quit" type="button" class="btn btn-danger waves-effect waves-light">
                             <i class="glyphicon glyphicon-off"></i>

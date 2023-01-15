@@ -193,10 +193,7 @@ overflow-y:scroll
     z-index: 999;
 }
 
-.loading{
-  margin-left: 35%;
-  height:50px;
-}
+
 
 #quit {
   z-index: 9999;
@@ -274,4 +271,29 @@ overflow-y:scroll
 .modal-body {
     max-height: calc(100vh - 143px);
     overflow: auto; 
+  }
+
+.splash{
+  position: absolute;
+  top: 50%;
+  left: 50%;
+/*  opacity: 0.5;*/
+  background-color:rgba(0,0,0,0.5);
+  transform: translate(-50%, -50%);
+  border-radius: 3%;
+  border:1px solid #fff;
+  width: 50%;
+  height: 50vh;
+  z-index:1000;
+  }
+
+  .splash h1, .splash img{
+    position: absolute;
+  top: 50%;
+  left: 50%;
+  transform:translate(-50%, -50%);
+  }
+
+  .splash img{
+    width:10%;
   }
