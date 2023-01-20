@@ -294,7 +294,6 @@ if (auth == undefined) {
 
 
         function loadCustomers() {
-
             $.get(api + 'customers/all', function(customers) {
 
                 $('#customer').html(`<option value="0" selected="selected">Walk in customer</option>`);
@@ -333,7 +332,7 @@ if (auth == undefined) {
                             Swal.fire(
                                 'Out of stock!',
                                 'This item is currently unavailable',
-                                'danger'
+                                'error'
                             );
                         }
                     }
@@ -498,10 +497,8 @@ if (auth == undefined) {
             $("#gross_price").text(settings.symbol + moneyFormat(orderTotal));
             $("#payablePrice").val(moneyFormat(grossTotal));
 
-        };
-
-
-
+        }
+        
         $.fn.renderTable = function(cartList) {
             $('#cartTable .card-body').empty();
             $(this).calculateCart();

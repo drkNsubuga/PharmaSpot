@@ -7,9 +7,10 @@ Point of Sale application for Pharmacies
 - Receipt Printing.
 - Search for product by barcode.
 - Staff accounts and permissions. 
-- Products and Categories.
+- Manage Products and Categories.
+- Manage Users
 - Basic Stock Management.
-- Open Tabs (Orders).
+- Open Tabs and Orders.
 - Customer Database. 
 - Transaction History. 
 - Filter Transactions by Till, Cashier or Status. 
@@ -17,6 +18,6 @@ Point of Sale application for Pharmacies
 - Custom barcode  
 - Product Expiry date 
 - Calculate profit per item and total profit
-- Alert for expiration date
-- New styling and fix display issues  
- 
+- Alerts for low Stock
+- Alerts  expiration date
+- New styling and fix display issues

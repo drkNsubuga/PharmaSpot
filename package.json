@@ -76,6 +76,7 @@
     "cross-env": "^7.0.3",
     "electron": "22.0.0",
     "electron-is-dev": "^2.0.0",
+    "electron-reloader": "^1.2.3",
     "gulp": "^4.0.2",
     "gulp-clean-css": "^4.3.0",
     "gulp-concat": "^2.6.1",
