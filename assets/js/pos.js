@@ -181,6 +181,10 @@ if (auth == undefined) {
 
 
     $(document).ready(function() {
+        //update title based on company
+        let appName = $('title').text();
+        let appTitle = settings.store?`${settings.store} - ${appName}`:appName; 
+        $('title').text(appTitle);
 
         $(".loading").hide();
 
