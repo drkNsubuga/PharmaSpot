@@ -2,19 +2,10 @@ let express = require("express"),
     http = require("http"),
     app = require("express")(),
     server = http.createServer(app),
-    bodyParser = require("body-parser"),
-    RateLimit = require('express-rate-limit');
+    bodyParser = require("body-parser");
+
 
 const PORT = process.env.PORT || 0;
-
-//set up rate limiter: maximum of five requests per minute
-var limiter = RateLimit({
-    windowMs: 1 * 60 * 1000, // 1 minute
-    max: 10
-});
-
-// apply rate limiter to all requests
-app.use(limiter);
 
 console.log("Server started");
 

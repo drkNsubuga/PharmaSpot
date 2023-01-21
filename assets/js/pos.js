@@ -82,6 +82,12 @@ const moneyFormat = (amount, locale = 'en-US') => {
     return new Intl.NumberFormat(locale).format(amount);
 };
 
+const isExpired = (dueDate)=>{
+            let todayDate = moment();
+            let expiryDate = moment(dueDate, DATE_FORMAT);
+            return todayDate.isSameOrAfter(dueDate)
+        }
+
 module.exports = { moneyFormat }
 
 $(function() {
@@ -171,7 +177,6 @@ if (auth == undefined) {
 
     $.get(api + 'settings/get', function(data) {
         settings = data.settings;
-        console.log(settings);
     });
 
 
@@ -184,7 +189,7 @@ if (auth == undefined) {
     $(document).ready(function() {
         //update title based on company
         let appName = $('title').text();
-        let appTitle = !!settings.store?`${settings.store} - ${appName}`:appName; 
+        let appTitle = !!settings?`${settings.store} - ${appName}`:appName; 
         $('title').text(appTitle);
 
         $(".loading").hide();
@@ -243,7 +248,7 @@ if (auth == undefined) {
                 let delay = 0;
                 allProducts.forEach(product => {
                     let todayDate = moment();
-                    let expiryDate = moment(product.expirationDate, "DD-MMM-YYYY");
+                    let expiryDate = moment(product.expirationDate, DATE_FORMAT);
 
                     if (todayDate.isBefore(expiryDate)) {
                         const diffDays = Math.abs(todayDate.startOf('day').diff(expiryDate, 'days'));
@@ -318,11 +323,11 @@ if (auth == undefined) {
 
         $.fn.addToCart = function(id, count, stock) {
             $.get(api + 'inventory/product/' + id, function(product) {
-                let todayDate = moment();
-                let expiryDate = moment(product.expirationDate, "DD-MMM-YYYY");
-                let expired = todayDate.isSameOrAfter(expiryDate)
+                // let todayDate = moment();
+                // let expiryDate = moment(product.expirationDate, DATE_FORMAT);
+                // let expired = isExpired(expiryDate)
 
-                if (expired) {
+                if (isExpired(product.expirationDate)) {
                     notiflix.Report.failure(
                         'Expired',
                         'This item is expired!',
@@ -370,14 +375,23 @@ if (auth == undefined) {
                 processData: false,
                 success: function(data) {
                     $(".search-barcode-btn").html(searchBarCodeIcon);
-                    if (data._id != undefined && data.quantity >= 1) {
+                    let expired=isExpired(data.expirationDate);
+                    if (data._id != undefined && data.quantity >= 1 && !expired) {
                         $(this).addProductToCart(data);
                         $("#searchBarCode").get(0).reset();
                         $("#basic-addon2").empty();
                         $("#basic-addon2").append(
                             $('<i>', { class: 'glyphicon glyphicon-ok' })
                         )
-                    } else if (data.quantity < 1) {
+                    } 
+                     else if (expired) {
+                        notiflix.Report.failure(
+                            'Expired!',
+                            'This item is expired',
+                            'Ok'
+                        );
+                     }
+                    else if (data.quantity < 1) {
                         notiflix.Report.info(
                             'Out of stock!',
                             'This item is currently unavailable',
@@ -1066,10 +1080,10 @@ if (auth == undefined) {
                             $(this).getHoldOrders();
                             $(this).getCustomerOrders();
 
-                            Swal.fire(
+                            notiflix.Report.success(
                                 'Deleted!',
                                 'You have deleted the order!',
-                                'success'
+                                'Ok'
                             )
 
                         },
@@ -1228,7 +1242,7 @@ if (auth == undefined) {
                 
                 },
                 error: function(data) {
-                    console.log(data);
+                    //console.log(data);
                 }
             });
 
@@ -1272,7 +1286,7 @@ if (auth == undefined) {
 
                 },
                 error: function(data) {
-                    console.log(data);
+                    //console.log(data);
                 }
 
             });
@@ -1542,7 +1556,7 @@ if (auth == undefined) {
 
                 product.stockAlert = '';
                 let todayDate = moment();
-                let expiryDate = moment(product.expirationDate, "DD-MMM-YYYY");
+                let expiryDate = moment(product.expirationDate, DATE_FORMAT);
 
                 //calculate stock level
                 if (product.quantity <= product.minStock) {

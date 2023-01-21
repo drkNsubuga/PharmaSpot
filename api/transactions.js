@@ -4,6 +4,7 @@ let bodyParser = require("body-parser");
 let Datastore = require("nedb");
 let Inventory = require("./inventory");
 
+
 app.use(bodyParser.json());
 
 module.exports = app;
