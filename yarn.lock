@@ -2545,6 +2545,11 @@ express-fileupload@^1.4.0:
   dependencies:
     busboy "^1.6.0"
 
+express-rate-limit@^6.7.0:
+  version "6.7.0"
+  resolved "https://registry.npmjs.org/express-rate-limit/-/express-rate-limit-6.7.0.tgz"
+  integrity sha512-vhwIdRoqcYB/72TK3tRZI+0ttS8Ytrk24GfmsxDXK9o9IhHNO5bXRiXQSExPQ4GbaE5tvIS7j1SGrxsuWs+sGA==
+
 express-rate@^0.0.1:
   version "0.0.1"
   resolved "https://registry.npmjs.org/express-rate/-/express-rate-0.0.1.tgz"
@@ -2552,7 +2557,7 @@ express-rate@^0.0.1:
   dependencies:
     redis ">= 0.0.1"
 
-express@^4.18.2:
+"express@^4 || ^5", express@^4.18.2:
   version "4.18.2"
   resolved "https://registry.npmjs.org/express/-/express-4.18.2.tgz"
   integrity sha512-5/PsL6iGPdfQ/lKM1UuielYgv3BUoJfz1aUwU9vHZ+J7gyvwdQXFEBIEIaxeGf0GIcreATNyBExtalisDbuMqQ==

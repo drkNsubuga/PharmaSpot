@@ -171,6 +171,7 @@ if (auth == undefined) {
 
     $.get(api + 'settings/get', function(data) {
         settings = data.settings;
+        console.log(settings);
     });
 
 
@@ -183,7 +184,7 @@ if (auth == undefined) {
     $(document).ready(function() {
         //update title based on company
         let appName = $('title').text();
-        let appTitle = settings.store?`${settings.store} - ${appName}`:appName; 
+        let appTitle = !!settings.store?`${settings.store} - ${appName}`:appName; 
         $('title').text(appTitle);
 
         $(".loading").hide();
@@ -322,10 +323,10 @@ if (auth == undefined) {
                 let expired = todayDate.isSameOrAfter(expiryDate)
 
                 if (expired) {
-                    Swal.fire(
+                    notiflix.Report.failure(
                         'Expired',
                         'This item is expired!',
-                        'info'
+                        'Ok'
                     );
                 } else {
 
@@ -333,10 +334,11 @@ if (auth == undefined) {
                         $(this).addProductToCart(product);
                     } else {
                         if (stock == 1) {
-                            Swal.fire(
+
+                            notiflix.Report.failure(
                                 'Out of stock!',
-                                'This item is currently unavailable',
-                                'error'
+                                '<span class="text-center">This item is currently unavailable</span>',
+                                'Ok'
                             );
                         }
                     }
@@ -376,17 +378,17 @@ if (auth == undefined) {
                             $('<i>', { class: 'glyphicon glyphicon-ok' })
                         )
                     } else if (data.quantity < 1) {
-                        Swal.fire(
+                        notiflix.Report.info(
                             'Out of stock!',
                             'This item is currently unavailable',
-                            'info'
+                            'Ok'
                         );
                     } else {
 
-                        Swal.fire(
+                        notiflix.Report.warning(
                             'Not Found!',
                             '<b>' + $("#skuCode").val() + '</b> is not a valid barcode!',
-                            'warning'
+                            'Ok'
                         );
 
                         $("#searchBarCode").get(0).reset();
@@ -572,10 +574,10 @@ if (auth == undefined) {
                     item.quantity = parseInt(item.quantity) + 1;
                     $(this).renderTable(cart);
                 } else {
-                    Swal.fire(
+                    notiflix.Report.info(
                         'No more stock!',
                         'You have already added all the available stock.',
-                        'info'
+                        'Ok'
                     );
                 }
             } else {
@@ -605,7 +607,7 @@ if (auth == undefined) {
         $.fn.cancelOrder = function() {
 
             if (cart.length > 0) {
-                Swal.fire({
+                let diagOptions={
                     title: 'Are you sure?',
                     text: "You are about to remove all items from the cart.",
                     icon: 'warning',
@@ -613,7 +615,15 @@ if (auth == undefined) {
                     confirmButtonColor: '#3085d6',
                     cancelButtonColor: '#d33',
                     confirmButtonText: 'Yes, clear it!'
-                }).then((result) => {
+                    
+                }
+
+                notiflix.Confirm.show(
+                    diagOptions.title,
+                    diagOptions.text,
+                    'Yes',
+                    'No'
+                    ).then((result) => {
 
                     if (result.value) {
 
@@ -621,10 +631,10 @@ if (auth == undefined) {
                         $(this).renderTable(cart);
                         holdOrder = 0;
 
-                        Swal.fire(
+                        notiflix.Report.success(
                             'Cleared!',
                             'All items have been removed.',
-                            'success'
+                            'Ok'
                         )
                     }
                 });
@@ -1106,7 +1116,7 @@ if (auth == undefined) {
                 processData: false,
                 success: function(data) {
                     $("#newCustomer").modal('hide');
-                    Swal.fire("Customer added!", "Customer added successfully!", "success");
+                    notiflix.Report.success("Customer added!", "Customer added successfully!", 'Ok');
                     $("#customer option:selected").removeAttr('selected');
                     $('#customer').append(
                         $('<option>', { text: custData.name, value: `{"id": ${custData._id}, "name": ${custData.name}}`, selected: 'selected' })
@@ -1117,7 +1127,7 @@ if (auth == undefined) {
                 },
                 error: function(data) {
                     $("#newCustomer").modal('hide');
-                    Swal.fire('Error', 'Something went wrong please try again', 'error')
+                    notiflix.Report.failure('Error', 'Something went wrong please try again', 'Ok')
                 }
             })
         })
@@ -1134,10 +1144,10 @@ if (auth == undefined) {
 
         $("#confirmPayment").on('click', function() {
             if ($('#payment').val() == "") {
-                Swal.fire(
+                notiflix.Report.warning(
                     'Nope!',
                     'Please enter the amount that was paid!',
-                    'warning'
+                    'Ok'
                 );
             } else {
                 $(this).submitDueOrder(1);
@@ -1199,7 +1209,7 @@ if (auth == undefined) {
                     $('#current_img').text('');
 
                     loadProducts();
-                    Swal.fire({
+                    diagOptions={
                         title: 'Product Saved',
                         text: "Select an option below to continue.",
                         icon: 'success',
@@ -1208,12 +1218,14 @@ if (auth == undefined) {
                         cancelButtonColor: '#d33',
                         confirmButtonText: 'Add another',
                         cancelButtonText: 'Close'
-                    }).then((result) => {
+                    }
+                     Swal.fire(diagOptions).then((result) => {
 
                         if (!result.value) {
                             $("#newProduct").modal('hide');
                         }
                     });
+                
                 },
                 error: function(data) {
                     console.log(data);
@@ -1241,7 +1253,7 @@ if (auth == undefined) {
                     $('#saveCategory').get(0).reset();
                     loadCategories();
                     loadProducts();
-                    Swal.fire({
+                    diagOptions={
                         title: 'Category Saved',
                         text: "Select an option below to continue.",
                         icon: 'success',
@@ -1250,12 +1262,14 @@ if (auth == undefined) {
                         cancelButtonColor: '#d33',
                         confirmButtonText: 'Add another',
                         cancelButtonText: 'Close'
-                    }).then((result) => {
+                    }
+                    Swal.fire(diagOptions).then((result) => {
 
                         if (!result.value) {
                             $("#newCategory").modal('hide');
                         }
                     });
+
                 },
                 error: function(data) {
                     console.log(data);
