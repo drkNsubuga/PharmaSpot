@@ -79,9 +79,11 @@ const template = [
       {
         label: 'Send feedback'
       },
+      { type: 'separator' },
       {
         label: 'Check for updates...'
       },
+      { type: 'separator' },
       {
         label: `About ${app.getName()}`,
         click: ()=>showAbout()
