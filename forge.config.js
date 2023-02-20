@@ -1,7 +1,15 @@
 module.exports = {
   packagerConfig: {
     icon:'assets/images/icon.ico',
-    setupIcon: 'assets/images/icon.ico'
+    setupIcon: 'assets/images/icon.ico',
+    asar:true,
+    ignore:[
+      'gulpfile\.js',
+      '\.git.*',
+      'TODO',
+      'notes\.txt',
+      'forge\.config\.js'
+      ]
   },
   rebuildConfig: {},
   makers: [
