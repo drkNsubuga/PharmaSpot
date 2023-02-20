@@ -2,10 +2,12 @@ let express = require("express"),
     http = require("http"),
     app = require("express")(),
     server = http.createServer(app),
-    bodyParser = require("body-parser");
+    bodyParser = require("body-parser")
+    pkg=require('./package.json');
 
-
+process.env.APPNAME = pkg.name;
 const PORT = process.env.PORT || 0;
+
 
 console.log("Server started");
 

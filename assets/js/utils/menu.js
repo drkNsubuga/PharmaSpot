@@ -1,6 +1,6 @@
 const { app, Menu, dialog } = require('electron')
 const isMac = process.platform === 'darwin'
-const {showAbout}=require('./menuController')
+const {showAbout,checkForUpdates}=require('./menuController')
 const template = [
 
   ...(isMac ? [{
@@ -60,6 +60,9 @@ const template = [
     label: 'View',
     submenu: [
       { 'label':'Refresh',role: 'reload' },
+      ...(!app.isPackaged?[
+        { role: 'toggleDevTools', after: ['Refresh'] }
+      ]:[]),
       { type: 'separator' },
       { role: 'resetZoom' },
       { role: 'zoomIn' },
@@ -81,7 +84,8 @@ const template = [
       },
       { type: 'separator' },
       {
-        label: 'Check for updates...'
+        label: 'Check for updates...',
+        click: ()=>checkForUpdates()
       },
       { type: 'separator' },
       {

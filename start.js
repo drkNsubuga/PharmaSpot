@@ -5,15 +5,13 @@ if (setupEvents.handleSquirrelEvent()) {
     return;
 }
 const server = require('./server');
-const { app, BrowserWindow, ipcMain } = require('electron');
+const { app, BrowserWindow, ipcMain, dialog } = require('electron');
 const path = require('path');
-const { autoUpdater } = require('electron-updater');
 const contextMenu = require('electron-context-menu');
-let { Menu, template } = require('./assets/js/utils/menu')
-let isDev = require('electron-is-dev')
-
-
-
+let { Menu, template } = require('./assets/js/utils/menu');
+// const { MenuItem } = require('@electron/remote/main');
+const isPackaged = app.isPackaged;
+const menu = Menu.buildFromTemplate(template);
 
 let mainWindow
 
@@ -36,23 +34,24 @@ function createWindow() {
 
     mainWindow.loadURL(
         `file://${path.join(__dirname, 'index.html')}`
-    )
+        )
 
     mainWindow.on('closed', () => {
         mainWindow = null
     })
 
-    mainWindow.once('ready-to-show', () => {
-        autoUpdater.checkForUpdatesAndNotify();
-    });
+    
 }
 
-// https://github.com/electron/remote/issues/94#issuecomment-1024849702
+
 app.on('browser-window-created', (_, window) => {
     require("@electron/remote/main").enable(window.webContents);
 });
 
-app.on('ready', createWindow)
+// app.on('ready', createWindow)
+app.whenReady().then(() => {
+  createWindow()
+})
 
 app.on('window-all-closed', () => {
     if (process.platform !== 'darwin') {
@@ -75,39 +74,8 @@ ipcMain.on('app-reload', (event, arg) => {
     mainWindow.reload();
 });
 
-ipcMain.on('app-about', (event) => {
-    event.sender.send('app_version', { version: app.getVersion(), name: app.getName() });
-});
-
-
 ipcMain.on('restart-app', () => {
     autoUpdater.quitAndInstall();
-});
-
-//auto update application
-// mainWindow.on('ready-to-show', () => {
-//   autoUpdater.checkForUpdatesAndNotify();
-// });
-
-autoUpdater.on('update-available', () => {
-    mainWindow.webContents.send('update_available');
-});
-
-autoUpdater.on('update-not-available', () => {
-    mainWindow.webContents.send('update_not_available');
-});
-
-autoUpdater.on('update-downloaded', () => {
-    mainWindow.webContents.send('update_downloaded');
-});
-
-autoUpdater.on('error', () => {
-    mainWindow.webContents.send('update_error');
-});
-
-//save a backup of the db
-autoUpdater.on('before-quit-for-update', () => {
-    mainWindow.webContents.send('before_quit_for_update');
 });
 
 //Build menus
@@ -121,13 +89,11 @@ contextMenu({
 
 });
 
-if (isDev) {
-    //show developer tools
-    //template = { ...template, ...{ role: 'toggleDevTools', after: ['Refresh'] } }
+if (!isPackaged) {
     try {
         require('electron-reloader')(module)
     } catch (_) {}
 }
 
-const menu = Menu.buildFromTemplate(template);
+
 Menu.setApplicationMenu(menu)
