@@ -661,10 +661,10 @@ if (auth == undefined) {
             if (cart.length != 0) {
                 $("#paymentModel").modal('toggle');
             } else {
-                Swal.fire(
+                notiflix.Report.warning(
                     'Oops!',
                     'There is nothing to pay!',
-                    'warning'
+                    'Ok'
                 );
             }
 
@@ -677,10 +677,10 @@ if (auth == undefined) {
 
                 $("#dueModal").modal('toggle');
             } else {
-                Swal.fire(
+                notiflix.Report.warning(
                     'Oops!',
                     'There is nothing to hold!',
-                    'warning'
+                    'Ok'
                 );
             }
         });

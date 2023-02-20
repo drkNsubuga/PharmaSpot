@@ -4,7 +4,11 @@ const bodyParser = require("body-parser");
 const Datastore = require("nedb");
 const bcrypt=require('bcrypt');
 const saltRounds =10;
-
+const path = require('path');
+const dbPath= path.join(
+    process.env.APPDATA,
+    process.env.APPNAME,
+    "server","databases","users.db");
 
 app.use(bodyParser.json());
 
@@ -12,12 +16,12 @@ module.exports = app;
 
 
 let usersDB = new Datastore({
-    filename: process.env.APPDATA + "/POS/server/databases/users.db",
+    filename: dbPath,
     autoload: true
 });
 
 
-usersDB.ensureIndex({fieldName: '_id', unique: true });
+usersDB.ensureIndex({fieldName: 'username', unique: true });
 
 app.get("/", function(req, res) {
     res.send("Users API");
@@ -117,6 +121,7 @@ app.delete("/user/:userId", function(req, res) {
 
 
 app.post("/post", function(req, res) {
+
    
     //encrypt password
     bcrypt.hash(req.body.password,saltRounds)
@@ -134,12 +139,17 @@ app.post("/post", function(req, res) {
         if (!!req.body[perm]) {
             req.body[perm]=req.body[perm] == "on" ? 1 : 0;
         }
+        else
+        {
+            req.body[perm] = 0;
+        }
     }
     
     let User = {
         ...req.body,
         "status": ""
     }
+     delete User.id;
     if (req.body.id == "") {
         req.body._id = Math.floor(Date.now() / 1000);
         usersDB.insert(User, function(err, user) {
@@ -162,7 +172,7 @@ app.post("/post", function(req, res) {
 
     }
 
-        }).catch(err=>res.sendStatus(500).send(err));
+        }).catch(err=>res.sendStatus(500).send(err.message));
 });
 
 
@@ -171,7 +181,10 @@ app.get("/check", function(req, res) {
         _id: 1
     }, function(err, docs) {
         if (!docs) {
-            let user = {
+            bcrypt
+             .hash("admin", saltRounds)
+             .then((hash)=> {
+              let user = {
                 "_id": 1,
                 "username": "admin",
                 "fullname": "Administrator",
@@ -182,15 +195,15 @@ app.get("/check", function(req, res) {
                 "perm_settings": 1,
                 "status": ""
             }
-
-            bcrypt
-             .hash("admin", saltRounds)
-             .then((err, hash)=> {
               user.password=hash;
               usersDB.insert(user, function(err, user) {
+                if(err)
+                {
+                    res.sendStatus(500).send(err)
+                }
               });
             })
-              .catch(err=>res.sendStatus(500).send(err));
+              .catch(err=>res.sendStatus(500).send(err.message));
                 }
     });
 });
