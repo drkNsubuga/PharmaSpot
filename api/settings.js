@@ -6,10 +6,14 @@ const multer = require("multer");
 const fileUpload = require('express-fileupload');
 const fs = require('fs');
 const path = require('path');
+const dbPath= path.join(
+    process.env.APPDATA,
+    process.env.APPNAME,
+    "server","databases","settings.db");
 
 
 const storage = multer.diskStorage({
-    destination:  path.join(process.env.APPDATA,'POS','uploads'),
+    destination:  path.join(process.env.APPDATA,process.env.APPNAME,'uploads'),
     filename: function(req, file, callback){
         callback(null, Date.now() + '.jpg'); // 
     }
@@ -23,7 +27,7 @@ module.exports = app;
 
  
 let settingsDB = new Datastore( {
-    filename: path.join(process.env.APPDATA,"POS","server","databases","settings.db"),
+    filename: dbPath,
     autoload: true
 } );
 
@@ -57,7 +61,7 @@ app.post( "/post", upload.single('imagename'), function ( req, res ) {
     }
 
     if(req.body.remove == 1) {
-        const imgPath = path.join(process.env.APPDATA,"POS","uploads",req.body.img);
+        const imgPath = path.join(process.env.APPDATA,process.env.APPNAME,"uploads",req.body.img);
         try {
           fs.unlinkSync(imgPath)
         } catch(err) {
