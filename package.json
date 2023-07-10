@@ -43,7 +43,7 @@
     "notiflix": "^3.2.5",
     "print-js": "^1.6.0",
     "sanitize": "^2.1.2",
-    "socket.io": "^4.5.4",
+    "socket.io": "^4.7.1",
     "sweetalert2": "^11.6.16",
     "xmlhttprequest": "^1.8.0"
   },
