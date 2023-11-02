@@ -55,7 +55,7 @@ PharmaSpot is a cross-platform Point of Sale system designed for pharmacies and 
   
 ## Credits
 
-This repository is an adaptation of the [POS]([https://github.com/original-repo-owner/original-repo-name](https://github.com/ailakhdar/Store-POS))
+This repository is an adaptation of the **POS** by [ailakhdar]([https://github.com/original-repo-owner/original-repo-name](https://github.com/ailakhdar/Store-POS))
 Feel free to report any issues or suggest enhancements via [GitHub Issues](https://github.com/drkNsubuga/PharmaSpot/issues). 
 
 ### License
