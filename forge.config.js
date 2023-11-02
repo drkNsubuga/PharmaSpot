@@ -1,3 +1,6 @@
+const fs = require('fs')
+const path = require('path')
+const glob = require('glob')
 module.exports = {
   packagerConfig: {
     icon:'assets/images/icon.ico',
@@ -48,5 +51,22 @@ module.exports = {
             }
           }
         }
-      ]
+      ],
+      //fix the 
+      hooks: {
+        packageAfterPrune(config, buildPath) {
+          if (process.platform === 'linux') {
+            const dirs = glob.sync(
+              path.join(buildPath, 'node_modules/**/node_gyp_bins'),
+              {
+                onlyDirectories: true,
+              }
+            );
+    
+            for (const directory of dirs) {
+              fs.rmdirSync(directory, { recursive: true, force: true });
+            }
+          }
+        },
+      },
 };
