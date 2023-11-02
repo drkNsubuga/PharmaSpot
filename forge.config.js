@@ -43,7 +43,7 @@ module.exports = {
           "config": {
             "repository": {
               "owner": "drkNsubuga",
-              "name": "POS",
+              "name": "PharmaSpot",
               "draft": true
             }
           }
