@@ -27,80 +27,71 @@ function showAbout()
 }
 
 function checkForUpdates() {
-const dialogOpts = {
-        type: 'info',
-        buttons: ['Update now', 'Later'],
-        title: 'New version available',
-        message: `Current version: v${pkg.version}`,
-      }
-      dialog.showMessageBox(dialogOpts);
-      
-  if (isPackaged) {
-    autoUpdater.setFeedURL({
-      provider: "generic",
-      url: updateUrl
-    });
-
-        autoUpdater.checkForUpdates();
-        autoUpdater.autoDownload=false;
-
-    autoUpdater.on('update-available', (info) => {
-            // mainWindow.webContents.send('update_available');
-      console.log("Update available: " + info.version);
-      const dialogOpts = {
-        type: 'info',
-        buttons: ['Update now', 'Later'],
-        title: 'New version available',
-        message: `Current version: ${pkg.version}
-                  New Version: ${info.version}
-        `,
-        detail: process.platform === 'win32' ? releaseNotes : releaseName,
-      }
-
-      dialog.showMessageBox(dialogOpts).then((returnValue) => {
-        if (returnValue.response === 0) autoUpdater.downloadUpdate()
-      })
-
-    });
-
-    autoUpdater.on('update-not-available', (info) => {
-            // mainWindow.webContents.send('update_not_available');
-      console.log("Update not available: " + info.version);
-  
-      const dialogOpts = {
-        type: 'info',
-        // buttons: ['Update now', 'Retry'],
-        title: 'Update not available',
-        message: `You are using the latest version: ${info.version}`,
-      }
-
-      dialog.showMessageBox(dialogOpts)
-    });
-
-    autoUpdater.on('update-downloaded', (info) => {
-            // mainWindow.webContents.send('update_downloaded');
-      console.log("Update downloaded " + info.version);
-    });
-
-    autoUpdater.on('error', (err) => {
-            // mainWindow.webContents.send('update_error');
-      console.error("Error checking for updates: " + err);
-      const dialogOpts = {
-        type: 'error',
-        buttons: ['Retry', 'Cancel'],
-        title: 'Update Failed',
-        message: "Error checking for updates",
-        detail: err
-      }
-
-      dialog.showMessageBox(dialogOpts)
-    });
-
-        //save a backup of the db
-    autoUpdater.on('before-quit-for-update', () => {
-            // mainWindow.webContents.send('before_quit_for_update');
-    });
+  if (!isPackaged) {
+    console.log(`Skipping update check in development mode`);
+    return;
   }
+
+  const dialogOpts = {
+    type: 'info',
+    buttons: ['Update now', 'Later'],
+    title: 'New version available',
+  };
+
+  autoUpdater.setFeedURL({
+    provider: "generic",
+    url: updateUrl
+  });
+
+  autoUpdater.checkForUpdates();
+  autoUpdater.autoDownload = false;
+
+  const handleUpdateAvailable = (info) => {
+    const message = `Current version: ${pkg.version}\nNew Version: ${info.version}`;
+    dialogOpts.message = message;
+    dialogOpts.detail = process.platform === 'win32' ? releaseNotes : releaseName;
+
+    dialog.showMessageBox(dialogOpts).then((returnValue) => {
+      if (returnValue.response === 0) {
+        autoUpdater.downloadUpdate();
+      }
+    });
+  };
+
+  const handleUpdateNotAvailable = (info) => {
+    dialogOpts.type = 'info';
+    dialogOpts.buttons = ['OK'];
+    dialogOpts.title = 'Update not available';
+    dialogOpts.message = `You are using the latest version: ${info.version}`;
+    dialog.showMessageBox(dialogOpts);
+  };
+
+  const handleUpdateDownloaded = (info) => {
+    console.log(`Update downloaded for version ${info.version}`);
+    dialogOpts.buttons = ['Install now', 'Later'];
+    dialogOpts.title = 'Update downloaded';
+    dialogOpts.message = `The update for version ${info.version} is downloaded.
+Click Install now to restart the app and apply the update.`;
+    dialog.showMessageBox(dialogOpts).then((returnValue) => {
+      if (returnValue.response === 0) {
+        autoUpdater.quitAndInstall();
+      }
+    });
+  };
+
+  const handleError = (err) => {
+    console.error(`Error checking for updates: ${err}`);
+    dialogOpts.type = 'error';
+    dialogOpts.message = `Error checking for updates: ${err}`;
+    dialog.showMessageBox(dialogOpts);
+  };
+
+  autoUpdater.on('update-available', handleUpdateAvailable);
+  autoUpdater.on('update-not-available', handleUpdateNotAvailable);
+  autoUpdater.on('update-downloaded', handleUpdateDownloaded);
+  autoUpdater.on('error', handleError);
+
+  // Implement backup creation for 'before-quit-for-update' event if needed
 }
 
 module.exports={showAbout,checkForUpdates}
