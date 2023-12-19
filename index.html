@@ -10,8 +10,10 @@
 
 <body>
     <div class="splash loading">
-    <h1 class="text-white pull-right"><i class="fa fa-spinner fa-spin"></i> Loading...</h1>
-</div>
+        <img src="assets/images/logo.svg"/>
+    <h1 class="pull-right pt-3"><i class="fa fa-spinner fa-spin"></i> Please wait...</h1>
+    </div>
+
     <div id="login">
         <div class="login-box">
             <div id="load" class="login-box-body">
@@ -27,6 +29,7 @@
             </div>
         </div>
     </div>
+
     <div id="main_app">
         <div class="container">
             <div class="row">
@@ -96,9 +99,6 @@
                         <button id="log-out" type="button" class="btn btn-warning waves-effect waves-light">
                             <i class="glyphicon glyphicon-log-out"></i> <span>Log out</span>
                         </button>
-                       <!--  <button id="quit" type="button" class="btn btn-danger waves-effect waves-light">
-                            <i class="glyphicon glyphicon-off"></i>
-                        </button> -->
                     </div>
                 </div>
             </div>
@@ -123,7 +123,6 @@
                     </div>
                 </div>
                 <div class="row p-t-10 p-b-10 bg-white m-t-10 m-b-20">
-                    <!-- <div class="card-box"> -->
                     <h3 class="col-md-2">Transactions</h3>
                     <div class="col-md-2">
                         <div class="input-group">
@@ -157,7 +156,6 @@
                             </div>
                         </div>
                     </div>
-                    <!-- </div> -->
                 </div>
                 <div class="row">
                     <div class="col-md-4 bg-white" id="productSales">
@@ -374,7 +372,7 @@
                             <div class="col-md-4">
                                 <button
                                     onclick="$('#refNumber').val($('#refNumber').val().substr(0,$('#refNumber').val().length -1))"
-                                    class="btn btn-success btn-lg btn-block">⌫</button>
+                                    class="btn btn-warning btn-lg btn-block">⌫</button>
                             </div>
                             <div class="col-md-4">
                                 <button onclick="$(this).go(0,true);"
@@ -382,7 +380,7 @@
                             </div>
                             <div class="col-md-4">
                                 <button onclick="$('#refNumber').val('')"
-                                    class="btn btn-success btn-lg btn-block">AC</button>
+                                    class="btn btn-danger btn-lg btn-block">AC</button>
                             </div>
                         </div>
                     </div>
@@ -426,8 +424,8 @@
                                     <span class="input-group-addon" id="basic-addon3">Payment <span
                                             id="payment_curr"></span> </span>
 
-                                    <input type="text" placeholder="0.0" class="form-control" id="paymentText" aria-describedby="basic-addon3">
-                                    <input type="hidden" placeholder="0.0" class="form-control" id="payment" aria-describedby="basic-addon3">
+                                    <input type="text" placeholder="0.0" class="form-control" id="paymentText" aria-describedby="basic-addon3" readonly>
+                                    <input type="hidden" class="form-control" id="payment" aria-describedby="basic-addon3">
                                 </div>
                                 <hr>
                                 <div class="row">
@@ -475,7 +473,7 @@
                                             </div>
                                             <div class="col-md-3">
                                                 <button onclick="$(this).go(9,false);"
-                                                    class="btn btn-success btn-lg btn-block">9</button>
+                                                    class="btn btn-success btn-outline-success btn-lg btn-block">9</button>
                                             </div>
                                             <div class="col-md-3"></div>
                                         </div>
@@ -484,7 +482,7 @@
                                             <div class="col-md-3">
                                                 <button
                                                     onclick="$('#payment,#paymentText').val($('#payment').val().substr(0,$('#payment').val().length -1));$(this).calculateChange();"
-                                                    class="btn btn-success btn-lg btn-block">⌫</button>
+                                                    class="btn btn-danger btn-lg btn-block">⌫</button>
                                             </div>
                                             <div class="col-md-3">
                                                 <button onclick="$(this).go(0,false);"
@@ -492,7 +490,7 @@
                                             </div>
                                             <div class="col-md-3">
                                                 <button onclick="$(this).digits()"
-                                                    class="btn btn-success btn-lg btn-block">.</button>
+                                                    class="btn btn-warning btn-lg btn-block">.</button>
                                             </div>
                                             <div class="col-md-3"></div>
                                         </div>
@@ -812,8 +810,8 @@
                             class="holdOrderInput form-control">
                         <div class="holdOrderKeyboard"></div>
                         <br>
-                        <div class="row" id="randerHoldOrders">
-                            <p>please wait <span class="dot"></span> </p>
+                        <div class="row" id="renderHoldOrders">
+                            <p>Please wait <span class="dot"></span> </p>
                         </div>
                     </div>
                 </div>
@@ -832,7 +830,7 @@
                             class="holdCustomerOrderInput form-control">
                         <div class="customerOrderKeyboard"></div>
                         <br>
-                        <div class="row" id="randerCustomerOrders">
+                        <div class="row" id="renderCustomerOrders">
                             <p>please wait <span class="dot"></span> </p>
                         </div>
                     </div>
