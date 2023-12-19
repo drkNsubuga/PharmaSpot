@@ -1,4 +1,6 @@
-const moneyFormat = require('./pos.js')
+
+const moneyFormat = (amount,locale='en-US')=>Intl.NumberFormat(locale).format(amount)
+
 
 $(document).ready(function(){
 

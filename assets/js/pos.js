@@ -32,7 +32,7 @@ let Store = require('electron-store');
 const remote = require('@electron/remote');
 const app = remote.app;
 let port = process.env.PORT;
-let img_path = path.join(app.getPath('appData'),'POS','uploads','/');
+let img_path = path.join(app.getPath('appData'),process.env.APPNAME,'uploads','/');
 let api = 'http://' + host + ':' + port + '/api/';
 const bcrypt = require('bcrypt');
 const saltRounds = 24;
@@ -104,9 +104,9 @@ const daysToExpire = (dueDate)=>{
 const checkImageExists = (imageUrl) => {
   try {
     fs.accessSync(imageUrl, fs.constants.F_OK);
-    return true; // File exists
+    return true; // Image exists
   } catch (err) {
-    return false; // File does not exist
+    return false; // Image does not exist
   }
 };
 
@@ -147,8 +147,6 @@ $(function() {
             format: DATE_FORMAT
         }
     });
-
-
 });
 
 
@@ -443,7 +441,7 @@ if (auth == undefined) {
                         $("#basic-addon2").empty();
                         $("#basic-addon2").append(
                             $('<i>', { class: 'glyphicon glyphicon-remove' })
-                        )
+                        );
                     } else {
                         $(this).showServerError();
                         $("#basic-addon2").empty();
