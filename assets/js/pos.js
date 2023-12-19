@@ -72,11 +72,13 @@ const permissions = [
 ];
 notiflix.Notify.init({
     position: "right-top",
-    cssAnimationDuration: 600,
+    // cssAnimationDuration: 600,
     messageMaxLength: 150,
     clickToClose: true,
-    closeButton: true
+    closeButton: true,
+    // timeOut:10000
 });
+
 const DATE_FORMAT = 'DD-MMM-YYYY';
 
 const moneyFormat = (amount, locale = 'en-US') => {
@@ -267,9 +269,11 @@ if (auth == undefined) {
                 loadProductList();
 
                 let delay = 0;
+                let expiredCount=0;
                 allProducts.forEach(product => {
                     let todayDate = moment();
                     let expiryDate = moment(product.expirationDate, DATE_FORMAT);
+
 
                     if (!isExpired(expiryDate)) {
                         const diffDays = daysToExpire(expiryDate);
@@ -279,10 +283,11 @@ if (auth == undefined) {
                             notiflix.Notify.warning(`${product.name} has only ${diffDays} ${days_noun} left to expiry`);
                         }
                     } else {
-                        notiflix.Notify.failure(`${product.name} is expired. Please restock!`);
+                        // notiflix.Notify.failure(`${product.name} is expired. Please restock!`);
+                        expiredCount++;
                     }
                 })
-
+                notiflix.Notify.failure(`${expiredCount} ${expiredCount>0?'products':'product'} expired. Please restock!`);
                 $('#parent').text('');
 
                 data.forEach(item => {
@@ -1608,13 +1613,13 @@ if (auth == undefined) {
                 product_list += `<tr>
             <td><img id="` + product._id + `"></td>
             <td><img style="max-height: 50px; max-width: 50px; border: 1px solid #ddd;" src="${product_img}" id="product_img"></td>
-            <td>${product.name}</td>
+            <td>${product.name}
+            ${product.expiryAlert}</td>
             <td>${settings.symbol}${product.price}</td>
             <td>${product.stock == 1 ? product.quantity : 'N/A'}
             ${product.stockAlert}
             </td>
-            <td>${product.expirationDate}
-            ${product.expiryAlert}</td>
+            <td>${product.expirationDate}</td>
             <td>${category.length > 0 ? category[0].name : ''}</td>
             <td class="nobr"><span class="btn-group"><button onClick="$(this).editProduct(${index})" class="btn btn-warning btn-sm"><i class="fa fa-edit"></i></button><button onClick="$(this).deleteProduct(${product._id})" class="btn btn-danger btn-sm"><i class="fa fa-trash"></i></button></span></td></tr>`;
 
