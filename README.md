@@ -1,7 +1,8 @@
 # PharmaSpot Point of Sale
 ![GitHub package.json version](https://img.shields.io/github/package-json/v/drkNsubuga/PharmaSpot) ![GitHub all releases](https://img.shields.io/github/downloads/drkNsubuga/PharmaSpot/total) [![Build](https://github.com/drkNsubuga/PharmaSpot/actions/workflows/build.yml/badge.svg)](https://github.com/drkNsubuga/PharmaSpot/actions/workflows/build.yml) [![Release](https://github.com/drkNsubuga/PharmaSpot/actions/workflows/release.yml/badge.svg)](https://github.com/drkNsubuga/PharmaSpot/actions/workflows/release.yml) [![GitHub issues](https://img.shields.io/github/issues/drkNsubuga/PharmaSpot)](https://github.com/drkNsubuga/PharmaSpot) [![License](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/drkNsubuga/PharmaSpot/blob/main/LICENSE)
 
-![PharmaSpot Logo](./assets/images/logo.svg)
+![PharmaSpot Logo](assets/images/logo.svg)
+
 PharmaSpot is a cross-platform Point of Sale system designed for pharmacies and built to streamline operations and enhance customer service.
 
 ## Features
@@ -44,17 +45,30 @@ PharmaSpot is a cross-platform Point of Sale system designed for pharmacies and 
 
 
 ## Demo
-![PharmaSpot Demo](https://github.com/drkNsubuga/PharmaSpot/blob/main/screenshots/demo.webm)
-*Point of Sale*
-![PharmaSpot Demo - Point of Sale](https://github.com/drkNsubuga/PharmaSpot/blob/main/screenshots/pos.png)
-*Payment Point*
-![PharmaSpot Demo - Payment](https://github.com/drkNsubuga/PharmaSpot/blob/main/screenshots/payment.png)
-*Receipt*
-![PharmaSpot Demo-Receipt](https://github.com/drkNsubuga/PharmaSpot/blob/main/screenshots/receipt.png)
-*Transactions*
-![PharmaSpot Demo - Transactions](https://github.com/drkNsubuga/PharmaSpot/blob/main/screenshots/transactions.png)
-*Status Alerts*
-![PharmaSpot Demo - Status Alerts](https://github.com/drkNsubuga/PharmaSpot/blob/main/screenshots/alerts.png)
+
+[PharmaSpot Video Preview](https://github.com/drkNsubuga/PharmaSpot/assets/12871099/14e32721-b5d6-4186-bb63-be59733862c3)
+
+**Point of Sale**
+
+![PharmaSpot Demo - Point of Sale](screenshots/pos.png)
+
+<img src="screenshots/pos.png" alt="PharmaSpot Demo - POS" width="80%"/>
+
+**Payment Point**
+
+<img src="screenshots/payment.png" alt="PharmaSpot Demo - Payment" width="80%"/>
+
+**Receipt**
+
+<img src="screenshots/receipt.png" alt="PharmaSpot Demo-Receipt" width="80%"/>
+
+**Transactions**
+
+<img src="screenshots/transactions.png" alt="PharmaSpot Demo - Transactions" width="80%"/>
+
+**Status Alerts**
+
+<img src="screenshots/alerts.png" alt="PharmaSpot Demo - Status Alerts" width="80%"/>
 
 ## Getting Started
 - Download [PharmaSpot](https://github.com/drkNsubuga/PharmaSpot/releases/latest)
