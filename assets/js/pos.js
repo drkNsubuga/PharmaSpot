@@ -23,16 +23,16 @@ let user_index = 0;
 let product_index = 0;
 let transaction_index;
 let host = 'localhost';
+let fs = require('fs');
 let path = require('path');
 let moment = require('moment');
-let Swal = require('sweetalert2');
 let { ipcRenderer } = require('electron');
 let dotInterval = setInterval(function() { $(".dot").text('.') }, 3000);
 let Store = require('electron-store');
 const remote = require('@electron/remote');
 const app = remote.app;
 let port = process.env.PORT;
-let img_path = app.getPath('appData') + '/POS/uploads/';
+let img_path = path.join(app.getPath('appData'),'POS','uploads','/');
 let api = 'http://' + host + ':' + port + '/api/';
 const bcrypt = require('bcrypt');
 const saltRounds = 24;
@@ -250,8 +250,8 @@ if (auth == undefined) {
                     let todayDate = moment();
                     let expiryDate = moment(product.expirationDate, DATE_FORMAT);
 
-                    if (todayDate.isBefore(expiryDate)) {
-                        const diffDays = Math.abs(todayDate.startOf('day').diff(expiryDate, 'days'));
+                    if (!isExpired(expiryDate)) {
+                        const diffDays = daysToExpire(expiryDate);
 
                         if (diffDays > 0 && diffDays <= 30) {
                             var days_noun = diffDays > 1 ? "days" : "day";
@@ -260,8 +260,6 @@ if (auth == undefined) {
                     } else {
                         notiflix.Notify.failure(`${product.name} is expired. Please restock!`);
                     }
-
-
                 })
 
                 $('#parent').text('');
@@ -314,8 +312,6 @@ if (auth == undefined) {
                     $('#customer').append(customer);
                 });
 
-                //  $('#customer').chosen();
-
             });
 
         }
@@ -323,14 +319,11 @@ if (auth == undefined) {
 
         $.fn.addToCart = function(id, count, stock) {
             $.get(api + 'inventory/product/' + id, function(product) {
-                // let todayDate = moment();
-                // let expiryDate = moment(product.expirationDate, DATE_FORMAT);
-                // let expired = isExpired(expiryDate)
-
+        
                 if (isExpired(product.expirationDate)) {
                     notiflix.Report.failure(
                         'Expired',
-                        'This item is expired!',
+                        `${product.name} is expired! Please restock`,
                         'Ok'
                     );
                 } else {
@@ -339,7 +332,6 @@ if (auth == undefined) {
                         $(this).addProductToCart(product);
                     } else {
                         if (stock == 1) {
-
                             notiflix.Report.failure(
                                 'Out of stock!',
                                 '<span class="text-center">This item is currently unavailable</span>',
@@ -347,7 +339,6 @@ if (auth == undefined) {
                             );
                         }
                     }
-
                 }
             });
         }
@@ -373,11 +364,11 @@ if (auth == undefined) {
                 contentType: 'application/json; charset=utf-8',
                 cache: false,
                 processData: false,
-                success: function(data) {
+                success: function(product) {
                     $(".search-barcode-btn").html(searchBarCodeIcon);
-                    let expired=isExpired(data.expirationDate);
-                    if (data._id != undefined && data.quantity >= 1 && !expired) {
-                        $(this).addProductToCart(data);
+                    const expired=isExpired(data.expirationDate);
+                    if (product._id != undefined && product.quantity >= 1 && !expired) {
+                        $(this).addProductToCart(product);
                         $("#searchBarCode").get(0).reset();
                         $("#basic-addon2").empty();
                         $("#basic-addon2").append(
@@ -387,11 +378,11 @@ if (auth == undefined) {
                      else if (expired) {
                         notiflix.Report.failure(
                             'Expired!',
-                            'This item is expired',
+                            `${product.name} is expired`,
                             'Ok'
                         );
                      }
-                    else if (data.quantity < 1) {
+                    else if (product.quantity < 1) {
                         notiflix.Report.info(
                             'Out of stock!',
                             'This item is currently unavailable',
@@ -621,37 +612,33 @@ if (auth == undefined) {
         $.fn.cancelOrder = function() {
 
             if (cart.length > 0) {
-                let diagOptions={
+                const diagOptions={
                     title: 'Are you sure?',
                     text: "You are about to remove all items from the cart.",
                     icon: 'warning',
                     showCancelButton: true,
                     confirmButtonColor: '#3085d6',
                     cancelButtonColor: '#d33',
-                    confirmButtonText: 'Yes, clear it!'
-                    
-                }
+                    confirmButtonText: 'Yes, clear it!',
+                    cancelButtonText: 'Cancel'
+                };
 
                 notiflix.Confirm.show(
                     diagOptions.title,
                     diagOptions.text,
-                    'Yes',
-                    'No'
-                    ).then((result) => {
-
-                    if (result.value) {
-
+                    diagOptions.confirmButtonText,
+                    diagOptions.cancelButtonText,
+                    () => {
                         cart = [];
                         $(this).renderTable(cart);
                         holdOrder = 0;
-
                         notiflix.Report.success(
                             'Cleared!',
                             'All items have been removed.',
                             'Ok'
                         )
                     }
-                });
+                );
             }
 
         }
@@ -667,7 +654,6 @@ if (auth == undefined) {
                     'Ok'
                 );
             }
-
         });
 
 
@@ -741,7 +727,6 @@ if (auth == undefined) {
             }
 
 
-
             if (settings.charge_tax) {
                 tax_row = `<tr>
                     <td>Vat(${settings.percentage})% </td>
@@ -753,14 +738,12 @@ if (auth == undefined) {
 
 
             if (status == 0) {
-
                 if ($("#customer").val() == 0 && $("#refNumber").val() == "") {
-                    Swal.fire(
+                    notiflix.Report.warning(
                         'Reference Required!',
                         'You either need to select a customer <br> or enter a reference!',
-                        'warning'
+                        'Ok'
                     )
-
                     return;
                 }
             }
@@ -770,7 +753,6 @@ if (auth == undefined) {
 
 
             if (holdOrder != 0) {
-
                 orderNumber = holdOrder;
                 method = 'PUT'
             } else {
@@ -821,9 +803,7 @@ if (auth == undefined) {
                 <td>:</td>
                 <td>${discount > 0 ? settings.symbol + moneyFormat(parseFloat(discount).toFixed(2)) : ''}</td>
             </tr>
-            
             ${tax_row}
-        
             <tr>
                 <td><h3>Total</h3></td>
                 <td><h3>:</h3></td>
@@ -1056,19 +1036,23 @@ if (auth == undefined) {
             let data = {
                 orderId: deleteId,
             }
-
-            Swal.fire({
-                title: "Delete order?",
+            let diagOptions={
+                     title: "Delete order?",
                 text: "This will delete the order. Are you sure you want to delete!",
                 icon: 'warning',
                 showCancelButton: true,
                 confirmButtonColor: '#3085d6',
                 cancelButtonColor: '#d33',
-                confirmButtonText: 'Yes, delete it!'
-            }).then((result) => {
+                confirmButtonText: 'Yes, delete it!',
+                cancelButtonText:''
+                };
 
-                if (result.value) {
-
+                notiflix.Confirm.show(
+                    diagOptions.title,
+                    diagOptions.text,
+                    diagOptions.confirmButtonText,
+                    diagOptions.cancelButtonText,
+                    () => {
                     $.ajax({
                         url: api + 'delete',
                         type: 'POST',
@@ -1076,7 +1060,6 @@ if (auth == undefined) {
                         contentType: 'application/json; charset=utf-8',
                         cache: false,
                         success: function(data) {
-
                             $(this).getHoldOrders();
                             $(this).getCustomerOrders();
 
@@ -1233,16 +1216,16 @@ if (auth == undefined) {
                         confirmButtonText: 'Add another',
                         cancelButtonText: 'Close'
                     }
-                     Swal.fire(diagOptions).then((result) => {
 
-                        if (!result.value) {
+                     notiflix.Confirm.show(
+                        diagOptions.title,
+                        diagOptions.text,
+                        diagOptions.confirmButtonText,
+                        diagOptions.cancelButtonText,
+                     () => {
                             $("#newProduct").modal('hide');
-                        }
                     });
                 
-                },
-                error: function(data) {
-                    //console.log(data);
                 }
             });
 
@@ -1277,16 +1260,19 @@ if (auth == undefined) {
                         confirmButtonText: 'Add another',
                         cancelButtonText: 'Close'
                     }
-                    Swal.fire(diagOptions).then((result) => {
+                    
+                    notiflix.Confirm.show(
+                        diagOptions.title,
+                        diagOptions.title,
+                        diagOptions.confirmButtonText,
+                        diagOptions.cancelButtonText,
+                    () => {
 
                         if (!result.value) {
                             $("#newCategory").modal('hide');
                         }
                     });
 
-                },
-                error: function(data) {
-                    //console.log(data);
                 }
 
             });
@@ -1369,38 +1355,43 @@ if (auth == undefined) {
 
 
         $.fn.deleteProduct = function(id) {
-            Swal.fire({
+            diagOptions = {
                 title: 'Are you sure?',
                 text: "You are about to delete this product.",
                 icon: 'warning',
                 showCancelButton: true,
                 confirmButtonColor: '#3085d6',
                 cancelButtonColor: '#d33',
-                confirmButtonText: 'Yes, delete it!'
-            }).then((result) => {
+                confirmButtonText: 'Yes, delete it!',
+                cancelButtonText: 'Cancel'
+            };
 
-                if (result.value) {
-
+            notiflix.Confirm.show(
+                        diagOptions.title,
+                        diagOptions.title,
+                        diagOptions.confirmButtonText,
+                        diagOptions.cancelButtonText,
+            () => {
                     $.ajax({
                         url: api + 'inventory/product/' + id,
                         type: 'DELETE',
                         success: function(result) {
                             loadProducts();
-                            Swal.fire(
+                            notiflix.Report.success(
                                 'Done!',
                                 'Product deleted',
-                                'success'
+                                'Ok'
                             );
 
                         }
                     });
                 }
-            });
+            );
         }
 
 
         $.fn.deleteUser = function(id) {
-            Swal.fire({
+            diagOptions = {
                 title: 'Are you sure?',
                 text: "You are about to delete this user.",
                 icon: 'warning',
@@ -1408,30 +1399,34 @@ if (auth == undefined) {
                 confirmButtonColor: '#3085d6',
                 cancelButtonColor: '#d33',
                 confirmButtonText: 'Yes, delete!'
-            }).then((result) => {
+            };
 
-                if (result.value) {
-
+            notiflix.Confirm.show(
+                        diagOptions.title,
+                        diagOptions.title,
+                        diagOptions.confirmButtonText,
+                        diagOptions.cancelButtonText,
+            () => {
                     $.ajax({
                         url: api + 'users/user/' + id,
                         type: 'DELETE',
                         success: function(result) {
                             loadUserList();
-                            Swal.fire(
+                            notiflix.Report.success(
                                 'Done!',
                                 'User deleted',
-                                'success'
+                                'Ok'
                             );
 
                         }
                     });
                 }
-            });
+            );
         }
 
 
         $.fn.deleteCategory = function(id) {
-            Swal.fire({
+             diagOptions = {
                 title: 'Are you sure?',
                 text: "You are about to delete this category.",
                 icon: 'warning',
@@ -1439,24 +1434,27 @@ if (auth == undefined) {
                 confirmButtonColor: '#3085d6',
                 cancelButtonColor: '#d33',
                 confirmButtonText: 'Yes, delete it!'
-            }).then((result) => {
+            };
 
-                if (result.value) {
-
+            notiflix.Confirm.show(
+                        diagOptions.title,
+                        diagOptions.title,
+                        diagOptions.confirmButtonText,
+                        diagOptions.cancelButtonText,
+           () => {
                     $.ajax({
                         url: api + 'categories/category/' + id,
                         type: 'DELETE',
                         success: function(result) {
                             loadCategories();
-                            Swal.fire(
+                            notiflix.Report.success(
                                 'Done!',
                                 'Category deleted',
-                                'success'
+                                'Ok'
                             );
 
                         }
-                    });
-                }
+                    })
             });
         }
 
@@ -1484,9 +1482,6 @@ if (auth == undefined) {
             $('#userList').DataTable().destroy();
 
             $.get(api + 'users/all', function(users) {
-
-
-
                 allUsers = [...users];
 
                 users.forEach((user, index) => {
@@ -1572,8 +1567,8 @@ if (auth == undefined) {
                 }
                 //calculate days to expiry
                 product.expiryAlert = '';
-                if (todayDate.isBefore(expiryDate)) {
-                    const diffDays = Math.abs(todayDate.startOf('day').diff(expiryDate, 'days'));
+                if (!isExpired(expiryDate)) {
+                    const diffDays = daysToExpire(expiryDate);
 
                     if (diffDays > 0 && diffDays <= 30) {
                         var days_noun = diffDays > 1 ? "days" : "day";
@@ -1582,15 +1577,17 @@ if (auth == undefined) {
                         product.expiryAlert = `<p class="text-danger"><small><i class="${icon}"></i> ${product.expiryStatus}</small></p>`;
                     }
                 } else {
-                    icon = 'fa fa-bell';
+                    icon = 'fa fa-exclamation-triangle';
                     product.expiryStatus = 'Expired';
                     product.expiryAlert = `<p class="text-danger"><small><i class="${icon}"></i> ${product.expiryStatus}</small></p>`;
                 }
 
+                product.img=img_path + product.img;
+                product.img=checkImageExists(product.img)?product.img:default_item_img;
                 //render product list
                 product_list += `<tr>
             <td><img id="` + product._id + `"></td>
-            <td><img style="max-height: 50px; max-width: 50px; border: 1px solid #ddd;" src="${product.img == "" ? "./assets/images/default.jpg" : img_path + product.img}" id="product_img"></td>
+            <td><img style="max-height: 50px; max-width: 50px; border: 1px solid #ddd;" src="${product.img}" id="product_img"></td>
             <td>${product.name}</td>
             <td>${settings.symbol}${product.price}</td>
             <td>${product.stock == 1 ? product.quantity : 'N/A'}
@@ -1682,23 +1679,27 @@ if (auth == undefined) {
 
         $('#log-out').click(function() {
 
-            Swal.fire({
-                title: 'Are you sure?',
+            const diagOptions={
+                    title: 'Are you sure?',
                 text: "You are about to log out.",
                 icon: 'warning',
                 showCancelButton: true,
                 confirmButtonColor: '#d33',
                 cancelButtonColor: '#3085d6',
                 confirmButtonText: 'Logout'
-            }).then((result) => {
+                };
 
-                if (result.value) {
+                notiflix.Confirm.show(
+                    diagOptions.title,
+                    diagOptions.text,
+                    confirmButtonText,
+                    cancelButtonText,
+                    () => {
                     $.get(api + 'users/logout/' + user._id, function(data) {
                         storage.delete('auth');
                         storage.delete('user');
                         ipcRenderer.send('app-reload', '');
                     });
-                }
             });
         });
 
@@ -1722,10 +1723,10 @@ if (auth == undefined) {
             $('#settings_form').append('<input type="hidden" name="app" value="' + formData.app + '" />');
 
             if (formData.percentage != "" && !$.isNumeric(formData.percentage)) {
-                Swal.fire(
+                notiflix.Report.warning(
                     'Oops!',
                     'Please make sure the tax value is a number',
-                    'warning'
+                    'Ok'
                 );
             } else {
                 storage.set('settings', formData);
@@ -1758,10 +1759,10 @@ if (auth == undefined) {
             let formData = $(this).serializeObject();
 
             if (formData.till == 0 || formData.till == 1) {
-                Swal.fire(
+                notiflix.Report.warning(
                     'Oops!',
                     'Please enter a number greater than 1.',
-                    'warning'
+                    'Ok'
                 );
             } else {
                 if (isNumeric(formData.till)) {
@@ -1769,10 +1770,10 @@ if (auth == undefined) {
                     storage.set('settings', formData);
                     ipcRenderer.send('app-reload', '');
                 } else {
-                    Swal.fire(
+                    notiflix.Report.warning(
                         'Oops!',
                         'Till number must be a number!',
-                        'warning'
+                        'Ok'
                     );
                 }
 
@@ -1790,10 +1791,10 @@ if (auth == undefined) {
 
 
             if (formData.password != formData.pass) {
-                Swal.fire(
+                notiflix.Report.warning(
                     'Oops!',
                     'Passwords do not match!',
-                    'warning'
+                    'Ok'
                 );
             }
 
@@ -1815,10 +1816,10 @@ if (auth == undefined) {
                             loadUserList();
 
                             $('#Users').modal('show');
-                            Swal.fire(
-                                'Ok!',
+                            notiflix.Report.success(
+                                'Great!',
                                 'User details saved!',
-                                'success'
+                                'Ok'
                             );
                         }
 
@@ -2123,10 +2124,10 @@ function loadTransactions() {
                 }
             });
         } else {
-            Swal.fire(
+            notiflix.Report.warning(
                 'No data!',
                 'No transactions available within the selected criteria',
-                'warning'
+                'Ok'
             );
         }
 
@@ -2387,10 +2388,10 @@ $('body').on("submit", "#account", function(e) {
 
     if (formData.username == "" || formData.password == "") {
 
-        Swal.fire(
+        notiflix.Report.warning(
             'Incomplete form!',
             auth_empty,
-            'warning'
+            'Ok'
         );
     } else {
 
@@ -2408,11 +2409,10 @@ $('body').on("submit", "#account", function(e) {
                     ipcRenderer.send('app-reload', '');
                     $('#login').hide();
                 } else {
-                    //console.log(data)
-                    Swal.fire(
+                    notiflix.Report.warning(
                         'Oops!',
                         auth_error,
-                        'warning'
+                        'Ok'
                     );
 
                 }
@@ -2427,18 +2427,24 @@ $('body').on("submit", "#account", function(e) {
 
 
 $('#quit').click(function() {
-    Swal.fire({
-        title: 'Are you sure?',
+    const diagOptions={
+                    title: 'Are you sure?',
         text: "You are about to close the application.",
         icon: 'warning',
         showCancelButton: true,
         confirmButtonColor: '#d33',
         cancelButtonColor: '#3085d6',
         confirmButtonText: 'Close Application'
-    }).then((result) => {
+                }
 
-        if (result.value) {
+                notiflix.Confirm.show(
+                    diagOptions.title,
+                    diagOptions.text,
+                    confirmButtonText,
+                    cancelButtonText,
+                    () => {
+    
             ipcRenderer.send('app-quit', '');
         }
-    });
+    );
 });
