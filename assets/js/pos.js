@@ -710,7 +710,7 @@ if (auth == undefined) {
             let items = "";
             let payment = 0;
             cart.forEach(item => {
-                items += "<tr><td>" + item.product_name + "</td><td>" + item.quantity + "</td><td>" + settings.symbol + moneyFormat(parseFloat(item.price).toFixed(2)) + "</td></tr>";
+                items +=`<tr><td>${item.product_name}</td><td>${item.quantity} </td><td class="text-right"> ${settings.symbol} ${moneyFormat(Math.abs(item.price).toFixed(2))} </td></tr>`;
             });
 
             let currentTime = new Date(moment());
@@ -741,12 +741,12 @@ if (auth == undefined) {
                 payment = `<tr>
                         <td>Paid</td>
                         <td>:</td>
-                        <td>${settings.symbol + paid}</td>
+                        <td class="text-right">${settings.symbol} ${paid}</td>
                     </tr>
                     <tr>
                         <td>Change</td>
                         <td>:</td>
-                        <td>${settings.symbol + moneyFormat(Math.abs(change).toFixed(2))}</td>
+                        <td>${settings.symbol} ${moneyFormat(Math.abs(change).toFixed(2))}</td>
                     </tr>
                     <tr>
                         <td>Method</td>
@@ -758,9 +758,9 @@ if (auth == undefined) {
 
             if (settings.charge_tax) {
                 tax_row = `<tr>
-                    <td>Vat(${settings.percentage})% </td>
+                    <td>VAT(${settings.percentage})% </td>
                     <td>:</td>
-                    <td>${settings.symbol}${parseFloat(totalVat).toFixed(2)}</td>
+                    <td>${settings.symbol} ${moneyFormat(parseFloat(totalVat).toFixed(2))}</td>
                 </tr>`;
             }
 
@@ -789,10 +789,10 @@ if (auth == undefined) {
                 method = 'POST'
             }
 
-
-            receipt = `<div style="font-size: 10px;">                            
+            logo=path.join(img_path,settings.img);
+            receipt = `<div style="font-size: 10px">                            
         <p style="text-align: center;">
-        ${settings.img == "" ? settings.img : '<img style="max-width: 50px;max-width: 100px;" src ="' + img_path + settings.img + '" /><br>'}
+        ${checkImageExists(logo) ?`<img style='max-width: 50px' src='${logo}' /><br>`:``}
             <span style="font-size: 22px;">${settings.store}</span> <br>
             ${settings.address_one} <br>
             ${settings.address_two} <br>
@@ -812,16 +812,16 @@ if (auth == undefined) {
         </left>
         <hr>
         <table class="table table-responsive">
-            <thead style="text-align: left;">
+            <thead>
             <tr>
                 <th>Item</th>
                 <th>Qty</th>
-                <th>Price</th>
+                <th class="text-right">Price</th>
             </tr>
             </thead>
             <tbody>
             ${items}                
-     
+            <tr><td colspan="3"><hr></td></tr>
             <tr>                        
                 <td><b>Subtotal</b></td>
                 <td>:</td>
@@ -834,10 +834,10 @@ if (auth == undefined) {
             </tr>
             ${tax_row}
             <tr>
-                <td><h3>Total</h3></td>
-                <td><h3>:</h3></td>
-                <td>
-                    <h3>${settings.symbol}${moneyFormat(parseFloat(orderTotal).toFixed(2))}</h3>
+                <td><h5>Total</h5></td>
+                <td><h5>:</h5></td>
+                <td class="text-right">
+                    <h5>${settings.symbol} ${moneyFormat(parseFloat(orderTotal).toFixed(2))}</h3>
                 </td>
             </tr>
             ${payment == 0 ? '' : payment}
@@ -1100,9 +1100,8 @@ if (auth == undefined) {
 
                         }
                     });
-                }
-            });
-        }
+                })
+            };
 
 
 
@@ -1111,7 +1110,7 @@ if (auth == undefined) {
                 clearInterval(dotInterval);
                 customerOrderList = data;
                 customerOrderLocation.empty();
-                $(this).randerHoldOrders(customerOrderList, customerOrderLocation, 2);
+                $(this).renderHoldOrders(customerOrderList, customerOrderLocation, 2);
             });
         }
 
@@ -1717,8 +1716,8 @@ if (auth == undefined) {
                 notiflix.Confirm.show(
                     diagOptions.title,
                     diagOptions.text,
-                    confirmButtonText,
-                    cancelButtonText,
+                    diagOptions.confirmButtonText,
+                    diagOptions.cancelButtonText,
                     () => {
                     $.get(api + 'users/logout/' + user._id, function(data) {
                         storage.delete('auth');
@@ -2249,7 +2248,7 @@ $.fn.viewTransaction = function(index) {
     let products = allTransactions[index].items;
 
     products.forEach(item => {
-        items += "<tr><td>" + item.product_name + "</td><td>" + item.quantity + "</td><td>" + settings.symbol + parseFloat(item.price).toFixed(2) + "</td></tr>";
+        items+=`<tr><td>${item.product_name}</td><td>${item.quantity} </td><td class="text-right"> ${settings.symbol} ${moneyFormat(Math.abs(item.price).toFixed(2))} </td></tr>`;
 
     });
 
@@ -2270,12 +2269,12 @@ $.fn.viewTransaction = function(index) {
         payment = `<tr>
                     <td>Paid</td>
                     <td>:</td>
-                    <td>${settings.symbol + allTransactions[index].paid}</td>
+                    <td>${settings.symbol + moneyFormat(Math.abs(allTransactions[index].paid).toFixed(2))}</td>
                 </tr>
                 <tr>
                     <td>Change</td>
                     <td>:</td>
-                    <td>${settings.symbol + moneyFormat(Math.abs(allTransactions[index].change).toFixed(2))}</td>
+                    <td class="text-right">${settings.symbol + moneyFormat(Math.abs(allTransactions[index].change).toFixed(2))}</td>
                 </tr>
                 <tr>
                     <td>Method</td>
@@ -2290,7 +2289,7 @@ $.fn.viewTransaction = function(index) {
         tax_row = `<tr>
                 <td>Vat(${settings.percentage})% </td>
                 <td>:</td>
-                <td>${settings.symbol}${parseFloat(allTransactions[index].tax).toFixed(2)}</td>
+                <td class="text-right">${settings.symbol}${parseFloat(allTransactions[index].tax).toFixed(2)}</td>
             </tr>`;
     }
 
@@ -2298,7 +2297,7 @@ $.fn.viewTransaction = function(index) {
 
     receipt = `<div style="font-size: 10px;">                            
         <p style="text-align: center;">
-        ${settings.img == "" ? settings.img : '<img style="max-width: 50px;max-width: 100px;" src ="' + img_path + settings.img + '" /><br>'}
+        ${settings.img == "" ? settings.img : '<img style="max-width: 50px;" src ="' + img_path + settings.img + '" /><br>'}
             <span style="font-size: 22px;">${settings.store}</span> <br>
             ${settings.address_one} <br>
             ${settings.address_two} <br>
@@ -2317,21 +2316,21 @@ $.fn.viewTransaction = function(index) {
 
     </left>
     <hr>
-    <table width="100%">
-        <thead style="text-align: left;">
+    <table width="90%">
+        <thead>
         <tr>
             <th>Item</th>
             <th>Qty</th>
-            <th>Price</th>
+            <th class="text-right">Price</th>
         </tr>
         </thead>
         <tbody>
         ${items}                
- 
+        <tr><td colspan="3"><hr></td></tr>
         <tr>                        
             <td><b>Subtotal</b></td>
             <td>:</td>
-            <td><b>${settings.symbol}${moneyFormat(allTransactions[index].subtotal)}</b></td>
+            <td class="text-right"><b>${settings.symbol}${moneyFormat(allTransactions[index].subtotal)}</b></td>
         </tr>
         <tr>
             <td>Discount</td>
@@ -2342,10 +2341,10 @@ $.fn.viewTransaction = function(index) {
         ${tax_row}
     
         <tr>
-            <td><h3>Total</h3></td>
-            <td><h3>:</h3></td>
+            <td><h5>Total</h5></td>
+            <td><h5>:</h5></td>
             <td>
-                <h3>${settings.symbol}${moneyFormat(allTransactions[index].total)}</h3>
+                <h5>${settings.symbol}${moneyFormat(allTransactions[index].total)}</h5>
             </td>
         </tr>
         ${payment == 0 ? '' : payment}
@@ -2465,8 +2464,8 @@ $('#quit').click(function() {
                 notiflix.Confirm.show(
                     diagOptions.title,
                     diagOptions.text,
-                    confirmButtonText,
-                    cancelButtonText,
+                    diagOptions.confirmButtonText,
+                    diagOptions.cancelButtonText,
                     () => {
     
             ipcRenderer.send('app-quit', '');
