@@ -1,4 +1,4 @@
-const moneyFormat = (amount,locale='en-US')=>Intl.NumberFormat(locale).format(amount)
+const moneyFormat = require('./pos.js')
 
 $(document).ready(function(){
 
@@ -16,7 +16,6 @@ $(document).ready(function(){
 
  
     function searchProducts () {        
-        //$("#categories .btn-categories").removeClass("active");
         var matcher = new RegExp($("#search").val(), 'gi');
         $('.box').show().not(function(){
             return matcher.test($(this).find('.name, .sku').text())

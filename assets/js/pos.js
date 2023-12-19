@@ -49,8 +49,8 @@ let totalPrice = 0;
 let orderTotal = 0;
 let auth_error = 'Incorrect username or password';
 let auth_empty = 'Please enter a username and password';
-let holdOrderlocation = $("#randerHoldOrders");
-let customerOrderLocation = $("#randerCustomerOrders");
+let holdOrderlocation = $("#renderHoldOrders");
+let customerOrderLocation = $("#renderCustomerOrders");
 let storage = new Store();
 let settings;
 let platform;
@@ -62,6 +62,7 @@ let end_date = moment(end).toDate();
 let by_till = 0;
 let by_user = 0;
 let by_status = 1;
+const default_item_img = "assets/images/default.jpg";
 const permissions = [
     "perm_products",
     "perm_categories",
@@ -87,6 +88,26 @@ const isExpired = (dueDate)=>{
             let expiryDate = moment(dueDate, DATE_FORMAT);
             return todayDate.isSameOrAfter(dueDate)
         }
+
+const daysToExpire = (dueDate)=>{
+        let todayDate = moment();
+        let expiryDate = moment(dueDate, DATE_FORMAT);
+
+        if (todayDate.isBefore(expiryDate)) {
+            const diffDays = Math.abs(todayDate.startOf('day').diff(expiryDate, 'days'));
+            return diffDays;
+        }
+}
+
+const checkImageExists = (imageUrl) => {
+  try {
+    fs.accessSync(imageUrl, fs.constants.F_OK);
+    return true; // File exists
+  } catch (err) {
+    return false; // File does not exist
+  }
+};
+
 
 module.exports = { moneyFormat }
 
@@ -269,13 +290,16 @@ if (auth == undefined) {
                     if (!categories.includes(item.category)) {
                         categories.push(item.category);
                     }
-
+                    let item_isExpired = isExpired(item.expirationDate);
+                    item_img = path.join(img_path, item.img);
+                    item_img = checkImageExists(item_img)?item_img:default_item_img; 
+                    
                     let item_info = `<div class="col-lg-2 box ${item.category}"
                                 onclick="$(this).addToCart(${item._id}, ${item.quantity}, ${item.stock})">
                             <div class="widget-panel widget-style-2 ">                    
-                            <div id="image"><img src="${item.img == "" ? "./assets/images/default.jpg" : img_path + item.img}" id="product_img" alt=""></div>                    
+                            <div id="image"><img src="${item_img}" id="product_img" alt=""></div>                    
                                         <div class="text-muted m-t-5 text-center">
-                                        <div class="name" id="product_name">${item.name}</div> 
+                                        <div class="name" id="product_name"><span class="${item_isExpired?'text-danger':''}">${item.name}</span></div> 
                                         <span class="sku">${item.barcode||item._id}</span>
                                         <span class="stock">STOCK </span><span class="count">${item.stock == 1 ? item.quantity : 'N/A'}</span></div>
                                         <span class="text-success text-center"><b data-plugin="counterup">${settings.symbol + moneyFormat(item.price)}</b> </span>
@@ -884,42 +908,38 @@ if (auth == undefined) {
                     $(this).getHoldOrders();
                     $(this).getCustomerOrders();
                     $(this).renderTable(cart);
-
                 },
+
                 error: function(data) {
                     $(".loading").hide();
                     $("#dueModal").modal('toggle');
-                    swal("Something went wrong!", 'Please refresh this page and try again');
-
+                    notiflix.Report.error("Something went wrong!", 'Please refresh this page and try again','Ok');
                 }
             });
 
             $("#refNumber").val('');
             $("#change").text('');
-            $("#payment").val('');
+            $("#payment,#paymentText").val('');
 
         }
-
 
         $.get(api + 'on-hold', function(data) {
             holdOrderList = data;
             holdOrderlocation.empty();
             clearInterval(dotInterval);
-            $(this).randerHoldOrders(holdOrderList, holdOrderlocation, 1);
+            $(this).renderHoldOrders(holdOrderList, holdOrderlocation, 1);
         });
-
 
         $.fn.getHoldOrders = function() {
             $.get(api + 'on-hold', function(data) {
                 holdOrderList = data;
                 clearInterval(dotInterval);
                 holdOrderlocation.empty();
-                $(this).randerHoldOrders(holdOrderList, holdOrderlocation, 1);
+                $(this).renderHoldOrders(holdOrderList, holdOrderlocation, 1);
             });
         };
 
-
-        $.fn.randerHoldOrders = function(data, renderLocation, orderType) {
+        $.fn.renderHoldOrders = function(data, renderLocation, orderType) {
             $.each(data, function(index, order) {
                 $(this).calculatePrice(order);
                 renderLocation.append(
@@ -1582,12 +1602,12 @@ if (auth == undefined) {
                     product.expiryAlert = `<p class="text-danger"><small><i class="${icon}"></i> ${product.expiryStatus}</small></p>`;
                 }
 
-                product.img=img_path + product.img;
-                product.img=checkImageExists(product.img)?product.img:default_item_img;
+                product_img=img_path + product.img;
+                product_img=checkImageExists(product_img)?product_img:default_item_img;
                 //render product list
                 product_list += `<tr>
             <td><img id="` + product._id + `"></td>
-            <td><img style="max-height: 50px; max-width: 50px; border: 1px solid #ddd;" src="${product.img}" id="product_img"></td>
+            <td><img style="max-height: 50px; max-width: 50px; border: 1px solid #ddd;" src="${product_img}" id="product_img"></td>
             <td>${product.name}</td>
             <td>${settings.symbol}${product.price}</td>
             <td>${product.stock == 1 ? product.quantity : 'N/A'}

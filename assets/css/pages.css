@@ -89,8 +89,8 @@ display:none;
   float: left;
 }
 
-#randerHoldOrders,
-#randerCustomerOrders
+#renderHoldOrders,
+#renderCustomerOrders
 {
 height: 460px;
 overflow-x: hidden;
