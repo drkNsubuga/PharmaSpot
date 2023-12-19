@@ -1,6 +1,7 @@
 # PharmaSpot Point of Sale
 ![GitHub package.json version](https://img.shields.io/github/package-json/v/drkNsubuga/PharmaSpot) ![GitHub all releases](https://img.shields.io/github/downloads/drkNsubuga/PharmaSpot/total) [![Build](https://github.com/drkNsubuga/PharmaSpot/actions/workflows/build.yml/badge.svg)](https://github.com/drkNsubuga/PharmaSpot/actions/workflows/build.yml) [![Release](https://github.com/drkNsubuga/PharmaSpot/actions/workflows/release.yml/badge.svg)](https://github.com/drkNsubuga/PharmaSpot/actions/workflows/release.yml) [![GitHub issues](https://img.shields.io/github/issues/drkNsubuga/PharmaSpot)](https://github.com/drkNsubuga/PharmaSpot) [![License](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/drkNsubuga/PharmaSpot/blob/main/LICENSE)
-![PharmaSpot Logo](https://github.com/drkNsubuga/PharmaSpot/blob/main/assets/logo.svg)
+
+![PharmaSpot Logo](./assets/images/logo.svg)
 PharmaSpot is a cross-platform Point of Sale system designed for pharmacies and built to streamline operations and enhance customer service.
 
 ## Features
@@ -44,15 +45,15 @@ PharmaSpot is a cross-platform Point of Sale system designed for pharmacies and 
 
 ## Demo
 ![PharmaSpot Demo](https://github.com/drkNsubuga/PharmaSpot/blob/main/screenshots/demo.webm)
-## Point of Sale
+*Point of Sale*
 ![PharmaSpot Demo - Point of Sale](https://github.com/drkNsubuga/PharmaSpot/blob/main/screenshots/pos.png)
-## Point of Sale
+*Payment Point*
 ![PharmaSpot Demo - Payment](https://github.com/drkNsubuga/PharmaSpot/blob/main/screenshots/payment.png)
-## Receipt
+*Receipt*
 ![PharmaSpot Demo-Receipt](https://github.com/drkNsubuga/PharmaSpot/blob/main/screenshots/receipt.png)
-## Transactions
+*Transactions*
 ![PharmaSpot Demo - Transactions](https://github.com/drkNsubuga/PharmaSpot/blob/main/screenshots/transactions.png)
-## Status Alerts
+*Status Alerts*
 ![PharmaSpot Demo - Status Alerts](https://github.com/drkNsubuga/PharmaSpot/blob/main/screenshots/alerts.png)
 
 ## Getting Started
