@@ -211,6 +211,12 @@ overflow-y:scroll
     width: 360px;
     margin: 15% auto;
 }
+
+.login-box img{
+  max-width: 80%;
+  margin-bottom:15px;
+  align-items: center;
+}
 .login-page {
    height: 100vh;
     min-height: 100%;
