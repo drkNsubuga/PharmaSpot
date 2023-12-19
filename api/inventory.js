@@ -16,7 +16,7 @@ const dbPath= path.join(
 const storage = multer.diskStorage({
     destination: path.join(process.env.APPDATA ,process.env.APPNAME,'uploads'),
     filename: function (req, file, callback) {
-        callback(null, Date.now() + '.jpg'); // 
+        callback(null, Date.now() + '.jpg'); 
     }
 });
 

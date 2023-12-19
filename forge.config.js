@@ -18,26 +18,7 @@ module.exports = {
   makers: [
     {
       name: '@electron-forge/maker-zip'
-    },
-    // {
-    //   name: '@electron-forge/maker-squirrel',
-    //   config: {
-    //     // certificateFile: './cert.pfx',
-    //     // certificatePassword: process.env.CERTIFICATE_PASSWORD
-    //   },
-    // },
-    // {
-    //   name: '@electron-forge/maker-zip',
-    //   platforms: ['darwin'],
-    // },
-    // {
-    //   name: '@electron-forge/maker-deb',
-    //   config: {},
-    // },
-    // {
-    //   name: '@electron-forge/maker-rpm',
-    //   config: {},
-    // },
+    }
   ],
 
       "publishers": [
@@ -52,7 +33,7 @@ module.exports = {
           }
         }
       ],
-      //fix the 
+      //fix issue with packaging linux app
       hooks: {
         packageAfterPrune(config, buildPath) {
           if (process.platform === 'linux') {

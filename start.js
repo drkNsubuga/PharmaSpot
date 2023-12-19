@@ -9,7 +9,6 @@ const { app, BrowserWindow, ipcMain, dialog } = require('electron');
 const path = require('path');
 const contextMenu = require('electron-context-menu');
 let { Menu, template } = require('./assets/js/utils/menu');
-// const { MenuItem } = require('@electron/remote/main');
 const isPackaged = app.isPackaged;
 const menu = Menu.buildFromTemplate(template);
 
@@ -48,7 +47,7 @@ app.on('browser-window-created', (_, window) => {
     require("@electron/remote/main").enable(window.webContents);
 });
 
-// app.on('ready', createWindow)
+
 app.whenReady().then(() => {
   createWindow()
 })
@@ -78,7 +77,7 @@ ipcMain.on('restart-app', () => {
     autoUpdater.quitAndInstall();
 });
 
-//Build menus
+//Context menu
 contextMenu({
     prepend: (params, browserWindow) => [{
         label: "Refresh",
@@ -89,6 +88,7 @@ contextMenu({
 
 });
 
+//Live reload during development
 if (!isPackaged) {
     try {
         require('electron-reloader')(module)

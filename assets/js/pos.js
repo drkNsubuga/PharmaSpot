@@ -739,12 +739,12 @@ if (auth == undefined) {
                 payment = `<tr>
                         <td>Paid</td>
                         <td>:</td>
-                        <td class="text-right">${settings.symbol} ${paid}</td>
+                        <td class="text-right">${settings.symbol} ${moneyFormat(Math.abs(paid).toFixed(2))}</td>
                     </tr>
                     <tr>
                         <td>Change</td>
                         <td>:</td>
-                        <td>${settings.symbol} ${moneyFormat(Math.abs(change).toFixed(2))}</td>
+                        <td class="text-right">${settings.symbol} ${moneyFormat(Math.abs(change).toFixed(2))}</td>
                     </tr>
                     <tr>
                         <td>Method</td>
@@ -758,7 +758,7 @@ if (auth == undefined) {
                 tax_row = `<tr>
                     <td>VAT(${settings.percentage})% </td>
                     <td>:</td>
-                    <td>${settings.symbol} ${moneyFormat(parseFloat(totalVat).toFixed(2))}</td>
+                    <td class="text-right">${settings.symbol} ${moneyFormat(parseFloat(totalVat).toFixed(2))}</td>
                 </tr>`;
             }
 
@@ -809,7 +809,7 @@ if (auth == undefined) {
 
         </left>
         <hr>
-        <table class="table table-responsive">
+        <table width="90%">
             <thead>
             <tr>
                 <th>Item</th>
@@ -823,12 +823,12 @@ if (auth == undefined) {
             <tr>                        
                 <td><b>Subtotal</b></td>
                 <td>:</td>
-                <td><b>${settings.symbol}${moneyFormat(subTotal.toFixed(2))}</b></td>
+                <td class="text-right"><b>${settings.symbol}${moneyFormat(subTotal.toFixed(2))}</b></td>
             </tr>
             <tr>
                 <td>Discount</td>
                 <td>:</td>
-                <td>${discount > 0 ? settings.symbol + moneyFormat(parseFloat(discount).toFixed(2)) : ''}</td>
+                <td class="text-right">${discount > 0 ? settings.symbol + moneyFormat(parseFloat(discount).toFixed(2)) : ''}</td>
             </tr>
             ${tax_row}
             <tr>
@@ -2267,12 +2267,12 @@ $.fn.viewTransaction = function(index) {
         payment = `<tr>
                     <td>Paid</td>
                     <td>:</td>
-                    <td>${settings.symbol + moneyFormat(Math.abs(allTransactions[index].paid).toFixed(2))}</td>
+                    <td class="text-right">${settings.symbol} ${moneyFormat(Math.abs(allTransactions[index].paid).toFixed(2))}</td>
                 </tr>
                 <tr>
                     <td>Change</td>
                     <td>:</td>
-                    <td class="text-right">${settings.symbol + moneyFormat(Math.abs(allTransactions[index].change).toFixed(2))}</td>
+                    <td class="text-right">${settings.symbol} ${moneyFormat(Math.abs(allTransactions[index].change).toFixed(2))}</td>
                 </tr>
                 <tr>
                     <td>Method</td>
@@ -2333,7 +2333,7 @@ $.fn.viewTransaction = function(index) {
         <tr>
             <td>Discount</td>
             <td>:</td>
-            <td>${discount > 0 ? settings.symbol + moneyFormat(parseFloat(allTransactions[index].discount).toFixed(2)) : ''}</td>
+            <td class="text-right">${discount > 0 ? settings.symbol + moneyFormat(parseFloat(allTransactions[index].discount).toFixed(2)) : ''}</td>
         </tr>
         
         ${tax_row}

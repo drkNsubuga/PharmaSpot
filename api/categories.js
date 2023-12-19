@@ -55,9 +55,8 @@ app.delete( "/category/:categoryId", function ( req, res ) {
     } );
 } );
 
- 
 
- 
+
 app.put( "/category", function ( req, res ) {
     categoryDB.update( {
         _id: parseInt(req.body.id)
@@ -66,7 +65,7 @@ app.put( "/category", function ( req, res ) {
         numReplaced,
         category
     ) {
-        if ( err ) res.status( 500 ).send( err );
+        if ( err) res.status( 500 ).send( err );
         else res.sendStatus( 200 );
     } );
 });
