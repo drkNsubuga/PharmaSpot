@@ -4,9 +4,11 @@ const bodyParser = require( "body-parser" );
 const Datastore = require( "nedb" );
 const async = require( "async" );
 const path = require('path');
+const appName = process.env.APPNAME;
+const appData = process.env.APPDATA;
 const dbPath= path.join(
-    process.env.APPDATA,
-    process.env.APPNAME,
+    appData,
+    appName,
     "server","databases","categories.db");
 
 

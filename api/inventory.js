@@ -7,14 +7,16 @@ const fileUpload = require('express-fileupload');
 const multer = require("multer");
 const fs = require('fs');
 const path = require('path');
+const appName = process.env.APPNAME;
+const appData = process.env.APPDATA;
 const dbPath= path.join(
-    process.env.APPDATA,
+    appData,
     process.env.APPNAME,
     "server","databases","inventory.db");
 
 
 const storage = multer.diskStorage({
-    destination: path.join(process.env.APPDATA ,process.env.APPNAME,'uploads'),
+    destination: path.join(appData ,process.env.APPNAME,'uploads'),
     filename: function (req, file, callback) {
         callback(null, Date.now() + '.jpg'); 
     }

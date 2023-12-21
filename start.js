@@ -1,18 +1,17 @@
-require('@electron/remote/main').initialize();
-require('electron-store').initRenderer();
-const setupEvents = require('./installers/setupEvents')
+require("@electron/remote/main").initialize();
+require("electron-store").initRenderer();
+const setupEvents = require("./installers/setupEvents");
 if (setupEvents.handleSquirrelEvent()) {
     return;
 }
 const server = require('./server');
-const { app, BrowserWindow, ipcMain, dialog } = require('electron');
-const path = require('path');
-const contextMenu = require('electron-context-menu');
-let { Menu, template } = require('./assets/js/utils/menu');
+const { app, BrowserWindow, ipcMain, dialog } = require("electron");
+const path = require("path");
+const contextMenu = require("electron-context-menu");
+let { Menu, template } = require("./assets/js/native_menu/menu");
 const isPackaged = app.isPackaged;
 const menu = Menu.buildFromTemplate(template);
-
-let mainWindow
+let mainWindow;
 
 function createWindow() {
     mainWindow = new BrowserWindow({
@@ -24,76 +23,69 @@ function createWindow() {
         webPreferences: {
             nodeIntegration: true,
             enableRemoteModule: false,
-            contextIsolation: false
+            contextIsolation: false,
         },
     });
 
     mainWindow.maximize();
     mainWindow.show();
 
-    mainWindow.loadURL(
-        `file://${path.join(__dirname, 'index.html')}`
-        )
+    mainWindow.loadURL(`file://${path.join(__dirname, "index.html")}`);
 
-    mainWindow.on('closed', () => {
-        mainWindow = null
-    })
-
-    
+    mainWindow.on("closed", () => {
+        mainWindow = null;
+    });
 }
 
-
-app.on('browser-window-created', (_, window) => {
+app.on("browser-window-created", (_, window) => {
     require("@electron/remote/main").enable(window.webContents);
 });
 
-
 app.whenReady().then(() => {
-  createWindow()
-})
+    createWindow();
+});
 
-app.on('window-all-closed', () => {
-    if (process.platform !== 'darwin') {
-        app.quit()
+app.on("window-all-closed", () => {
+    if (process.platform !== "darwin") {
+        app.quit();
     }
-})
+});
 
-app.on('activate', () => {
+app.on("activate", () => {
     if (mainWindow === null) {
-        createWindow()
+        createWindow();
     }
-})
+});
 
-ipcMain.on('app-quit', (evt, arg) => {
-    app.quit()
-})
+ipcMain.on("app-quit", (evt, arg) => {
+    app.quit();
+});
 
-
-ipcMain.on('app-reload', (event, arg) => {
+ipcMain.on("app-reload", (event, arg) => {
     mainWindow.reload();
 });
 
-ipcMain.on('restart-app', () => {
+ipcMain.on("restart-app", () => {
     autoUpdater.quitAndInstall();
 });
 
 //Context menu
 contextMenu({
-    prepend: (params, browserWindow) => [{
-        label: "Refresh",
-        click() {
-            mainWindow.reload();
-        }
-    }, ]
-
+    prepend: (params, browserWindow) => [
+        {
+            label: "Refresh",
+            click() {
+                mainWindow.reload();
+            },
+        },
+    ],
 });
 
 //Live reload during development
 if (!isPackaged) {
     try {
-        require('electron-reloader')(module)
+        require("electron-reloader")(module);
     } catch (_) {}
 }
 
-
-Menu.setApplicationMenu(menu)
+Menu.setApplicationMenu(menu);

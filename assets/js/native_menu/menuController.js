@@ -4,10 +4,10 @@ const iconPath=path.join(__dirname, '../../../assets/images/favicon.png');
 const appVersion = app.getVersion();
 const appName= app.getName();
 const pkg = require('../../../package.json');
-const {configVars} = require('./config');
+const {appConfig} = require('../../../app.config');
 const { autoUpdater } = require('electron-updater');
 const isPackaged = app.isPackaged;
-const updateServer = configVars.UPDATE_SERVER;
+const updateServer = appConfig.UPDATE_SERVER;
 const updateUrl = `${updateServer}/update/${process.platform}/${app.getVersion()}`
 
 
@@ -16,7 +16,7 @@ function showAbout()
   const options={
     applicationName:`${appName}`,
     applicationVersion:`v${appVersion}`,
-    copyright:`Copyright © ${configVars.COPYRIGHT_YEAR}-${new Date().getFullYear()} ${pkg.author}`,
+    copyright:`Copyright © ${appConfig.COPYRIGHT_YEAR}-${new Date().getFullYear()} ${pkg.author}`,
     version:`v${appVersion}`,
     authors:[pkg.author],
     website:pkg.website,
