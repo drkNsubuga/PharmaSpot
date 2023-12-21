@@ -1,103 +1,97 @@
-const { app, Menu, dialog } = require('electron')
-const isMac = process.platform === 'darwin'
-const {showAbout,checkForUpdates}=require('./menuController')
+const { app, Menu, dialog } = require("electron");
+const isMac = process.platform === "darwin";
+const { showAbout, checkForUpdates } = require("./menuController");
 const template = [
+  ...(isMac
+    ? [
+        {
+          label: app.name,
+          submenu: [
+            { role: "about" },
+            { type: "separator" },
+            { role: "services" },
+            { type: "separator" },
+            { role: "hide" },
+            { role: "hideOthers" },
+            { role: "unhide" },
+            { type: "separator" },
+            { role: "quit" },
+          ],
+        },
+      ]
+    : []),
 
-  ...(isMac ? [{
-    label: app.name,
-    submenu: [
-      { role: 'about' },
-      { type: 'separator' },
-      { role: 'services' },
-      { type: 'separator' },
-      { role: 'hide' },
-      { role: 'hideOthers' },
-      { role: 'unhide' },
-      { type: 'separator' },
-      { role: 'quit' }
-    ]
-  }] : []),
-  // { role: 'fileMenu' }
   {
-    label: 'File',
+    label: "File",
     submenu: [
-      { label: 'Backup' },
-      { label: 'Restore' },
-      isMac ? { role: 'close' } : { role: 'quit' }
-    ]
+      { label: "Backup" },
+      { label: "Restore" },
+      isMac ? { role: "close" } : { role: "quit" },
+    ],
   },
   // { role: 'editMenu' }
   {
-    label: 'Edit',
+    label: "Edit",
     submenu: [
-      { role: 'undo' },
-      { role: 'redo' },
-      { type: 'separator' },
-      { role: 'cut' },
-      { role: 'copy' },
-      { role: 'paste' },
-      ...(isMac ? [
-        { role: 'pasteAndMatchStyle' },
-        { role: 'delete' },
-        { role: 'selectAll' },
-        { type: 'separator' },
-        {
-          label: 'Speech',
-          submenu: [
-            { role: 'startSpeaking' },
-            { role: 'stopSpeaking' }
+      { role: "undo" },
+      { role: "redo" },
+      { type: "separator" },
+      { role: "cut" },
+      { role: "copy" },
+      { role: "paste" },
+      ...(isMac
+        ? [
+            { role: "pasteAndMatchStyle" },
+            { role: "delete" },
+            { role: "selectAll" },
+            { type: "separator" },
+            {
+              label: "Speech",
+              submenu: [{ role: "startSpeaking" }, { role: "stopSpeaking" }],
+            },
           ]
-        }
-      ] : [
-        { role: 'delete' },
-        { type: 'separator' },
-        { role: 'selectAll' }
-      ])
-    ]
+        : [{ role: "delete" }, { type: "separator" }, { role: "selectAll" }]),
+    ],
   },
   // { role: 'viewMenu' }
   {
-    label: 'View',
+    label: "View",
     submenu: [
-      { 'label':'Refresh',role: 'reload' },
-      ...(!app.isPackaged?[
-        { role: 'toggleDevTools', after: ['Refresh'] }
-      ]:[]),
-      { type: 'separator' },
-      { role: 'resetZoom' },
-      { role: 'zoomIn' },
-      { role: 'zoomOut' },
-      { type: 'separator' },
-      { role: 'togglefullscreen' }
-    ]
+      { label: "Refresh", role: "reload" },
+      ...(!app.isPackaged
+        ? [{ role: "toggleDevTools", after: ["Refresh"] }]
+        : []),
+      { type: "separator" },
+      { role: "resetZoom" },
+      { role: "zoomIn" },
+      { role: "zoomOut" },
+      { type: "separator" },
+      { role: "togglefullscreen" },
+    ],
   },
   // { role: 'helpMenu' }
-  
+
   {
-    role: 'Help',
+    role: "Help",
     submenu: [
       {
-        label: 'Documentation'
+        label: "Documentation",
       },
       {
-        label: 'Send feedback'
+        label: "Send feedback",
       },
-      { type: 'separator' },
+      { type: "separator" },
       {
-        label: 'Check for updates...',
-        click: ()=>checkForUpdates()
+        label: "Check for updates...",
+        click: () => checkForUpdates(),
       },
-      { type: 'separator' },
+      { type: "separator" },
       {
         label: `About ${app.getName()}`,
-        click: ()=>showAbout()
+        click: () => showAbout(),
       },
-      
-
-    ]
-  }
+    ],
+  },
 ];
 
-
-
-module.exports={template, Menu}
+module.exports = { template, Menu };
