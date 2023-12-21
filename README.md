@@ -75,7 +75,6 @@ PharmaSpot is a cross-platform Point of Sale system designed for pharmacies and 
 - Unzip the package to a location of your choice.
 - Click the ``PharmaSpot`` executable in the folder
 - Login for default user:
-
 	``username:`` admin
 	``password:`` admin
 
