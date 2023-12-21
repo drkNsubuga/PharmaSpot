@@ -25,16 +25,37 @@ let transactionsDB = new Datastore({
 
 transactionsDB.ensureIndex({ fieldName: "_id", unique: true });
 
+/**
+ * GET endpoint: Get the welcome message for the Transactions API.
+ *
+ * @param {Object} req request object.
+ * @param {Object} res response object.
+ * @returns {void}
+ */
 app.get("/", function (req, res) {
   res.send("Transactions API");
 });
 
+/**
+ * GET endpoint: Get details of all transactions.
+ *
+ * @param {Object} req request object.
+ * @param {Object} res response object.
+ * @returns {void}
+ */
 app.get("/all", function (req, res) {
   transactionsDB.find({}, function (err, docs) {
     res.send(docs);
   });
 });
 
+/**
+ * GET endpoint: Get on-hold transactions.
+ *
+ * @param {Object} req request object.
+ * @param {Object} res response object.
+ * @returns {void}
+ */
 app.get("/on-hold", function (req, res) {
   transactionsDB.find(
     { $and: [{ ref_number: { $ne: "" } }, { status: 0 }] },
@@ -44,6 +65,13 @@ app.get("/on-hold", function (req, res) {
   );
 });
 
+/**
+ * GET endpoint: Get customer orders with a status of 0 and an empty reference number.
+ *
+ * @param {Object} req request object.
+ * @param {Object} res response object.
+ * @returns {void}
+ */
 app.get("/customer-orders", function (req, res) {
   transactionsDB.find(
     { $and: [{ customer: { $ne: "0" } }, { status: 0 }, { ref_number: "" }] },
@@ -53,6 +81,13 @@ app.get("/customer-orders", function (req, res) {
   );
 });
 
+/**
+ * GET endpoint: Get transactions based on date, user, and till parameters.
+ *
+ * @param {Object} req request object with query parameters.
+ * @param {Object} res response object.
+ * @returns {void}
+ */
 app.get("/by-date", function (req, res) {
   let startDate = new Date(req.query.start);
   let endDate = new Date(req.query.end);
@@ -118,12 +153,26 @@ app.get("/by-date", function (req, res) {
   }
 });
 
+/**
+ * POST endpoint: Create a new transaction.
+ *
+ * @param {Object} req request object with transaction data in the body.
+ * @param {Object} res response object.
+ * @returns {void}
+ */
 app.post("/new", function (req, res) {
   let newTransaction = req.body;
 
   transactionsDB.insert(newTransaction, function (err, transaction) {
-    if (err) res.status(500).send(err);
-    else {
+    if (err) {
+      console.error(err);
+      res
+        .status(500)
+        .json({
+          error: "Internal Server Error",
+          message: "An unexpected error occurred.",
+        });
+    } else {
       res.sendStatus(200);
 
       if (newTransaction.paid >= newTransaction.total) {
@@ -133,6 +182,13 @@ app.post("/new", function (req, res) {
   });
 });
 
+/**
+ * PUT endpoint: Update an existing transaction.
+ *
+ * @param {Object} req request object with transaction data in the body.
+ * @param {Object} res response object.
+ * @returns {void}
+ */
 app.put("/new", function (req, res) {
   let oderId = req.body._id;
   transactionsDB.update(
@@ -142,12 +198,26 @@ app.put("/new", function (req, res) {
     req.body,
     {},
     function (err, numReplaced, order) {
-      if (err) res.status(500).send(err);
-      else res.sendStatus(200);
+      if (err) {
+        console.error(err);
+        res
+          .status(500)
+          .json({
+            error: "Internal Server Error",
+            message: "An unexpected error occurred.",
+          });
+      } else res.sendStatus(200);
     },
   );
 });
 
+/**
+ * POST endpoint: Delete a transaction.
+ *
+ * @param {Object} req request object with transaction data in the body.
+ * @param {Object} res response object.
+ * @returns {void}
+ */
 app.post("/delete", function (req, res) {
   let transaction = req.body;
   transactionsDB.remove(
@@ -155,12 +225,26 @@ app.post("/delete", function (req, res) {
       _id: transaction.orderId,
     },
     function (err, numRemoved) {
-      if (err) res.status(500).send(err);
-      else res.sendStatus(200);
+      if (err) {
+        console.error(err);
+        res
+          .status(500)
+          .json({
+            error: "Internal Server Error",
+            message: "An unexpected error occurred.",
+          });
+      } else res.sendStatus(200);
     },
   );
 });
 
+/**
+ * GET endpoint: Get details of a specific transaction by transaction ID.
+ *
+ * @param {Object} req request object with transaction ID as a parameter.
+ * @param {Object} res response object.
+ * @returns {void}
+ */
 app.get("/:transactionId", function (req, res) {
   transactionsDB.find({ _id: req.params.transactionId }, function (err, doc) {
     if (doc) res.send(doc[0]);
