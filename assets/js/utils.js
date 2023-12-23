@@ -19,12 +19,11 @@ const daysToExpire = (dueDate) => {
   let todayDate = moment();
   let expiryDate = moment(dueDate, DATE_FORMAT);
 
-  if (todayDate.isBefore(expiryDate)) {
-    const diffDays = Math.abs(
-      todayDate.startOf("day").diff(expiryDate, "days"),
-    );
-    return diffDays;
+    if (expiryDate.isSameOrBefore(todayDate, 'day')) {
+    return 0;
   }
+
+  return expiryDate.diff(todayDate, 'days');
 };
 
 /** File **/

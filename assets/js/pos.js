@@ -1154,7 +1154,6 @@ if (auth == undefined) {
     $("#payment").on("input", function () {
       $(this).calculateChange();
     });
-
     $("#confirmPayment").on("click", function () {
       if ($("#payment").val() == "") {
         notiflix.Report.warning(
@@ -1585,9 +1584,9 @@ if (auth == undefined) {
         if (counter == allProducts.length) {
           $("#product_list").html(product_list);
 
-          products.forEach((pro) => {
-            let bcode = pro.barcode || pro._id;
-            $("#" + pro._id + "").JsBarcode(bcode, {
+          products.forEach((product) => {
+            let bcode = product.barcode || product._id;
+            $("#" + product._id + "").JsBarcode(bcode, {
               width: 2,
               height: 25,
               fontSize: 14,
