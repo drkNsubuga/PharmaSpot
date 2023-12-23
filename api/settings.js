@@ -1,7 +1,7 @@
 const app = require("express")();
 const server = require("http").Server(app);
 const bodyParser = require("body-parser");
-const Datastore =  require('@seald-io/nedb');
+const Datastore = require("@seald-io/nedb");
 const multer = require("multer");
 const fileUpload = require("express-fileupload");
 const fs = require("fs");
@@ -35,6 +35,7 @@ let settingsDB = new Datastore({
     autoload: true,
 });
 
+settingsDB.ensureIndex({ fieldName: "_id", unique: true });
 /**
  * GET endpoint: Get the welcome message for the Settings API.
  *
@@ -143,7 +144,9 @@ app.post("/post", upload.single("imagename"), function (req, res) {
                         error: "Internal Server Error",
                         message: "An unexpected error occurred.",
                     });
-                } else res.sendStatus(200);
+                } else {
+                    res.sendStatus(200);
+                }
             },
         );
     }

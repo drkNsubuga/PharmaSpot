@@ -1,7 +1,7 @@
 const app = require("express")();
 const server = require("http").Server(app);
 const bodyParser = require("body-parser");
-const Datastore =  require('@seald-io/nedb');
+const Datastore = require("@seald-io/nedb");
 const async = require("async");
 const fileUpload = require("express-fileupload");
 const multer = require("multer");
@@ -158,7 +158,9 @@ app.post("/product", upload.single("imagename"), function (req, res) {
                         error: "Internal Server Error",
                         message: "An unexpected error occurred.",
                     });
-                } else res.sendStatus(200);
+                } else {
+                    res.sendStatus(200);
+                }
             },
         );
     }
@@ -177,8 +179,10 @@ app.delete("/product/:productId", function (req, res) {
             _id: parseInt(req.params.productId),
         },
         function (err, numRemoved) {
-            if (err) res.sendStatus(500).send(err);
-            else res.sendStatus(200);
+            if (err) res.sendStatus(500).send(err)
+            else {
+                res.sendStatus(200);
+            }
         },
     );
 });
@@ -198,7 +202,7 @@ app.post("/product/sku", function (req, res) {
             barcode: parseInt(sku),
         },
         function (err, doc) {
-            if (err) res.sendStatus(500).send(err);
+            if (err) res.sendStatus(500).send(err)
             else res.send(doc);
         },
     );

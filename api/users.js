@@ -1,7 +1,7 @@
 const app = require("express")();
 const server = require("http").Server(app);
 const bodyParser = require("body-parser");
-const Datastore =  require('@seald-io/nedb');
+const Datastore = require("@seald-io/nedb");
 const bcrypt = require("bcrypt");
 const saltRounds = 10;
 const validator = require("validator");
@@ -162,7 +162,9 @@ app.delete("/user/:userId", function (req, res) {
                     error: "Internal Server Error",
                     message: "An unexpected error occurred.",
                 });
-            } else res.sendStatus(200);
+            } else {
+                res.sendStatus(200);
+            }
         },
     );
 });
@@ -223,7 +225,9 @@ app.post("/post", function (req, res) {
                     {},
                     function (err, numReplaced, user) {
                         if (err) res.sendStatus(500).send(err);
-                        else res.sendStatus(200);
+                        else {
+                            res.sendStatus(200);
+                        }
                     },
                 );
             }

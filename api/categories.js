@@ -60,8 +60,14 @@ app.post("/category", function (req, res) {
     let newCategory = req.body;
     newCategory._id = Math.floor(Date.now() / 1000);
     categoryDB.insert(newCategory, function (err, category) {
-        if (err) res.status(500).send(err);
-        else res.sendStatus(200);
+            if (err) {
+                    console.error(err);
+                    res.status(500).json({
+                        error: "Internal Server Error",
+                        message: "An unexpected error occurred.",
+                    });
+                }
+        else{res.sendStatus(200);}
     });
 });
 
@@ -78,8 +84,14 @@ app.delete("/category/:categoryId", function (req, res) {
             _id: parseInt(req.params.categoryId),
         },
         function (err, numRemoved) {
-            if (err) res.status(500).send(err);
-            else res.sendStatus(200);
+                if (err) {
+                    console.error(err);
+                    res.status(500).json({
+                        error: "Internal Server Error",
+                        message: "An unexpected error occurred.",
+                    });
+                }
+            else{res.sendStatus(200);}
         },
     );
 });
@@ -99,8 +111,14 @@ app.put("/category", function (req, res) {
         req.body,
         {},
         function (err, numReplaced, category) {
-            if (err) res.status(500).send(err);
-            else res.sendStatus(200);
+                if (err) {
+                    console.error(err);
+                    res.status(500).json({
+                        error: "Internal Server Error",
+                        message: "An unexpected error occurred.",
+                    });
+                }
+            else{res.sendStatus(200);}
         },
     );
 });

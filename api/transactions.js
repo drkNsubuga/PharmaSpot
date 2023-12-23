@@ -1,7 +1,7 @@
 let app = require("express")();
 let server = require("http").Server(app);
 let bodyParser = require("body-parser");
-let Datastore =  require('@seald-io/nedb');
+let Datastore = require("@seald-io/nedb");
 let Inventory = require("./inventory");
 const path = require("path");
 const appName = process.env.APPNAME;
@@ -166,12 +166,10 @@ app.post("/new", function (req, res) {
   transactionsDB.insert(newTransaction, function (err, transaction) {
     if (err) {
       console.error(err);
-      res
-        .status(500)
-        .json({
-          error: "Internal Server Error",
-          message: "An unexpected error occurred.",
-        });
+      res.status(500).json({
+        error: "Internal Server Error",
+        message: "An unexpected error occurred.",
+      });
     } else {
       res.sendStatus(200);
 
@@ -200,13 +198,13 @@ app.put("/new", function (req, res) {
     function (err, numReplaced, order) {
       if (err) {
         console.error(err);
-        res
-          .status(500)
-          .json({
-            error: "Internal Server Error",
-            message: "An unexpected error occurred.",
-          });
-      } else res.sendStatus(200);
+        res.status(500).json({
+          error: "Internal Server Error",
+          message: "An unexpected error occurred.",
+        });
+      } else {
+        res.sendStatus(200);
+      }
     },
   );
 });
@@ -227,13 +225,13 @@ app.post("/delete", function (req, res) {
     function (err, numRemoved) {
       if (err) {
         console.error(err);
-        res
-          .status(500)
-          .json({
-            error: "Internal Server Error",
-            message: "An unexpected error occurred.",
-          });
-      } else res.sendStatus(200);
+        res.status(500).json({
+          error: "Internal Server Error",
+          message: "An unexpected error occurred.",
+        });
+      } else {
+        res.sendStatus(200);
+      }
     },
   );
 });
