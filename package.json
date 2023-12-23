@@ -18,6 +18,7 @@
   "dependencies": {
     "@electron/asar": "^3.2.7",
     "@electron/remote": "^2.0.9",
+    "@seald-io/nedb": "^4.0.3",
     "async": "^3.2.4",
     "bcrypt": "^5.1.0",
     "body-parser": "^1.20.1",
@@ -38,8 +39,7 @@
     "jspdf": "^2.5.1",
     "macaddress": "^0.5.3",
     "moment": "^2.29.4",
-    "multer": "^1.4.2",
-    "nedb": "^1.8.0",
+    "multer": "^1.4.5-lts.1",
     "notiflix": "^3.2.5",
     "print-js": "^1.6.0",
     "sanitize": "^2.1.2",
@@ -55,7 +55,8 @@
     "start": "electron-forge start",
     "package": "electron-forge package",
     "make": "electron-forge make",
-    "publish": "electron-forge publish"
+    "publish": "electron-forge publish",
+    "test": "jest"
   },
   "browserslist": {
     "production": [
@@ -76,7 +77,7 @@
     "@electron-forge/maker-squirrel": "^6.0.4",
     "@electron-forge/maker-zip": "^6.0.4",
     "@electron-forge/publisher-github": "^6.0.4",
-    "browser-sync": "^2.27.11",
+    "browser-sync": "^2.23.7",
     "cross-env": "^7.0.3",
     "electron": "^22.3.27",
     "electron-is-dev": "^2.0.0",
@@ -90,9 +91,11 @@
     "gulp-purgecss": "^5.0.0",
     "gulp-rename": "^2.0.0",
     "gulp-uglify": "^3.0.2",
+    "jest": "^29.7.0",
     "merge-stream": "^2.0.0",
     "node-gyp": "^10.0.0",
     "nodemon": "^3.0.1",
-    "path": "^0.12.7"
+    "path": "^0.12.7",
+    "ts-node": "^10.9.2"
   }
 }
