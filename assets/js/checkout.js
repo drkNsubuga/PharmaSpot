@@ -87,7 +87,7 @@ $(document).ready(function () {
   }
 });
 
-  /** Swict Views for Payment Options **/
+  /** Switch Views for Payment Options **/
   var $list = $(".list-group-item").on("click", function () {
     $list.removeClass("active");
     $(this).addClass("active");
