@@ -2,7 +2,8 @@ node_modules*
 notes.txt
 package.*.json
 TODO
-gulpfile.js
 out/
 .gitignore
 LICENSE
+coverage
+*.old*

@@ -75,6 +75,7 @@ PharmaSpot is a cross-platform Point of Sale system designed for pharmacies and 
 - Unzip the package to a location of your choice.
 - Click the ``PharmaSpot`` executable in the folder
 - Login for default user:
+
 	``username:`` admin
 	``password:`` admin
 
@@ -83,6 +84,8 @@ PharmaSpot is a cross-platform Point of Sale system designed for pharmacies and 
 - Open terminal and navigate into the cloned folder.
 - Run ```npm install``` to install dependencies.
 - Run ```npm run start```.
+- Run ```gulp``` to bundle css and js assets
+- Run ```npm run test``` to run tests
   
 ## Credits
 
