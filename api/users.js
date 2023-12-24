@@ -101,7 +101,7 @@ app.post("/login", function (req, res) {
             if (docs) {
                 //verify password
                 bcrypt
-                    .compare(validator.escape(req.body.password), docs.password)
+                    .compare(req.body.password, docs.password)
                     .then((result) => {
                         if (result) {
                             usersDB.update(

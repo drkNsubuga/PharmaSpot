@@ -1,3 +1,19 @@
+const jsPDF = require("jspdf");
+const html2canvas = require("html2canvas");
+const JsBarcode = require("jsbarcode");
+const macaddress = require("macaddress");
+const DOMPurify = require('dompurify');
+const notiflix = require("notiflix");
+let fs = require("fs");
+let path = require("path");
+let moment = require("moment");
+let { ipcRenderer } = require("electron");
+let dotInterval = setInterval(function () {
+  $(".dot").text(".");
+}, 3000);
+let Store = require("electron-store");
+const remote = require("@electron/remote");
+const app = remote.app;
 let cart = [];
 let index = 0;
 let allUsers = [];
@@ -24,27 +40,11 @@ let product_index = 0;
 let transaction_index;
 const appName = process.env.APPNAME;
 let host = "localhost";
-let fs = require("fs");
-let path = require("path");
-let moment = require("moment");
-let { ipcRenderer } = require("electron");
-let dotInterval = setInterval(function () {
-  $(".dot").text(".");
-}, 3000);
-let Store = require("electron-store");
-const remote = require("@electron/remote");
-const app = remote.app;
 let port = process.env.PORT;
 let img_path = path.join(app.getPath("appData"), appName, "uploads", "/");
 let api = "http://" + host + ":" + port + "/api/";
 const bcrypt = require("bcrypt");
 const saltRounds = 24;
-const jsPDF = require("jspdf");
-const html2canvas = require("html2canvas");
-const JsBarcode = require("jsbarcode");
-const macaddress = require("macaddress");
-
-const notiflix = require("notiflix");
 let categories = [];
 let holdOrderList = [];
 let customerOrderList = [];
@@ -66,7 +66,7 @@ let end_date = moment(end).toDate();
 let by_till = 0;
 let by_user = 0;
 let by_status = 1;
-const default_item_img = "assets/images/default.jpg";
+const default_item_img = path.join("assets","images","default.jpg");
 const permissions = [
   "perm_products",
   "perm_categories",
@@ -82,11 +82,18 @@ notiflix.Notify.init({
   closeButton: true,
   // timeOut:10000
 });
-const utils = require("./utils");
-const DATE_FORMAT = utils.DATE_FORMAT;
+const {
+  DATE_FORMAT,
+  moneyFormat,
+  isExpired,
+  daysToExpire,
+  checkImageExists,
+  setContentSecurityPolicy,
+} = require("./utils");
+
 
 //set the content security policy of the app
-// utils.setContentSecurityPolicy();
+setContentSecurityPolicy();
 
 $(function () {
   function cb(start, end) {
@@ -253,8 +260,8 @@ if (auth == undefined) {
           let todayDate = moment();
           let expiryDate = moment(product.expirationDate, DATE_FORMAT);
 
-          if (!utils.isExpired(expiryDate)) {
-            const diffDays = utils.daysToExpire(expiryDate);
+          if (!isExpired(expiryDate)) {
+            const diffDays = daysToExpire(expiryDate);
 
             if (diffDays > 0 && diffDays <= 30) {
               var days_noun = diffDays > 1 ? "days" : "day";
@@ -278,11 +285,9 @@ if (auth == undefined) {
           if (!categories.includes(item.category)) {
             categories.push(item.category);
           }
-          let item_isExpired = utils.isExpired(item.expirationDate);
+          let item_isExpired = isExpired(item.expirationDate);
           item_img = path.join(img_path, item.img);
-          item_img = utils.checkImageExists(item_img)
-            ? item_img
-            : default_item_img;
+          item_img = checkImageExists(item_img) ? item_img : default_item_img;
 
           let item_info = `<div class="col-lg-2 box ${item.category}"
                                 onclick="$(this).addToCart(${item._id}, ${
@@ -304,7 +309,7 @@ if (auth == undefined) {
                                         }</span></div>
                                         <span class="text-success text-center"><b data-plugin="counterup">${
                                           settings.symbol +
-                                          utils.moneyFormat(item.price)
+                                          moneyFormat(item.price)
                                         }</b> </span>
                             </div>
                         </div>`;
@@ -341,7 +346,7 @@ if (auth == undefined) {
 
     $.fn.addToCart = function (id, count, stock) {
       $.get(api + "inventory/product/" + id, function (product) {
-        if (utils.isExpired(product.expirationDate)) {
+        if (isExpired(product.expirationDate)) {
           notiflix.Report.failure(
             "Expired",
             `${product.name} is expired! Please restock`,
@@ -384,7 +389,7 @@ if (auth == undefined) {
         processData: false,
         success: function (product) {
           $(".search-barcode-btn").html(searchBarCodeIcon);
-          const expired = utils.isExpired(product.expirationDate);
+          const expired = isExpired(product.expirationDate);
           if (product._id != undefined && product.quantity >= 1 && !expired) {
             $(this).addProductToCart(product);
             $("#searchBarCode").get(0).reset();
@@ -493,7 +498,7 @@ if (auth == undefined) {
       });
       $("#total").text(total_items);
       total = total - $("#inputDiscount").val();
-      $("#price").text(settings.symbol + utils.moneyFormat(total.toFixed(2)));
+      $("#price").text(settings.symbol + moneyFormat(total.toFixed(2)));
 
       subTotal = total;
 
@@ -510,8 +515,8 @@ if (auth == undefined) {
 
       orderTotal = grossTotal.toFixed(2);
 
-      $("#gross_price").text(settings.symbol + utils.moneyFormat(orderTotal));
-      $("#payablePrice").val(utils.moneyFormat(grossTotal));
+      $("#gross_price").text(settings.symbol + moneyFormat(orderTotal));
+      $("#payablePrice").val(moneyFormat(grossTotal));
     };
 
     $.fn.renderTable = function (cartList) {
@@ -550,7 +555,7 @@ if (auth == undefined) {
               class: "col-md-3",
               text:
                 settings.symbol +
-                utils.moneyFormat((data.price * data.quantity).toFixed(2)),
+                moneyFormat((data.price * data.quantity).toFixed(2)),
             }),
             $("<div>", { class: "col-md-1" }).append(
               $("<button>", {
@@ -667,7 +672,7 @@ if (auth == undefined) {
       cart.forEach((item) => {
         items += `<tr><td>${item.product_name}</td><td>${
           item.quantity
-        } </td><td class="text-right"> ${settings.symbol} ${utils.moneyFormat(
+        } </td><td class="text-right"> ${settings.symbol} ${moneyFormat(
           Math.abs(item.price).toFixed(2),
         )} </td></tr>`;
       });
@@ -701,16 +706,16 @@ if (auth == undefined) {
         payment = `<tr>
                         <td>Paid</td>
                         <td>:</td>
-                        <td class="text-right">${
-                          settings.symbol
-                        } ${utils.moneyFormat(Math.abs(paid).toFixed(2))}</td>
+                        <td class="text-right">${settings.symbol} ${moneyFormat(
+                          Math.abs(paid).toFixed(2),
+                        )}</td>
                     </tr>
                     <tr>
                         <td>Change</td>
                         <td>:</td>
-                        <td class="text-right">${
-                          settings.symbol
-                        } ${utils.moneyFormat(Math.abs(change).toFixed(2))}</td>
+                        <td class="text-right">${settings.symbol} ${moneyFormat(
+                          Math.abs(change).toFixed(2),
+                        )}</td>
                     </tr>
                     <tr>
                         <td>Method</td>
@@ -723,9 +728,9 @@ if (auth == undefined) {
         tax_row = `<tr>
                     <td>VAT(${settings.percentage})% </td>
                     <td>:</td>
-                    <td class="text-right">${
-                      settings.symbol
-                    } ${utils.moneyFormat(parseFloat(totalVat).toFixed(2))}</td>
+                    <td class="text-right">${settings.symbol} ${moneyFormat(
+                      parseFloat(totalVat).toFixed(2),
+                    )}</td>
                 </tr>`;
       }
 
@@ -754,7 +759,7 @@ if (auth == undefined) {
       receipt = `<div style="font-size: 10px">                            
         <p style="text-align: center;">
         ${
-          utils.checkImageExists(logo)
+          checkImageExists(logo)
             ? `<img style='max-width: 50px' src='${logo}' /><br>`
             : ``
         }
@@ -789,12 +794,12 @@ if (auth == undefined) {
             </tr>
             </thead>
             <tbody>
-            ${items}                
+             ${items}                
             <tr><td colspan="3"><hr></td></tr>
             <tr>                        
                 <td><b>Subtotal</b></td>
                 <td>:</td>
-                <td class="text-right"><b>${settings.symbol}${utils.moneyFormat(
+                <td class="text-right"><b>${settings.symbol}${moneyFormat(
                   subTotal.toFixed(2),
                 )}</b></td>
             </tr>
@@ -804,7 +809,7 @@ if (auth == undefined) {
                 <td class="text-right">${
                   discount > 0
                     ? settings.symbol +
-                      utils.moneyFormat(parseFloat(discount).toFixed(2))
+                      moneyFormat(parseFloat(discount).toFixed(2))
                     : ""
                 }</td>
             </tr>
@@ -813,7 +818,7 @@ if (auth == undefined) {
                 <td><h5>Total</h5></td>
                 <td><h5>:</h5></td>
                 <td class="text-right">
-                    <h5>${settings.symbol} ${utils.moneyFormat(
+                    <h5>${settings.symbol} ${moneyFormat(
                       parseFloat(orderTotal).toFixed(2),
                     )}</h3>
                 </td>
@@ -1543,8 +1548,8 @@ if (auth == undefined) {
         }
         //calculate days to expiry
         product.expiryAlert = "";
-        if (!utils.isExpired(expiryDate)) {
-          const diffDays = utils.daysToExpire(expiryDate);
+        if (!isExpired(expiryDate)) {
+          const diffDays = daysToExpire(expiryDate);
 
           if (diffDays > 0 && diffDays <= 30) {
             var days_noun = diffDays > 1 ? "days" : "day";
@@ -1559,7 +1564,7 @@ if (auth == undefined) {
         }
 
         product_img = img_path + product.img;
-        product_img = utils.checkImageExists(product_img)
+        product_img = checkImageExists(product_img)
           ? product_img
           : default_item_img;
         //render product list
@@ -1684,13 +1689,14 @@ if (auth == undefined) {
       macaddress.one(function (err, mac) {
         mac_address = mac;
       });
-
-      formData["app"] = $("#app").find("option:selected").text();
+      const appChoice = $("#app").find("option:selected").text();
+      appChoice = appChoice;
+      formData["app"] = appChoice;
       formData["mac"] = mac_address;
       formData["till"] = 1;
 
       $("#settings_form").append(
-        '<input type="hidden" name="app" value="' + formData.app + '" />',
+        `<input type="hidden" name="app" value="${formData.app}" />`,
       );
 
       if (formData.percentage != "" && !$.isNumeric(formData.percentage)) {
@@ -1972,19 +1978,17 @@ function loadTransactions() {
                                   "DD-MM-YYYY",
                                 )}</td>
                                 <td>${
-                                  settings.symbol +
-                                  utils.moneyFormat(trans.total)
+                                  settings.symbol + moneyFormat(trans.total)
                                 }</td>
                                 <td>${
                                   trans.paid == ""
                                     ? ""
-                                    : settings.symbol +
-                                      utils.moneyFormat(trans.paid)
+                                    : settings.symbol + moneyFormat(trans.paid)
                                 }</td>
                                 <td>${
                                   trans.change
                                     ? settings.symbol +
-                                      utils.moneyFormat(
+                                      moneyFormat(
                                         Math.abs(trans.change).toFixed(2),
                                       )
                                     : ""
@@ -2009,7 +2013,7 @@ function loadTransactions() {
 
         if (counter == transactions.length) {
           $("#total_sales #counter").text(
-            settings.symbol + utils.moneyFormat(parseFloat(sales).toFixed(2)),
+            settings.symbol + moneyFormat(parseFloat(sales).toFixed(2)),
           );
           $("#total_transactions #counter").text(transact);
 
@@ -2110,7 +2114,7 @@ function loadSoldProducts() {
             }</td>
             <td>${
               settings.symbol +
-              utils.moneyFormat((item.qty * parseFloat(item.price)).toFixed(2))
+              moneyFormat((item.qty * parseFloat(item.price)).toFixed(2))
             }</td>
             </tr>`;
 
@@ -2164,7 +2168,7 @@ $.fn.viewTransaction = function (index) {
   products.forEach((item) => {
     items += `<tr><td>${item.product_name}</td><td>${
       item.quantity
-    } </td><td class="text-right"> ${settings.symbol} ${utils.moneyFormat(
+    } </td><td class="text-right"> ${settings.symbol} ${moneyFormat(
       Math.abs(item.price).toFixed(2),
     )} </td></tr>`;
   });
@@ -2182,18 +2186,14 @@ $.fn.viewTransaction = function (index) {
     payment = `<tr>
                     <td>Paid</td>
                     <td>:</td>
-                    <td class="text-right">${
-                      settings.symbol
-                    } ${utils.moneyFormat(
+                    <td class="text-right">${settings.symbol} ${moneyFormat(
                       Math.abs(allTransactions[index].paid).toFixed(2),
                     )}</td>
                 </tr>
                 <tr>
                     <td>Change</td>
                     <td>:</td>
-                    <td class="text-right">${
-                      settings.symbol
-                    } ${utils.moneyFormat(
+                    <td class="text-right">${settings.symbol} ${moneyFormat(
                       Math.abs(allTransactions[index].change).toFixed(2),
                     )}</td>
                 </tr>
@@ -2264,7 +2264,7 @@ $.fn.viewTransaction = function (index) {
         <tr>                        
             <td><b>Subtotal</b></td>
             <td>:</td>
-            <td class="text-right"><b>${settings.symbol}${utils.moneyFormat(
+            <td class="text-right"><b>${settings.symbol}${moneyFormat(
               allTransactions[index].subtotal,
             )}</b></td>
         </tr>
@@ -2274,7 +2274,7 @@ $.fn.viewTransaction = function (index) {
             <td class="text-right">${
               discount > 0
                 ? settings.symbol +
-                  utils.moneyFormat(
+                  moneyFormat(
                     parseFloat(allTransactions[index].discount).toFixed(2),
                   )
                 : ""
@@ -2287,7 +2287,7 @@ $.fn.viewTransaction = function (index) {
             <td><h5>Total</h5></td>
             <td><h5>:</h5></td>
             <td>
-                <h5>${settings.symbol}${utils.moneyFormat(
+                <h5>${settings.symbol}${moneyFormat(
                   allTransactions[index].total,
                 )}</h5>
             </td>
@@ -2304,7 +2304,7 @@ $.fn.viewTransaction = function (index) {
         </div>`;
 
   $("#viewTransaction").html("");
-  $("#viewTransaction").html(receipt);
+  $("#viewTransaction").text(receipt);
 
   $("#orderModal").modal("show");
 };

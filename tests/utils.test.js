@@ -24,9 +24,9 @@ describe("moneyFormat", () => {
 /** DATE FUNCTIONS **/
 
 // Mock today's date
-jest.mock('moment', () => {
-  const mockMoment = jest.requireActual('moment');
-  return (date) => (date ? mockMoment(date) : mockMoment('2023-12-23'));
+jest.mock("moment", () => {
+	const mockMoment = jest.requireActual("moment");
+	return (date) => (date ? mockMoment(date) : mockMoment("2023-12-23"));
 });
 
 describe("daysToExpire", () => {
@@ -50,26 +50,25 @@ describe("daysToExpire", () => {
 });
 
 // Test if product is Expired
-describe('isExpired', () => {
-  test('returns false when due date is in the future', () => {
-    const dueDate = '2023-12-25';
-    const result = isExpired(dueDate, DATE_FORMAT);
-    expect(result).toBe(false); 
-  });
+describe("isExpired", () => {
+	test("returns false when due date is in the future", () => {
+		const dueDate = "2023-12-25";
+		const result = isExpired(dueDate, DATE_FORMAT);
+		expect(result).toBe(false);
+	});
 
-  test('returns true when due date is today', () => {
-    const dueDate = '2023-12-23';
-    const result = isExpired(dueDate, DATE_FORMAT);
-    expect(result).toBe(true); 
-  });
+	test("returns true when due date is today", () => {
+		const dueDate = "2023-12-23";
+		const result = isExpired(dueDate, DATE_FORMAT);
+		expect(result).toBe(true);
+	});
 
-  test('returns true when due date is in the past', () => {
-    const dueDate = '2023-12-20';
-    const result = isExpired(dueDate, DATE_FORMAT);
-    expect(result).toBe(true); 
-  });
+	test("returns true when due date is in the past", () => {
+		const dueDate = "2023-12-20";
+		const result = isExpired(dueDate, DATE_FORMAT);
+		expect(result).toBe(true);
+	});
 });
-
 
 // describe("checkImageExists", () => {
 // 	test("returns true for existing image", () => {

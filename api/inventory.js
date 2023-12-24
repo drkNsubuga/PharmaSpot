@@ -7,6 +7,7 @@ const fileUpload = require("express-fileupload");
 const multer = require("multer");
 const fs = require("fs");
 const path = require("path");
+const allowedExtensions = [".jpg", ".jpeg", ".png"];
 const validator = require("validator");
 const appName = process.env.APPNAME;
 const appData = process.env.APPDATA;
@@ -103,17 +104,27 @@ app.post("/product", upload.single("imagename"), function (req, res) {
     }
 
     if (validator.escape(req.body.remove) == 1) {
-        const path =
-            "./resources/app/public/uploads/product_image/" +
-            validator.escape(req.body.img);
-        try {
-            fs.unlinkSync(path);
-        } catch (err) {
-            console.error(err);
-        }
+        const imgName = path.basename(req.body.img);
+        const isValidimage =
+            allowedExtensions.includes(path.extname(imgName).toLowerCase()) &&
+            validator.isAlphanumeric(imgName);
 
-        if (!req.file) {
-            image = "";
+        if (isValidimage) {
+            const imgPath = path.join(
+                appData,
+                process.env.APPNAME,
+                "uploads",
+                validator.escape(req.body.img),
+            );
+            try {
+                fs.unlinkSync(imgPath);
+            } catch (err) {
+                console.error(err);
+            }
+
+            if (!req.file) {
+                image = "";
+            }
         }
     }
 
@@ -142,7 +153,9 @@ app.post("/product", upload.single("imagename"), function (req, res) {
                     error: "Internal Server Error",
                     message: "An unexpected error occurred.",
                 });
-            } else res.send(product);
+            } else {
+                res.send(product);
+            }
         });
     } else {
         inventoryDB.update(
@@ -179,8 +192,13 @@ app.delete("/product/:productId", function (req, res) {
             _id: parseInt(req.params.productId),
         },
         function (err, numRemoved) {
-            if (err) res.sendStatus(500).send(err)
-            else {
+            if (err) {
+                console.error(err);
+                res.status(500).json({
+                    error: "Internal Server Error",
+                    message: "An unexpected error occurred.",
+                });
+            } else {
                 res.sendStatus(200);
             }
         },
@@ -202,8 +220,15 @@ app.post("/product/sku", function (req, res) {
             barcode: parseInt(sku),
         },
         function (err, doc) {
-            if (err) res.sendStatus(500).send(err)
-            else res.send(doc);
+            if (err) {
+                console.error(err);
+                res.status(500).json({
+                    error: "Internal Server Error",
+                    message: "An unexpected error occurred.",
+                });
+            } else {
+                res.send(doc);
+            }
         },
     );
 });
