@@ -11,19 +11,24 @@ const moneyFormat = (amount, locale = "en-US") => {
 
 const isExpired = (dueDate) => {
   let todayDate = moment();
-  let expiryDate = moment(dueDate, DATE_FORMAT);
+  // Convert dueDate to ISO format if needed
+  dueDate = new Date(dueDate).toISOString().slice(0, 10); // Extract date part
+  const expiryDate = moment(dueDate, "YYYY-MM-DD");
+  // let expiryDate = moment(dueDate, DATE_FORMAT);
   return todayDate.isSameOrAfter(dueDate);
 };
 
 const daysToExpire = (dueDate) => {
   let todayDate = moment();
-  let expiryDate = moment(dueDate, DATE_FORMAT);
+  dueDate = new Date(dueDate).toISOString().slice(0, 10);
+  const expiryDate = moment(dueDate, "YYYY-MM-DD");
+  // let expiryDate = moment(dueDate, DATE_FORMAT);
 
-    if (expiryDate.isSameOrBefore(todayDate, 'day')) {
+  if (expiryDate.isSameOrBefore(todayDate, "day")) {
     return 0;
   }
 
-  return expiryDate.diff(todayDate, 'days');
+  return expiryDate.diff(todayDate, "days");
 };
 
 /** File **/
@@ -46,7 +51,6 @@ const setContentSecurityPolicy = () => {
   let scriptHash = getFileHash("./assets/dist/js/bundle.min.js");
   let styleHash = getFileHash("./assets/dist/css/bundle.min.css");
   let content = `default-src 'self'; img-src 'self' data:;script-src 'self' 'unsafe-eval' 'unsafe-inline' sha256-${scriptHash}; style-src 'self' 'unsafe-inline' sha256-${styleHash};font-src 'self';base-uri 'self'; form-action 'self'; ;connect-src 'self' http://localhost:${PORT};`;
-
   let metaTag = document.createElement("meta");
   metaTag.setAttribute("http-equiv", "Content-Security-Policy");
   metaTag.setAttribute("content", content);
@@ -59,5 +63,5 @@ module.exports = {
   isExpired,
   daysToExpire,
   checkImageExists,
-  setContentSecurityPolicy,
+  setContentSecurityPolicy
 };
