@@ -1,4 +1,5 @@
-const { app, dialog, ipcRenderer } = require("electron");
+const { app, dialog} = require("electron");
+let mainWindow;
 const path = require("path");
 const iconPath = path.join(__dirname, "../../../assets/images/favicon.png");
 const appVersion = app.getVersion();
@@ -8,7 +9,9 @@ const { appConfig } = require("../../../app.config");
 const { autoUpdater } = require("electron-updater");
 const isPackaged = app.isPackaged;
 const updateServer = appConfig.UPDATE_SERVER;
-const updateUrl = `${updateServer}/update/${process.platform}/${app.getVersion()}`;
+const updateUrl = `${updateServer}/update/${
+  process.platform
+}/${app.getVersion()}`;
 
 function showAbout() {
   const options = {
@@ -26,6 +29,10 @@ function showAbout() {
   app.showAboutPanel();
 }
 
+function getDocs() {}
+
+function sendFeedback() {}
+
 function checkForUpdates() {
   if (!isPackaged) {
     console.log(`Skipping update check in development mode`);
@@ -40,7 +47,7 @@ function checkForUpdates() {
 
   autoUpdater.setFeedURL({
     provider: "generic",
-    url: updateUrl
+    url: updateUrl,
   });
 
   autoUpdater.checkForUpdates();
@@ -88,7 +95,7 @@ function checkForUpdates() {
     dialogOpts.buttons = ["Retry", "Cancel"];
     dialog.showMessageBox(dialogOpts).then((returnValue) => {
       if (returnValue.response === 0) {
-          checkForUpdates();
+        checkForUpdates();
       }
     });
   };
@@ -99,4 +106,19 @@ function checkForUpdates() {
   autoUpdater.on("error", handleError);
 }
 
-module.exports = { showAbout, checkForUpdates };
+const initializeMainWindow = (win)=>{
+mainWindow = win;
+} 
+
+const handleClick = (elementId)=>{
+  mainWindow.webContents.send('click-element', elementId);
+}
+
+module.exports = {
+showAbout, 
+checkForUpdates, 
+getDocs, 
+sendFeedback,
+initializeMainWindow,
+handleClick,
+ };

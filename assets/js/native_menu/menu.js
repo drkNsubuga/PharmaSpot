@@ -1,6 +1,12 @@
 const { app, Menu, dialog } = require("electron");
 const isMac = process.platform === "darwin";
-const { showAbout, checkForUpdates } = require("./menuController");
+const {
+  showAbout,
+  checkForUpdates,
+  sendFeeBack,
+  getDocs,
+  handleClick
+} = require("./menuController");
 const template = [
   ...(isMac
     ? [
@@ -24,8 +30,29 @@ const template = [
   {
     label: "File",
     submenu: [
+      {
+        label: "New",
+        submenu: [
+          {
+            label: "Product",
+            click: () => handleClick("newProductModal"),
+          },
+          {
+            label: "Category",
+            click: () => handleClick("newCategoryModal"),
+          },
+          {
+            label: "Customer",
+            click: () => handleClick("newCustomerModal"),
+          },
+        ],
+      },
       { label: "Backup" },
       { label: "Restore" },
+      {
+        label: "Logout",
+        click: () => handleClick("log-out"),
+      },
       isMac ? { role: "close" } : { role: "quit" },
     ],
   },
@@ -57,6 +84,23 @@ const template = [
   {
     label: "View",
     submenu: [
+      { 
+        label: "Point of Sale",
+        click: ()=>handleClick('pointofsale')
+      },
+      { 
+        label: "Transactions",
+        click: ()=>handleClick('transactions')
+      },
+      { 
+        label: "Products",
+        click: ()=>handleClick('productModal')
+      },
+      { 
+        label: "Settings",
+        click: ()=>handleClick('settings')
+      },
+      { type: "separator" },
       { label: "Refresh", role: "reload" },
       ...(!app.isPackaged
         ? [{ role: "toggleDevTools", after: ["Refresh"] }]
@@ -76,9 +120,11 @@ const template = [
     submenu: [
       {
         label: "Documentation",
+        click: () => getDocs(),
       },
       {
         label: "Send feedback",
+        click: () => sendFeeBack(),
       },
       { type: "separator" },
       {

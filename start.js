@@ -5,12 +5,14 @@ if (setupEvents.handleSquirrelEvent()) {
     return;
 }
 const server = require('./server');
-const { app, BrowserWindow, ipcMain, dialog } = require("electron");
+const { app, BrowserWindow, ipcMain} = require("electron");
 const path = require("path");
 const contextMenu = require("electron-context-menu");
 let { Menu, template } = require("./assets/js/native_menu/menu");
+const menuController = require('./assets/js/native_menu/menuController.js');
 const isPackaged = app.isPackaged;
 const menu = Menu.buildFromTemplate(template);
+Menu.setApplicationMenu(menu);
 let mainWindow;
 
 function createWindow() {
@@ -26,7 +28,7 @@ function createWindow() {
             contextIsolation: false,
         },
     });
-
+    menuController.initializeMainWindow(mainWindow); 
     mainWindow.maximize();
     mainWindow.show();
 
@@ -35,6 +37,7 @@ function createWindow() {
     mainWindow.on("closed", () => {
         mainWindow = null;
     });
+    
 }
 
 app.on("browser-window-created", (_, window) => {
@@ -87,5 +90,3 @@ if (!isPackaged) {
         require("electron-reloader")(module);
     } catch (_) {}
 }
-
-Menu.setApplicationMenu(menu);
