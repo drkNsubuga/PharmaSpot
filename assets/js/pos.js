@@ -2,7 +2,6 @@ const jsPDF = require("jspdf");
 const html2canvas = require("html2canvas");
 const JsBarcode = require("jsbarcode");
 const macaddress = require("macaddress");
-const DOMPurify = require('dompurify');
 const notiflix = require("notiflix");
 let fs = require("fs");
 let path = require("path");
@@ -90,7 +89,6 @@ const {
   checkImageExists,
   setContentSecurityPolicy,
 } = require("./utils");
-
 
 //set the content security policy of the app
 setContentSecurityPolicy();
@@ -270,7 +268,6 @@ if (auth == undefined) {
               );
             }
           } else {
-            // notiflix.Notify.failure(`${product.name} is expired. Please restock!`);
             expiredCount++;
           }
         });
@@ -2392,3 +2389,7 @@ $("#quit").on("click", function () {
     },
   );
 });
+
+ipcRenderer.on('click-element',(event, elementId)=>{
+document.getElementById(elementId).click();
+})
