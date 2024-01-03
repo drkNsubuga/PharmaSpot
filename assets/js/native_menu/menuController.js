@@ -86,19 +86,28 @@ function checkForUpdates() {
     });
   };
 
-  const handleError = (err) => {
+
+const handleError = async (err) => {
+  try {
     console.error(`Error checking for updates: ${err}`);
-    dialogOpts.type = "error";
-    dialogOpts.title = "Update check failed";
-    dialogOpts.message = `'An error occurred while checking for updates.`;
-    dialogOpts.detail = err || "Unknown error";
-    dialogOpts.buttons = ["Retry", "Cancel"];
-    dialog.showMessageBox(dialogOpts).then((returnValue) => {
-      if (returnValue.response === 0) {
-        checkForUpdates();
-      }
-    });
-  };
+    
+    const dialogOpts = {
+      type: "error",
+      title: "Update check failed",
+      message: "An error occurred while checking for updates.",
+      detail: err,
+      buttons: ["Retry", "Cancel"]
+    };
+
+    const returnValue = await dialog.showMessageBox(dialogOpts);
+
+    if (returnValue.response === 0) {
+      checkForUpdates();
+    }
+  } catch (error) {
+    console.error(`Error in handleError function: ${error}`);
+  }
+};
 
   autoUpdater.on("update-available", handleUpdateAvailable);
   autoUpdater.on("update-not-available", handleUpdateNotAvailable);

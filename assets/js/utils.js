@@ -3,6 +3,7 @@ const crypto = require("crypto");
 let moment = require("moment");
 const DATE_FORMAT = "DD-MMM-YYYY";
 const PORT = process.env.PORT;
+let path = require("path");
 const moneyFormat = (amount, locale = "en-US") => {
   return new Intl.NumberFormat(locale).format(amount);
 };
@@ -48,8 +49,8 @@ const getFileHash = (filePath) => {
 };
 
 const setContentSecurityPolicy = () => {
-  let scriptHash = getFileHash("./assets/dist/js/bundle.min.js");
-  let styleHash = getFileHash("./assets/dist/css/bundle.min.css");
+  let scriptHash = getFileHash(path.join(__dirname,"../dist","js","bundle.min.js"))
+  let styleHash = getFileHash(path.join(__dirname,"../dist","css","bundle.min.css"));
   let content = `default-src 'self'; img-src 'self' data:;script-src 'self' 'unsafe-eval' 'unsafe-inline' sha256-${scriptHash}; style-src 'self' 'unsafe-inline' sha256-${styleHash};font-src 'self';base-uri 'self'; form-action 'self'; ;connect-src 'self' http://localhost:${PORT};`;
   let metaTag = document.createElement("meta");
   metaTag.setAttribute("http-equiv", "Content-Security-Policy");
@@ -61,6 +62,7 @@ module.exports = {
   DATE_FORMAT,
   moneyFormat,
   isExpired,
+  getFileHash,
   daysToExpire,
   checkImageExists,
   setContentSecurityPolicy

@@ -11,8 +11,8 @@ const {
 } = require("../assets/js/utils");
 
 //Mock fs and crypto for controlled testig
-// jest.mock("fs");
-// jest.mock("crypto");
+jest.mock("fs");
+jest.mock("crypto");
 
 describe("moneyFormat", () => {
 	test("formats currency correctly", () => {
@@ -70,27 +70,76 @@ describe("isExpired", () => {
 	});
 });
 
-// describe("checkImageExists", () => {
-// 	test("returns true for existing image", () => {
-// 		fs.accessSync.mockReturnValue(true);
-// 		expect(checkImageExists("../assets/images/default.jpg")).toBe(true);
-// 	});
+// File tests
+describe('checkImageExists', () => {
+  // Mocking fs.accessSync to control its behavior during tests
+ 
+  fs.accessSync = jest.fn();
 
-// 	test("returns false for non-existent image", () => {
-// 		fs.accessSync.mockRejectedValue(new Error());
-// 		expect(checkImageExists("invalid/path")).toBe(false);
-// 	});
-// });
+  afterEach(() => {
+    // Clear the mock implementation and mock calls after each test
+    fs.accessSync.mockReset();
+  });
 
-// describe("getFileHash", () => {
-// 	test("generates SHA-256 hash", () => {
-// 		const mockFileData = Buffer.from("test data");
-// 		crypto.createHash.mockReturnValue({
-// 			update: jest.fn(),
-// 			digest: jest.fn().mockReturnValue("mock-hash"),
-// 		});
-// 		fs.readFileSync.mockReturnValue(mockFileData);
+  it('should return true if the image exists', () => {
+    // Set up the mock to simulate a successful file access
+    fs.accessSync.mockImplementation(() => {});
 
-// 		expect(getFileHash("../assets/images/default.jpg")).toBe("mock-hash");
-// 	});
-// });
+    const imageUrl = 'path/to/existing/image.jpg';
+    const result = checkImageExists(imageUrl);
+
+    expect(result).toBe(true);
+    expect(fs.accessSync).toHaveBeenCalledWith(imageUrl, fs.constants.F_OK);
+  });
+
+  it('should return false if the image does not exist', () => {
+    // Set up the mock to simulate a failed file access
+    fs.accessSync.mockImplementation(() => {
+      throw new Error('File not found');
+    });
+
+    const imageUrl = 'path/to/nonexistent/image.jpg';
+    const result = checkImageExists(imageUrl);
+
+    expect(result).toBe(false);
+    expect(fs.accessSync).toHaveBeenCalledWith(imageUrl, fs.constants.F_OK);
+  });
+});
+
+
+describe('getFileHash', () => {
+  const filePath = 'test-file.txt';
+  const fileData = 'Test file content';
+  const hashValue = 'mocked-hash-value';
+
+  beforeEach(() => {
+    // Mock fs.readFileSync
+    fs.readFileSync.mockReturnValue(fileData);
+
+    // Mock crypto.createHash().update().digest()
+    const digestMock = jest.fn(() => hashValue);
+    const updateMock = jest.fn().mockReturnValue({ digest: digestMock });
+    const createHashMock = jest.fn().mockReturnValue({ update: updateMock });
+    crypto.createHash.mockReturnValue(createHashMock);
+  });
+
+  afterEach(() => {
+    // Clear mock function calls after each test
+    jest.clearAllMocks();
+  });
+
+  it('should read file and return hash', () => {
+    const result = getFileHash(filePath);
+
+    // Verify that fs.readFileSync is called with the correct file path
+    expect(fs.readFileSync).toHaveBeenCalledWith(filePath);
+
+    // Verify that crypto.createHash().update().digest() is called with the correct file data
+    expect(crypto.createHash).toHaveBeenCalledWith('sha256');
+    expect(crypto.createHash().update).toHaveBeenCalledWith(fileData);
+    expect(crypto.createHash().update().digest).toHaveBeenCalledWith('hex');
+
+    // Verify that the result matches the mocked hash value
+    expect(result).toEqual(hashValue);
+  });
+});

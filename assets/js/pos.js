@@ -1594,16 +1594,25 @@ if (auth == undefined) {
               fontSize: 14,
             });
           });
-
-          $("#productList").DataTable({
-            order: [[1, "desc"]],
-            autoWidth: false,
-            info: true,
-            JQueryUI: true,
-            ordering: true,
-            paging: false,
-          });
         }
+      });
+
+      $("#productList").DataTable({
+        order: [[1, "desc"]],
+        autoWidth: false,
+        info: true,
+        JQueryUI: true,
+        ordering: true,
+        paging: false,
+        dom: "Bfrtip",
+        buttons: [
+          {
+            extend: "pdfHtml5",
+            className: "btn btn-light", // Custom class name
+            text: " Download PDF", // Custom text
+            filename: "product_list.pdf", // Default filename
+          },
+        ],
       });
     }
 
@@ -1894,37 +1903,6 @@ if (auth == undefined) {
     $(this).hide(500);
     $("#imagename").show(500);
   });
-
-  $("#print_list").on("click", function () {
-    //show progress bar
-    //$("#loading").show();
-
-    $("#productList").DataTable().destroy();
-
-    const filename = "productList.pdf";
-
-    html2canvas($("#all_products").get(0)).then((canvas) => {
-      let height = canvas.height * (25.4 / 96);
-      let width = canvas.width * (25.4 / 96);
-      let pdf = new jsPDF("p", "mm", "a4");
-      pdf.addImage(canvas.toDataURL("image/png"), "PNG", 0, 0, width, height);
-
-      //show progress bar
-      // $("#loading").hide();
-      pdf.save(filename);
-    });
-
-    $("#productList").DataTable({
-      order: [[1, "desc"]],
-      autoWidth: false,
-      info: true,
-      JQueryUI: true,
-      ordering: true,
-      paging: false,
-    });
-
-    $(".loading").hide();
-  });
 }
 
 $.fn.print = function () {
@@ -2070,7 +2048,7 @@ function loadTransactions() {
   });
 }
 
-function discend(a, b) {
+function sortDesc(a, b) {
   if (a.qty > b.qty) {
     return -1;
   }
@@ -2081,7 +2059,7 @@ function discend(a, b) {
 }
 
 function loadSoldProducts() {
-  sold.sort(discend);
+  sold.sort(sortDesc);
 
   let counter = 0;
   let sold_list = "";
@@ -2390,6 +2368,6 @@ $("#quit").on("click", function () {
   );
 });
 
-ipcRenderer.on('click-element',(event, elementId)=>{
-document.getElementById(elementId).click();
-})
+ipcRenderer.on("click-element", (event, elementId) => {
+  document.getElementById(elementId).click();
+});

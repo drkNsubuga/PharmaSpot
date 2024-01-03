@@ -11,7 +11,9 @@ module.exports = {
       '\.git.*',
       'TODO',
       'notes\.txt',
-      'forge\.config\.js'
+      'forge\.config\.js',
+      'tests',
+      'jest\.config\.js'
       ]
   },
   rebuildConfig: {},
