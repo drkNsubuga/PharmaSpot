@@ -12,7 +12,6 @@
         <img src="assets/images/logo.svg" />
         <h1 class="pull-right pt-3"><i class="fa fa-spinner fa-spin"></i> Please wait...</h1>
     </div>
-
     <div id="login">
         <div class="login-box">
             <div id="load" class="login-box-body">
@@ -29,51 +28,41 @@
             </div>
         </div>
     </div>
-
     <div id="main_app">
         <div class="container">
             <div class="row">
                 <div class="col-md-6">
                     <div class="button-list pull-left m-t-15 m-l-10">
                         <div class="btn-group p_one">
-                            <button id="productModal" data-toggle="modal" data-target="#Products" type="button"
-                                class="btn btn-success waves-effect waves-light">
+                            <button id="productModal" data-toggle="modal" data-target="#Products" type="button" class="btn btn-success waves-effect waves-light">
                                 <span class="btn-label"><i class="  glyphicon glyphicon-barcode"></i> </span> Products
                             </button>
-                            <button id="newProductModal" data-toggle="modal" data-target="#newProduct" type="button"
-                                class="btn btn-warning waves-effect waves-light">
+                            <button id="newProductModal" data-toggle="modal" data-target="#newProduct" type="button" class="btn btn-warning waves-effect waves-light">
                                 <i class="fa fa-plus"></i>
                             </button>
                         </div>
                         <div class="btn-group p_two">
-                            <button id="categoryModal" data-toggle="modal" data-target="#Categories" type="button"
-                                class="btn btn-success waves-effect waves-light">
+                            <button id="categoryModal" data-toggle="modal" data-target="#Categories" type="button" class="btn btn-success waves-effect waves-light">
                                 <span class="btn-label"><i class="glyphicon glyphicon-th"></i> </span> Categories
                             </button>
-                            <button id="newCategoryModal" data-toggle="modal" data-target="#newCategory" type="button"
-                                class="btn btn-warning waves-effect waves-light">
+                            <button id="newCategoryModal" data-toggle="modal" data-target="#newCategory" type="button" class="btn btn-warning waves-effect waves-light">
                                 <i class="fa fa-plus"></i>
                             </button>
                         </div>
-                        <button id="viewRefOrders" data-toggle="modal" data-target="#holdOrdersModal" type="button"
-                            class="btn btn-info waves-effect waves-light">
+                        <button id="viewRefOrders" data-toggle="modal" data-target="#holdOrdersModal" type="button" class="btn btn-info waves-effect waves-light">
                             <span class="btn-label"><i class="fa fa-shopping-basket"></i> </span> Open Tabs
                         </button>
-                        <button id="viewCustomerOrders" data-toggle="modal" data-target="#customerModal" type="button"
-                            onclick="$(this).getCustomerOrders()" class="btn btn-info waves-effect waves-light">
+                        <button id="viewCustomerOrders" data-toggle="modal" data-target="#customerModal" type="button" onclick="$(this).getCustomerOrders()" class="btn btn-info waves-effect waves-light">
                             <span class="btn-label"><i class="fa fa-shopping-cart"></i></span> Orders
                         </button>
                     </div>
                 </div>
-
                 <div class="col-md-6">
                     <div class="button-list m-t-15">
-                        <button id="settings" data-toggle="modal" data-target="#settingsModal" type="button"
-                            class="btn btn-success waves-effect waves-light p_five">
+                        <button id="settings" data-toggle="modal" data-target="#settingsModal" type="button" class="btn btn-success waves-effect waves-light p_five">
                             <i class="glyphicon glyphicon-cog"></i>
                         </button>
-                        <button id="transactions" type="button"
-                            class="btn btn-success waves-effect waves-light p_three">
+                        <button id="transactions" type="button" class="btn btn-success waves-effect waves-light p_three">
                             <span class="btn-label"><i class="  glyphicon glyphicon-credit-card"></i> </span>
                             Transactions
                         </button>
@@ -82,19 +71,15 @@
                             Sale
                         </button>
                         <div class="btn-group p_four">
-                            <button id="usersModal" data-toggle="modal" data-target="#Users" type="button"
-                                class="btn btn-success waves-effect waves-light">
+                            <button id="usersModal" data-toggle="modal" data-target="#Users" type="button" class="btn btn-success waves-effect waves-light">
                                 <span class="btn-label"><i class="  glyphicon glyphicon-user"></i> </span> Users
                             </button>
-                            <button id="add-user" data-toggle="modal" type="button"
-                                class="btn btn-warning waves-effect waves-light">
+                            <button id="add-user" data-toggle="modal" type="button" class="btn btn-warning waves-effect waves-light">
                                 <i class="fa fa-plus"></i>
                             </button>
                         </div>
-                        <button type="button" title="My Profile" class="btn btn-default waves-effect waves-light"
-                            id="cashier">
-                            <span class="btn-label"><i class="glyphicon glyphicon-user"></i> </span> <span
-                                id="loggedin-user"></span>
+                        <button type="button" title="My Profile" class="btn btn-default waves-effect waves-light" id="cashier">
+                            <span class="btn-label"><i class="glyphicon glyphicon-user"></i> </span> <span id="loggedin-user"></span>
                         </button>
                         <button id="log-out" type="button" class="btn btn-warning waves-effect waves-light">
                             <i class="glyphicon glyphicon-log-out"></i> <span>Log out</span>
@@ -184,8 +169,7 @@
                                     <h4>Transaction Details</h4>
                                 </div>
                                 <div class="card-body">
-                                    <table class="table table-striped table-bordered table-responsive"
-                                        id="transactionList">
+                                    <table class="table table-striped table-bordered table-responsive" id="transactionList">
                                         <thead>
                                             <tr>
                                                 <th>Invoice</th>
@@ -208,7 +192,6 @@
                 </div>
             </div>
             <div id="pos_view">
-
                 <div class="row m-t-20">
                     <div class="col-md-6">
                         <div class="card-box" id="card-box">
@@ -219,21 +202,16 @@
                                             <select name="" id="customer" class="form-control">
                                             </select>
                                             <span class="input-group-btn">
-                                                <button id="newCustomerModal" data-toggle="modal" data-target="#newCustomer"
-                                                    class="btn btn-success"><i class="fa fa-plus"></i></button>
+                                                <button id="newCustomerModal" data-toggle="modal" data-target="#newCustomer" class="btn btn-success"><i class="fa fa-plus"></i></button>
                                             </span>
                                         </div>
                                     </div>
                                     <div class="col-md-10 m-t-5">
                                         <form action="" id="searchBarCode">
                                             <div class="input-group">
-                                                <input type="text" required id="skuCode" name="skuCode"
-                                                    class="form-control"
-                                                    placeholder="Scan barcode or type the number then hit enter"
-                                                    aria-label="barcode" aria-describedby="basic-addon2">
+                                                <input type="text" required id="skuCode" name="skuCode" class="form-control" placeholder="Scan barcode or type the number then hit enter" aria-label="barcode" aria-describedby="basic-addon2">
                                                 <span class="input-group-btn">
-                                                    <button type="submit" class="btn btn-default search-barcode-btn"><i
-                                                            class="glyphicon glyphicon-ok"></i></button>
+                                                    <button type="submit" class="btn btn-default search-barcode-btn"><i class="glyphicon glyphicon-ok"></i></button>
                                                 </span>
                                             </div>
                                         </form>
@@ -247,9 +225,7 @@
                                                 <div class="col-md-3"><strong>Item</strong></div>
                                                 <div class="col-md-3"><strong>Qty</strong></div>
                                                 <div class="col-md-3"><strong>Price</strong></div>
-                                                <div class="col-md-1"><button onclick="$(this).cancelOrder()"
-                                                        class="btn btn-light btn-xs"><i
-                                                            class="fa fa-times"></i></button>
+                                                <div class="col-md-1"><button onclick="$(this).cancelOrder()" class="btn btn-light btn-xs"><i class="fa fa-times"></i></button>
                                                 </div>
                                             </div>
                                         </div>
@@ -268,8 +244,7 @@
                                 </div>
                                 <div class="row">
                                     <div class="col-md-3">Discount</div>
-                                    <div class="col-md-3"><input class="form-control" type="number" id="inputDiscount"
-                                            minimum="0" placeholder="amount" oninput="$(this).calculateCart();"></div>
+                                    <div class="col-md-3"><input class="form-control" type="number" id="inputDiscount" minimum="0" placeholder="amount" oninput="$(this).calculateCart();"></div>
                                     <div class="col-md-3">Gross Price (inc <span id="taxInfo"></span>% Tax)</div>
                                     <div class="col-md-3">
                                         <h3 id="gross_price">0.00</h3>
@@ -277,12 +252,10 @@
                                 </div>
                             </div>
                             <div class="button-list pull-right">
-                                <button onclick="$(this).submitDueOrder(3);" type="button"
-                                    class="btn btn-info waves-effect waves-light">
+                                <button onclick="$(this).submitDueOrder(3);" type="button" class="btn btn-info waves-effect waves-light">
                                     <i class="fa fa-print"></i>
                                 </button>
-                                <button onclick="$(this).cancelOrder()" type="button"
-                                    class="btn btn-danger waves-effect waves-light">
+                                <button onclick="$(this).cancelOrder()" type="button" class="btn btn-danger waves-effect waves-light">
                                     <span class="btn-label"><i class="fa fa-ban"></i></span>Cancel
                                 </button>
                                 <button type="button" id="hold" class="btn btn-success waves-effect waves-light">
@@ -299,8 +272,7 @@
                         <div class="card-box">
                             <div class="row">
                                 <div class="col-md-6">
-                                    <input type="text" id="search" class="form-control"
-                                        placeholder="Search product by name or sku">
+                                    <input type="text" id="search" class="form-control" placeholder="Search product by name or sku">
                                 </div>
                                 <div class="col-md-6">
                                     <select id="categories" class="form-control">
@@ -313,11 +285,9 @@
                         </div>
                     </div>
                 </div>
-
             </div>
         </div>
-        <div id="dueModal" class="modal fade bs-example-modal-sm" tabindex="-1" role="dialog"
-            aria-labelledby="mySmallModalLabel" aria-hidden="true">
+        <div id="dueModal" class="modal fade bs-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
             <div class="modal-dialog modal-sm">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -333,74 +303,60 @@
                         <hr>
                         <div class="row">
                             <div class="col-md-4">
-                                <button data-val="1" data-isdue="true"
-                                    class="btn btn-success btn-lg btn-block keypad-btn">1</button>
+                                <button data-val="1" data-isdue="true" class="btn btn-success btn-lg btn-block keypad-btn">1</button>
                             </div>
                             <div class="col-md-4">
-                                <button data-val="2" data-isdue="true"
-                                    class="btn btn-success btn-lg btn-block keypad-btn">2</button>
+                                <button data-val="2" data-isdue="true" class="btn btn-success btn-lg btn-block keypad-btn">2</button>
                             </div>
                             <div class="col-md-4">
-                                <button data-val="3" data-isdue="true"
-                                    class="btn btn-success btn-lg btn-block keypad-btn">3</button>
+                                <button data-val="3" data-isdue="true" class="btn btn-success btn-lg btn-block keypad-btn">3</button>
                             </div>
                         </div>
                         <br>
                         <div class="row">
                             <div class="col-md-4">
-                                <button data-val="4" data-isdue="true"
-                                    class="btn btn-success btn-lg btn-block keypad-btn">4</button>
+                                <button data-val="4" data-isdue="true" class="btn btn-success btn-lg btn-block keypad-btn">4</button>
                             </div>
                             <div class="col-md-4">
-                                <button data-val="5" data-isdue="true"
-                                    class="btn btn-success btn-lg btn-block keypad-btn">5</button>
+                                <button data-val="5" data-isdue="true" class="btn btn-success btn-lg btn-block keypad-btn">5</button>
                             </div>
                             <div class="col-md-4">
-                                <button data-val="6" data-isdue="true"
-                                    class="btn btn-success btn-lg btn-block keypad-btn">6</button>
+                                <button data-val="6" data-isdue="true" class="btn btn-success btn-lg btn-block keypad-btn">6</button>
                             </div>
                         </div>
                         <br>
                         <div class="row">
                             <div class="col-md-4">
-                                <button data-val="7" data-isdue="true"
-                                    class="btn btn-success btn-lg btn-block keypad-btn">7</button>
+                                <button data-val="7" data-isdue="true" class="btn btn-success btn-lg btn-block keypad-btn">7</button>
                             </div>
                             <div class="col-md-4">
-                                <button data-val="8" data-isdue="true"
-                                    class="btn btn-success btn-lg btn-block keypad-btn">8</button>
+                                <button data-val="8" data-isdue="true" class="btn btn-success btn-lg btn-block keypad-btn">8</button>
                             </div>
                             <div class="col-md-4">
-                                <button data-val="9" data-isdue="true"
-                                    class="btn btn-success btn-lg btn-block keypad-btn">9</button>
+                                <button data-val="9" data-isdue="true" class="btn btn-success btn-lg btn-block keypad-btn">9</button>
                             </div>
                         </div>
                         <br>
                         <div class="row">
                             <div class="col-md-4">
-                                <button data-val="del"
-                                    class="btn btn-warning btn-lg btn-block">⌫</button>
+                                <button data-val="del" class="btn btn-warning btn-lg btn-block">⌫</button>
                             </div>
                             <div class="col-md-4">
-                                <button data-val="0" data-isdue="true"
-                                    class="btn btn-success btn-lg btn-block keypad-btn">0</button>
+                                <button data-val="0" data-isdue="true" class="btn btn-success btn-lg btn-block keypad-btn">0</button>
                             </div>
                             <div class="col-md-4">
-                                <button data-val="ac" data-isdue="true"
-                                    class="btn btn-danger btn-lg btn-block keypad-btn">AC</button>
+                                <button data-val="ac" data-isdue="true" class="btn btn-danger btn-lg btn-block keypad-btn">AC</button>
                             </div>
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" onclick="$(this).submitDueOrder(0);"
-                            class="btn btn-primary btn-block btn-lg waves-effect waves-light">Hold Order</button>
+                        <button type="button" onclick="$(this).submitDueOrder(0);" class="btn btn-primary btn-block btn-lg waves-effect waves-light">Hold Order</button>
                     </div>
                 </div><!-- /.modal-content -->
             </div><!-- /.modal-dialog -->
         </div><!-- /.modal -->
         <!--  Modal content for the above example -->
-        <div id="paymentModel" class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog"
-            aria-labelledby="myLargeModalLabel" aria-hidden="true">
+        <div id="paymentModel" class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
             <div class="modal-dialog modal-lg">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -411,78 +367,61 @@
                         <div class="row">
                             <div class="col-md-4">
                                 <div class="list-group">
-                                    <a href="javascript:void(0)" id="cash" onclick="paymentType = 1"
-                                        class="list-group-item active">
+                                    <a href="javascript:void(0)" id="cash" onclick="paymentType = 1" class="list-group-item active">
                                         Cash
                                     </a>
-                                    <a href="javascript:void(0)" id="card" onclick="paymentType = 3"
-                                        class="list-group-item">Card</a>
+                                    <a href="javascript:void(0)" id="card" onclick="paymentType = 3" class="list-group-item">Card</a>
                                 </div>
                             </div>
                             <div class="col-md-8">
                                 <div class="input-group">
-                                    <span class="input-group-addon" id="basic-addon3">Price <span
-                                            id="price_curr"></span></span>
-                                    <input id="payablePrice" readonly type="text" class="form-control"
-                                        aria-describedby="basic-addon3">
+                                    <span class="input-group-addon" id="basic-addon3">Price <span id="price_curr"></span></span>
+                                    <input id="payablePrice" readonly type="text" class="form-control" aria-describedby="basic-addon3">
                                 </div>
                                 <br>
                                 <div class="input-group">
-                                    <span class="input-group-addon" id="basic-addon3">Payment <span
-                                            id="payment_curr"></span> </span>
-
-                                    <input type="text" placeholder="0.0" class="form-control" id="paymentText"
-                                        aria-describedby="basic-addon3" readonly>
-                                    <input type="hidden" class="form-control" id="payment"
-                                        aria-describedby="basic-addon3">
+                                    <span class="input-group-addon" id="basic-addon3">Payment <span id="payment_curr"></span> </span>
+                                    <input type="text" placeholder="0.0" class="form-control" id="paymentText" aria-describedby="basic-addon3" readonly>
+                                    <input type="hidden" class="form-control" id="payment" aria-describedby="basic-addon3">
                                 </div>
                                 <hr>
                                 <div class="row">
                                     <div class="col-md-9">
                                         <div class="row">
                                             <div class="col-md-3">
-                                                <button data-val="1" data-isdue="false"
-                                                    class="btn btn-success btn-lg btn-block keypad-btn">1</button>
+                                                <button data-val="1" data-isdue="false" class="btn btn-success btn-lg btn-block keypad-btn">1</button>
                                             </div>
                                             <div class="col-md-3">
-                                                <button data-val="2" data-isdue="false"
-                                                    class="btn btn-success btn-lg btn-block keypad-btn">2</button>
+                                                <button data-val="2" data-isdue="false" class="btn btn-success btn-lg btn-block keypad-btn">2</button>
                                             </div>
                                             <div class="col-md-3">
-                                                <button data-val="3" data-isdue="false"
-                                                    class="btn btn-success btn-lg btn-block keypad-btn">3</button>
+                                                <button data-val="3" data-isdue="false" class="btn btn-success btn-lg btn-block keypad-btn">3</button>
                                             </div>
                                             <div class="col-md-3"></div>
                                         </div>
                                         <br>
                                         <div class="row">
                                             <div class="col-md-3">
-                                                <button data-val="4" data-isdue="false"
-                                                    class="btn btn-success btn-lg btn-block keypad-btn">4</button>
+                                                <button data-val="4" data-isdue="false" class="btn btn-success btn-lg btn-block keypad-btn">4</button>
                                             </div>
                                             <div class="col-md-3">
-                                                <button data-val="5" data-isdue="false"
-                                                    class="btn btn-success btn-lg btn-block keypad-btn">5</button>
+                                                <button data-val="5" data-isdue="false" class="btn btn-success btn-lg btn-block keypad-btn">5</button>
                                             </div>
                                             <div class="col-md-3">
-                                                <button data-val="6" data-isdue="false"
-                                                    class="btn btn-success btn-lg btn-block keypad-btn">6</button>
+                                                <button data-val="6" data-isdue="false" class="btn btn-success btn-lg btn-block keypad-btn">6</button>
                                             </div>
                                             <div class="col-md-3"></div>
                                         </div>
                                         <br>
                                         <div class="row">
                                             <div class="col-md-3">
-                                                <button data-val="7" data-isdue="false"
-                                                    class="btn btn-success btn-lg btn-block keypad-btn">7</button>
+                                                <button data-val="7" data-isdue="false" class="btn btn-success btn-lg btn-block keypad-btn">7</button>
                                             </div>
                                             <div class="col-md-3">
-                                                <button data-val="8" data-isdue="false"
-                                                    class="btn btn-success btn-lg btn-block keypad-btn">8</button>
+                                                <button data-val="8" data-isdue="false" class="btn btn-success btn-lg btn-block keypad-btn">8</button>
                                             </div>
                                             <div class="col-md-3">
-                                                <button data-val="9" data-isdue="false"
-                                                    class="btn btn-success btn-outline-success btn-lg btn-block keypad-btn">9</button>
+                                                <button data-val="9" data-isdue="false" class="btn btn-success btn-outline-success btn-lg btn-block keypad-btn">9</button>
                                             </div>
                                             <div class="col-md-3"></div>
                                         </div>
@@ -492,26 +431,22 @@
                                                 <button data-val="del" class="btn btn-danger btn-lg btn-block keypad-btn">⌫</button>
                                             </div>
                                             <div class="col-md-3">
-                                                <button data-val="0" data-isdue="false"
-                                                    class="btn btn-success btn-lg btn-block keypad-btn">0</button>
+                                                <button data-val="0" data-isdue="false" class="btn btn-success btn-lg btn-block keypad-btn">0</button>
                                             </div>
                                             <div class="col-md-3">
-                                                <button data-val="." data-isdue="false" 
-                                                    class="btn btn-warning btn-lg btn-block">.</button>
+                                                <button data-val="." data-isdue="false" class="btn btn-warning btn-lg btn-block">.</button>
                                             </div>
                                             <div class="col-md-3"></div>
                                         </div>
                                     </div>
                                     <div class="col-md-3">
-                                        <button data-val="ac" data-isdue="false" 
-                                            class="btn btn-danger btn-block btn-lg keypad-btn">AC</button>
+                                        <button data-val="ac" data-isdue="false" class="btn btn-danger btn-block btn-lg keypad-btn">AC</button>
                                     </div>
                                 </div>
                                 <br>
                                 <div class="input-group" id="cardInfo">
                                     <span class="input-group-addon" id="basic-addon3">Card Info </span>
-                                    <input type="text" class="form-control" id="paymentInfo"
-                                        aria-describedby="basic-addon3">
+                                    <input type="text" class="form-control" id="paymentInfo" aria-describedby="basic-addon3">
                                 </div>
                             </div>
                         </div>
@@ -519,21 +454,18 @@
                     <div class="modal-footer">
                         <div class="row">
                             <div class="col-md-6">
-                                <div class="btn btn-primary btn-block btn-lg waves-effect waves-light">Change <span
-                                        id="change_curr"></span><span id="change"></span> </div>
+                                <div class="btn btn-primary btn-block btn-lg waves-effect waves-light">Change <span id="change_curr"></span><span id="change"></span> </div>
                             </div>
                             <div class="col-md-6">
-                                <button type="button" id="confirmPayment"
-                                    class="btn btn-success btn-block btn-lg waves-effect waves-light">Confirm
-                                    Payment</button>
+                                <button type="button" id="confirmPayment" class="btn btn-success btn-block btn-lg waves-effect waves-light">Confirm
+                                Payment</button>
                             </div>
                         </div>
                     </div>
                 </div><!-- /.modal-content -->
             </div><!-- /.modal-dialog -->
         </div><!-- /.modal -->
-        <div id="newCustomer" class="modal fade bs-example-modal-sm" tabindex="-1" role="dialog"
-            aria-labelledby="mySmallModalLabel" aria-hidden="true">
+        <div id="newCustomer" class="modal fade bs-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
             <div class="modal-dialog modal-sm">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -546,23 +478,19 @@
                         <form id="saveCustomer" data-parsley-validate>
                             <div class="form-group">
                                 <label for="userName">Customer Name*</label>
-                                <input type="text" required="required" name="name" parsley-trigger="change"
-                                    placeholder="Enter name" class="form-control" id="userName">
+                                <input type="text" required="required" name="name" parsley-trigger="change" placeholder="Enter name" class="form-control" id="userName">
                             </div>
                             <div class="form-group">
                                 <label for="userName">Customer Phone</label>
-                                <input type="text" name="phone" parsley-trigger="change"
-                                    placeholder="Enter Phone number" class="form-control" id="phoneNumber">
+                                <input type="text" name="phone" parsley-trigger="change" placeholder="Enter Phone number" class="form-control" id="phoneNumber">
                             </div>
                             <div class="form-group">
                                 <label for="userName">Customer Email</label>
-                                <input type="email" name="email" parsley-trigger="change"
-                                    placeholder="Enter email address" class="form-control" id="emailAddress">
+                                <input type="email" name="email" parsley-trigger="change" placeholder="Enter email address" class="form-control" id="emailAddress">
                             </div>
                             <div class="form-group">
                                 <label for="userName">Customer Address</label>
-                                <input type="text" name="address" parsley-trigger="change" placeholder="Enter address"
-                                    class="form-control" id="userAddress">
+                                <input type="text" name="address" parsley-trigger="change" placeholder="Enter address" class="form-control" id="userAddress">
                             </div>
                             <input type="submit" class="btn btn-primary btn-block waves-effect waves-light">
                         </form>
@@ -570,8 +498,7 @@
                 </div>
             </div>
         </div>
-        <div id="newProduct" class="modal fade bs-example-modal-sm" tabindex="-1" role="dialog"
-            aria-labelledby="mySmallModalLabel" aria-hidden="true">
+        <div id="newProduct" class="modal fade bs-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
             <div class="modal-dialog modal-sm">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -591,52 +518,44 @@
                             </div>
                             <div class="form-group">
                                 <label for="productName">Product Name</label>
-                                <input type="text" required="required" name="name" parsley-trigger="change"
-                                    placeholder="Enter a product name" class="form-control" id="productName">
+                                <input type="text" required="required" name="name" parsley-trigger="change" placeholder="Enter a product name" class="form-control" id="productName">
                             </div>
                             <div class="form-group">
                                 <label for="barcode">BarCode</label>
-                                <input type="text" required="required" name="barcode" parsley-trigger="change"
-                                    placeholder="Enter product barcode" class="form-control" id="barcode">
+                                <input type="text" required="required" name="barcode" parsley-trigger="change" placeholder="Enter product barcode" class="form-control" id="barcode">
                             </div>
                             <div class="form-group">
                                 <label for="product_price">Price</label>
-                                <input type="text" required="required" name="price" placeholder="Price"
-                                    class="form-control" id="product_price">
+                                <input type="text" required="required" name="price" placeholder="Price" class="form-control" id="product_price">
                             </div>
                             <div class="form-group">
                                 <label for="expirationDate">Expiry Date</label>
-                                <input type="text" name="expirationDate" parsley-trigger="change"
-                                    placeholder="dd/mm/yyyy" class="form-control" id="expirationDate" readonly>
+                                <input type="text" name="expirationDate" parsley-trigger="change" placeholder="dd/mm/yyyy" class="form-control" id="expirationDate" readonly>
                             </div>
                             <div class="form-group">
                                 <label for="quantity">Stock</label>
-                                <input type="number" name="quantity" placeholder="Available stock" class="form-control"
-                                    id="quantity" min="0">
+                                <input type="number" name="quantity" placeholder="Available stock" class="form-control" id="quantity" min="0">
                             </div>
                             <div class="form-group">
                                 <label for="quantity">Minimum Stock</label>
-                                <input type="number" name="minStock" placeholder="Minimum Stock" class="form-control"
-                                    id="minStock" min="1">
+                                <input type="number" name="minStock" placeholder="Minimum Stock" class="form-control" id="minStock" min="1">
                             </div>
                             <div class="form-group">
                                 <label><input type="checkbox" name="stock" id="stock"> Disable stock check </label>
                             </div>
                             <div class="form-group">
                                 <label for="imagename"><span id="rmv_img" class="btn btn-xs btn-warning">Remove</span>
-                                    Picture </label>
+                                Picture </label>
                                 <div id="current_img"></div>
                                 <input type="file" name="imagename" id="imagename">
                             </div>
-                            <input type="submit" id="submitProduct"
-                                class="btn btn-primary btn-block waves-effect waves-light">
+                            <input type="submit" id="submitProduct" class="btn btn-primary btn-block waves-effect waves-light">
                         </form>
                     </div>
                 </div>
             </div>
         </div>
-        <div id="newCategory" class="modal fade bs-example-modal-sm" tabindex="-1" role="dialog"
-            aria-labelledby="mySmallModalLabel" aria-hidden="true">
+        <div id="newCategory" class="modal fade bs-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
             <div class="modal-dialog modal-md">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -650,18 +569,15 @@
                             <div class="form-group">
                                 <label for="userName">Name</label>
                                 <input id="category_id" type="hidden" name="id">
-                                <input id="categoryName" type="text" required="required" name="name"
-                                    placeholder="Enter a category name" class="form-control">
+                                <input id="categoryName" type="text" required="required" name="name" placeholder="Enter a category name" class="form-control">
                             </div>
-                            <input type="submit" id="submitCategory"
-                                class="btn btn-primary btn-block waves-effect waves-light">
+                            <input type="submit" id="submitCategory" class="btn btn-primary btn-block waves-effect waves-light">
                         </form>
                     </div>
                 </div>
             </div>
         </div>
-        <div id="Products" class="modal fade bs-example-modal-sm" tabindex="-1" role="dialog"
-            aria-labelledby="mySmallModalLabel" aria-hidden="true">
+        <div id="Products" class="modal fade bs-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
             <div class="modal-dialog modal-lg">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -689,8 +605,7 @@
                 </div>
             </div>
         </div>
-        <div id="Users" class="modal fade bs-example-modal-sm" tabindex="-1" role="dialog"
-            aria-labelledby="mySmallModalLabel" aria-hidden="true">
+        <div id="Users" class="modal fade bs-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
             <div class="modal-dialog modal-lg">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -715,8 +630,7 @@
                 </div>
             </div>
         </div>
-        <div id="Categories" class="modal fade bs-example-modal-sm" tabindex="-1" role="dialog"
-            aria-labelledby="mySmallModalLabel" aria-hidden="true">
+        <div id="Categories" class="modal fade bs-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
             <div class="modal-dialog modal-md">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -739,8 +653,7 @@
                 </div>
             </div>
         </div>
-        <div id="userModal" class="modal fade bs-example-modal-sm" tabindex="-1" role="dialog"
-            aria-labelledby="mySmallModalLabel" aria-hidden="true">
+        <div id="userModal" class="modal fade bs-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
             <div class="modal-dialog modal-sm">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -754,46 +667,42 @@
                             <input type="hidden" name="id" id="user_id">
                             <div class="form-group">
                                 <label for="userName">Name*</label>
-                                <input type="text" required="required" name="fullname" parsley-trigger="change"
-                                    placeholder="Enter name" class="form-control" id="fullname">
+                                <input type="text" required="required" name="fullname" parsley-trigger="change" placeholder="Enter name" class="form-control" id="fullname">
                             </div>
                             <div class="form-group">
                                 <label for="userName">Username*</label>
-                                <input type="text" name="username" parsley-trigger="change" placeholder="Login Username"
-                                    class="form-control" id="username">
+                                <input type="text" name="username" parsley-trigger="change" placeholder="Login Username" class="form-control" id="username">
                             </div>
                             <div class="form-group">
                                 <label for="userName">Password</label>
-                                <input type="password" name="password" parsley-trigger="change" placeholder="Password"
-                                    class="form-control" id="password">
+                                <input type="password" name="password" parsley-trigger="change" placeholder="Password" class="form-control" id="password">
                             </div>
                             <div class="form-group">
                                 <label for="userName">Repeat Password</label>
-                                <input type="password" name="pass" parsley-trigger="change" placeholder="Repeat"
-                                    class="form-control" id="pass">
+                                <input type="password" name="pass" parsley-trigger="change" placeholder="Repeat" class="form-control" id="pass">
                             </div>
                             <div class="perms">
                                 <h3 class="m-t-20">Permissions</h3>
                                 <hr>
                                 <div class="form-group">
                                     <span><input type="checkbox" name="perm_products" id="perm_products"> Manage
-                                        Products and Stock </span>
+                                    Products and Stock </span>
                                 </div>
                                 <div class="form-group">
                                     <span><input type="checkbox" name="perm_categories" id="perm_categories"> Manage
-                                        Product Categories </span>
+                                    Product Categories </span>
                                 </div>
                                 <div class="form-group">
                                     <span><input type="checkbox" name="perm_transactions" id="perm_transactions"> View
-                                        Transactions </span>
+                                    Transactions </span>
                                 </div>
                                 <div class="form-group">
                                     <span><input type="checkbox" name="perm_users" id="perm_users"> Manage Users and
-                                        Permissions </span>
+                                    Permissions </span>
                                 </div>
                                 <div class="form-group">
                                     <span><input type="checkbox" name="perm_settings" id="perm_settings"> Manage
-                                        Settings </span>
+                                    Settings </span>
                                 </div>
                             </div>
                             <input type="submit" class="btn btn-primary btn-block waves-effect waves-light">
@@ -802,8 +711,7 @@
                 </div>
             </div>
         </div>
-        <div id="holdOrdersModal" class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog"
-            aria-labelledby="myLargeModalLabel" aria-hidden="true">
+        <div id="holdOrdersModal" class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
             <div class="modal-dialog modal-lg">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -811,8 +719,7 @@
                         <h4 class="modal-title" id="myLargeModalLabel">Open Orders</h4>
                     </div>
                     <div class="modal-body">
-                        <input type="text" id="holdOrderInput" placeholder="Search order by reference"
-                            class="holdOrderInput form-control">
+                        <input type="text" id="holdOrderInput" placeholder="Search order by reference" class="holdOrderInput form-control">
                         <div class="holdOrderKeyboard"></div>
                         <br>
                         <div class="row" id="renderHoldOrders">
@@ -822,8 +729,7 @@
                 </div>
             </div>
         </div>
-        <div id="customerModal" class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog"
-            aria-labelledby="myLargeModalLabel" aria-hidden="true">
+        <div id="customerModal" class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
             <div class="modal-dialog modal-lg">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -831,8 +737,7 @@
                         <h4 class="modal-title" id="myLargeModalLabel">Customer Orders</h4>
                     </div>
                     <div class="modal-body">
-                        <input type="text" id="holdCustomerOrderInput" placeholder="Search order by customer name"
-                            class="holdCustomerOrderInput form-control">
+                        <input type="text" id="holdCustomerOrderInput" placeholder="Search order by customer name" class="holdCustomerOrderInput form-control">
                         <div class="customerOrderKeyboard"></div>
                         <br>
                         <div class="row" id="renderCustomerOrders">
@@ -842,13 +747,11 @@
                 </div>
             </div>
         </div>
-        <div id="orderModal" class="modal fade bs-example-modal-sm" tabindex="-1" role="dialog"
-            aria-labelledby="myLargeModalLabel" aria-hidden="true">
+        <div id="orderModal" class="modal fade bs-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
             <div class="modal-dialog modal-sm">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <button class="btn btn-sm btn-success" onclick="$(this).print()">Print</button> <br> <button
-                            type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                        <button class="btn btn-sm btn-success" onclick="$(this).print()">Print</button> <br> <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
                     </div>
                     <div class="modal-body" id="viewTransaction">
                     </div>
@@ -857,8 +760,7 @@
                 </div>
             </div>
         </div>
-        <div id="settingsModal" class="modal fade bs-example-modal-sm" tabindex="-1" role="dialog"
-            aria-labelledby="mySmallModalLabel" aria-hidden="true">
+        <div id="settingsModal" class="modal fade bs-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
             <div class="modal-dialog modal-md">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -881,28 +783,22 @@
                                 <form id="net_settings_form">
                                     <div class="form-group">
                                         <label for="ip">Server IP Address*</label>
-                                        <input type="text" required="required"
-                                            placeholder="Enter the IP address of the admin computer." name="ip"
-                                            class="form-control" id="ip">
+                                        <input type="text" required="required" placeholder="Enter the IP address of the admin computer." name="ip" class="form-control" id="ip">
                                     </div>
                                     <div class="col-md-5">
                                         <div class="form-group">
                                             <label for="till">Till Number*</label>
-                                            <input type="text" required="required" placeholder="Enter a number"
-                                                name="till" class="form-control" id="till">
+                                            <input type="text" required="required" placeholder="Enter a number" name="till" class="form-control" id="till">
                                         </div>
                                     </div>
                                     <div class="col-md-7">
                                         <div class="form-group">
                                             <label for="mac">Hardware Identification Number </label>
-                                            <input type="text" required="required" name="mac" class="form-control"
-                                                id="mac" readonly="readonly">
+                                            <input type="text" required="required" name="mac" class="form-control" id="mac" readonly="readonly">
                                         </div>
                                     </div>
                                     <div class="form-group">
-                                        <input id="save_settings" type="submit"
-                                            class="btn btn-success btn-block waves-effect waves-light"
-                                            value="Save Settings">
+                                        <input id="save_settings" type="submit" class="btn btn-success btn-block waves-effect waves-light" value="Save Settings">
                                     </div>
                                 </form>
                             </div>
@@ -910,22 +806,20 @@
                                 <input type="hidden" name="id" id="settings_id">
                                 <input type="hidden" name="img" id="logo_img">
                                 <input type="hidden" name="remove" id="remove_logo">
+                                <div class="container">
                                 <div class="row">
                                     <div class="col-md-6">
                                         <div class="form-group">
                                             <label for="userName">Store Name</label>
-                                            <input type="text" required="required" name="store" class="form-control"
-                                                id="store">
+                                            <input type="text" required="required" name="store" class="form-control" id="store">
                                         </div>
                                         <div class="form-group">
                                             <label for="userName">Address Line 1</label>
-                                            <input type="text" required="required" name="address_one"
-                                                class="form-control" id="address_one">
+                                            <input type="text" required="required" name="address_one" class="form-control" id="address_one">
                                         </div>
                                         <div class="form-group">
                                             <label for="userName">Address Line 2</label>
-                                            <input type="text" required="required" name="address_two"
-                                                class="form-control" id="address_two">
+                                            <input type="text" required="required" name="address_two" class="form-control" id="address_two">
                                         </div>
                                         <div class="form-group">
                                             <label for="userName">Contact Number</label>
@@ -933,23 +827,20 @@
                                         </div>
                                         <div class="form-group">
                                             <label for="userName">Vat Number</label>
-                                            <input type="text" name="tax" parsley-trigger="change" class="form-control"
-                                                id="tax">
+                                            <input type="text" name="tax" parsley-trigger="change" class="form-control" id="tax">
                                         </div>
                                     </div>
                                     <div class="col-md-6">
                                         <div class="form-group">
                                             <label for="userName">Currency Symbol</label>
-                                            <input type="text" required="required" name="symbol" class="form-control"
-                                                id="symbol">
+                                            <input type="text" required="required" name="symbol" class="form-control" id="symbol" minlength="1" maxlength="4">
                                         </div>
                                         <div class="form-group">
                                             <label for="userName">Vat Percentage</label>
                                             <div class="pull-left">
                                                 <div class="col-md-6">
-                                                    <div class="input-group">
-                                                        <input type="text" required="required" name="percentage"
-                                                            class="form-control" id="percentage">
+                                                    <div class="input-group" style="width:130%">
+                                                        <input type="number" min="0" max="100" required="required" name="percentage" class="form-control" id="percentage">
                                                         <span class="input-group-addon">%</span>
                                                     </div>
                                                 </div>
@@ -958,11 +849,10 @@
                                         <br><br>
                                         <div class="form-group">
                                             <label><input type="checkbox" name="charge_tax" id="charge_tax"> Charge
-                                                Vat</label>
+                                            Vat</label>
                                         </div>
                                         <div class="form-group">
-                                            <label for="userName"><span id="rmv_logo"
-                                                    class="btn btn-xs btn-warning">Remove</span> Logo </label>
+                                            <label for="userName"><span id="rmv_logo" class="btn btn-xs btn-warning">Remove</span> Logo </label>
                                             <div id="current_logo"></div>
                                             <input type="file" name="imagename" id="logoname">
                                         </div>
@@ -973,10 +863,9 @@
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <input id="save_settings" type="submit"
-                                        class="btn btn-success btn-block waves-effect waves-light"
-                                        value="Save Settings">
+                                    <input id="save_settings" type="submit" class="btn btn-success btn-block waves-effect waves-light" value="Save Settings">
                                 </div>
+                            </div>
                             </form>
                         </div>
                     </div>

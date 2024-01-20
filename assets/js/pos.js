@@ -271,11 +271,18 @@ if (auth == undefined) {
             expiredCount++;
           }
         });
-        notiflix.Notify.failure(
+
+        //Show notification if there are any expired goods.
+        if(expiredCount>0)
+        {
+           notiflix.Notify.failure(
           `${expiredCount} ${
             expiredCount > 0 ? "products" : "product"
           } expired. Please restock!`,
         );
+        }
+
+       
         $("#parent").text("");
 
         data.forEach((item) => {
@@ -1696,7 +1703,7 @@ if (auth == undefined) {
         mac_address = mac;
       });
       const appChoice = $("#app").find("option:selected").text();
-      appChoice = appChoice;
+    
       formData["app"] = appChoice;
       formData["mac"] = mac_address;
       formData["till"] = 1;
