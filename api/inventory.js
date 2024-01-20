@@ -139,7 +139,7 @@ app.post("/product", upload.single("imagename"), function (req, res) {
                 ? 0
                 : validator.escape(req.body.quantity),
         name: validator.escape(req.body.name),
-        stock: validator.escape(req.body.stock) == "on" ? 0 : 1,
+        stock: req.body.stock == "on" ? 0 : 1,
         minStock: validator.escape(req.body.minStock),
         img: image,
     };

@@ -1238,6 +1238,7 @@ if (auth == undefined) {
             diagOptions.text,
             diagOptions.okButtonText,
             diagOptions.cancelButtonText,
+            ()=>{},
             () => {
               $("#newProduct").modal("hide");
             },
@@ -1279,10 +1280,10 @@ if (auth == undefined) {
             diagOptions.title,
             diagOptions.okButtonText,
             diagOptions.cancelButtonText,
+            ()=>{},
+
             () => {
-              if (!result.value) {
                 $("#newCategory").modal("hide");
-              }
             },
           );
         },
