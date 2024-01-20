@@ -12,18 +12,13 @@ const moneyFormat = (amount, locale = "en-US") => {
 
 const isExpired = (dueDate) => {
   let todayDate = moment();
-  // Convert dueDate to ISO format if needed
-  dueDate = new Date(dueDate).toISOString().slice(0, 10); // Extract date part
-  const expiryDate = moment(dueDate, "YYYY-MM-DD");
-  // let expiryDate = moment(dueDate, DATE_FORMAT);
+  let expiryDate = moment(dueDate, DATE_FORMAT);
   return todayDate.isSameOrAfter(dueDate);
 };
 
 const daysToExpire = (dueDate) => {
   let todayDate = moment();
-  dueDate = new Date(dueDate).toISOString().slice(0, 10);
-  const expiryDate = moment(dueDate, "YYYY-MM-DD");
-  // let expiryDate = moment(dueDate, DATE_FORMAT);
+  let expiryDate = moment(dueDate, DATE_FORMAT);
 
   if (expiryDate.isSameOrBefore(todayDate, "day")) {
     return 0;
