@@ -290,8 +290,16 @@ if (auth == undefined) {
             categories.push(item.category);
           }
           let item_isExpired = isExpired(item.expirationDate);
-          item_img = path.join(img_path, item.img);
-          item_img = checkImageExists(item_img) ? item_img : default_item_img;
+          if(item.img==="")
+          {
+            item_img = default_item_img;
+          }
+          else
+          {
+            item_img = path.join(img_path, item.img);
+            item_img = checkImageExists(item_img) ? item_img : default_item_img;
+          }
+          
 
           let item_info = `<div class="col-lg-2 box ${item.category}"
                                 onclick="$(this).addToCart(${item._id}, ${
@@ -1568,10 +1576,18 @@ if (auth == undefined) {
           product.expiryAlert = `<p class="text-danger"><small><i class="${icon}"></i> ${product.expiryStatus}</small></p>`;
         }
 
-        product_img = img_path + product.img;
-        product_img = checkImageExists(product_img)
+        if(product.img==="")
+        {
+          product_img=default_item_img;
+        }
+        else
+        {
+          product_img = img_path + product.img;
+          product_img = checkImageExists(product_img)
           ? product_img
           : default_item_img;
+        }
+        
         //render product list
         product_list +=
           `<tr>
