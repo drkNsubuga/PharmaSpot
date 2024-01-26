@@ -4,9 +4,9 @@ const setupEvents = require("./installers/setupEvents");
 if (setupEvents.handleSquirrelEvent()) {
     return;
 }
-const server = require('./server');
 const { app, BrowserWindow, ipcMain} = require("electron");
 const path = require("path");
+process.env.APPDATA = app.getPath('appData');
 const contextMenu = require("electron-context-menu");
 let { Menu, template } = require("./assets/js/native_menu/menu");
 const menuController = require('./assets/js/native_menu/menuController.js');

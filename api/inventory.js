@@ -3,7 +3,7 @@ const server = require("http").Server(app);
 const bodyParser = require("body-parser");
 const Datastore = require("@seald-io/nedb");
 const async = require("async");
-const fileUpload = require("express-fileupload");
+// const fileUpload = require("express-fileupload");
 const multer = require("multer");
 const fs = require("fs");
 const path = require("path");
@@ -13,7 +13,7 @@ const appName = process.env.APPNAME;
 const appData = process.env.APPDATA;
 const dbPath = path.join(
     appData,
-    process.env.APPNAME,
+    appName,
     "server",
     "databases",
     "inventory.db",
