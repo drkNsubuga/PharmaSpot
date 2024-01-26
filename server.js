@@ -1,10 +1,11 @@
 const http = require("http");
-const app = require("express")();
-const server = http.createServer(app);
+const express = require("express")();
+const server = http.createServer(express);
 const bodyParser = require("body-parser");
 const rateLimit = require("express-rate-limit");
 const pkg = require("./package.json");
-
+const {app} = require('electron');
+process.env.APPDATA = app.getPath('appData');
 process.env.APPNAME = pkg.name;
 const PORT = process.env.PORT || 0;
 const limiter = rateLimit({
@@ -14,11 +15,11 @@ const limiter = rateLimit({
 
 console.log("Server started");
 
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: false }));
-app.use(limiter);
+express.use(bodyParser.json());
+express.use(bodyParser.urlencoded({ extended: false }));
+express.use(limiter);
 
-app.all("/*", function (req, res, next) {
+express.all("/*", function (req, res, next) {
     res.header("Access-Control-Allow-Origin", "*");
     res.header("Access-Control-Allow-Methods", "GET,PUT,POST,DELETE,OPTIONS");
     res.header(
@@ -32,16 +33,16 @@ app.all("/*", function (req, res, next) {
     }
 });
 
-app.get("/", function (req, res) {
+express.get("/", function (req, res) {
     res.send("POS Server Online.");
 });
 
-app.use("/api/inventory", require("./api/inventory"));
-app.use("/api/customers", require("./api/customers"));
-app.use("/api/categories", require("./api/categories"));
-app.use("/api/settings", require("./api/settings"));
-app.use("/api/users", require("./api/users"));
-app.use("/api", require("./api/transactions"));
+express.use("/api/inventory", require("./api/inventory"));
+express.use("/api/customers", require("./api/customers"));
+express.use("/api/categories", require("./api/categories"));
+express.use("/api/settings", require("./api/settings"));
+express.use("/api/users", require("./api/users"));
+express.use("/api", require("./api/transactions"));
 
 server.listen(PORT, () => {
     process.env.PORT = server.address().port;
