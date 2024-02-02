@@ -3,6 +3,7 @@ const html2canvas = require("html2canvas");
 const JsBarcode = require("jsbarcode");
 const macaddress = require("macaddress");
 const notiflix = require("notiflix");
+const validator = require("validator");
 let fs = require("fs");
 let path = require("path");
 let moment = require("moment");
@@ -197,7 +198,7 @@ if (auth == undefined) {
 
   $(document).ready(function () {
     //update title based on company
-    let appTitle = !!settings ? `${settings.store} - ${appName}` : appName;
+    let appTitle = !!settings ? `${validator.unescape(settings.store)} - ${appName}` : appName;
     $("title").text(appTitle);
 
     $(".loading").hide();
@@ -206,16 +207,16 @@ if (auth == undefined) {
     loadProducts();
     loadCustomers();
 
-    if (settings && settings.symbol) {
-      $("#price_curr, #payment_curr, #change_curr").text(settings.symbol);
+    if (settings && validator.unescape(settings.symbol)) {
+      $("#price_curr, #payment_curr, #change_curr").text(validator.unescape(settings.symbol));
     }
 
     setTimeout(function () {
       if (settings == undefined && auth != undefined) {
         $("#settingsModal").modal("show");
       } else {
-        vat = parseFloat(settings.percentage);
-        $("#taxInfo").text(settings.charge_tax ? vat : 0);
+        vat = parseFloat(validator.unescape(settings.percentage));
+        $("#taxInfo").text(validator.unescape(settings.charge_tax) ? vat : 0);
       }
     }, 1500);
 
@@ -321,7 +322,7 @@ if (auth == undefined) {
                                             : "N/A"
                                         }</span></div>
                                         <span class="text-success text-center"><b data-plugin="counterup">${
-                                          settings.symbol +
+                                          validator.unescape(settings.symbol) +
                                           moneyFormat(item.price)
                                         }</b> </span>
                             </div>
@@ -511,7 +512,7 @@ if (auth == undefined) {
       });
       $("#total").text(total_items);
       total = total - $("#inputDiscount").val();
-      $("#price").text(settings.symbol + moneyFormat(total.toFixed(2)));
+      $("#price").text(validator.unescape(settings.symbol) + moneyFormat(total.toFixed(2)));
 
       subTotal = total;
 
@@ -519,7 +520,7 @@ if (auth == undefined) {
         $("#inputDiscount").val(0);
       }
 
-      if (settings.charge_tax) {
+      if (validator.unescape(settings.charge_tax)) {
         totalVat = (total * vat) / 100;
         grossTotal = total + totalVat;
       } else {
@@ -528,7 +529,7 @@ if (auth == undefined) {
 
       orderTotal = grossTotal.toFixed(2);
 
-      $("#gross_price").text(settings.symbol + moneyFormat(orderTotal));
+      $("#gross_price").text(validator.unescape(settings.symbol) + moneyFormat(orderTotal));
       $("#payablePrice").val(moneyFormat(grossTotal));
     };
 
@@ -567,7 +568,7 @@ if (auth == undefined) {
             $("<div>", {
               class: "col-md-3",
               text:
-                settings.symbol +
+                validator.unescape(settings.symbol) +
                 moneyFormat((data.price * data.quantity).toFixed(2)),
             }),
             $("<div>", { class: "col-md-1" }).append(
@@ -685,7 +686,7 @@ if (auth == undefined) {
       cart.forEach((item) => {
         items += `<tr><td>${item.product_name}</td><td>${
           item.quantity
-        } </td><td class="text-right"> ${settings.symbol} ${moneyFormat(
+        } </td><td class="text-right"> ${validator.unescape(settings.symbol)} ${moneyFormat(
           Math.abs(item.price).toFixed(2),
         )} </td></tr>`;
       });
@@ -719,14 +720,14 @@ if (auth == undefined) {
         payment = `<tr>
                         <td>Paid</td>
                         <td>:</td>
-                        <td class="text-right">${settings.symbol} ${moneyFormat(
+                        <td class="text-right">${validator.unescape(settings.symbol)} ${moneyFormat(
                           Math.abs(paid).toFixed(2),
                         )}</td>
                     </tr>
                     <tr>
                         <td>Change</td>
                         <td>:</td>
-                        <td class="text-right">${settings.symbol} ${moneyFormat(
+                        <td class="text-right">${validator.unescape(settings.symbol)} ${moneyFormat(
                           Math.abs(change).toFixed(2),
                         )}</td>
                     </tr>
@@ -737,11 +738,11 @@ if (auth == undefined) {
                     </tr>`;
       }
 
-      if (settings.charge_tax) {
+      if (validator.unescape(settings.charge_tax)) {
         tax_row = `<tr>
-                    <td>VAT(${settings.percentage})% </td>
+                    <td>VAT(${validator.unescape(settings.percentage)})% </td>
                     <td>:</td>
-                    <td class="text-right">${settings.symbol} ${moneyFormat(
+                    <td class="text-right">${validator.unescape(settings.symbol)} ${moneyFormat(
                       parseFloat(totalVat).toFixed(2),
                     )}</td>
                 </tr>`;
@@ -768,7 +769,7 @@ if (auth == undefined) {
         method = "POST";
       }
 
-      logo = path.join(img_path, settings.img);
+      logo = path.join(img_path, validator.unescape(settings.img));
       receipt = `<div style="font-size: 10px">                            
         <p style="text-align: center;">
         ${
@@ -776,13 +777,13 @@ if (auth == undefined) {
             ? `<img style='max-width: 50px' src='${logo}' /><br>`
             : ``
         }
-            <span style="font-size: 22px;">${settings.store}</span> <br>
-            ${settings.address_one} <br>
-            ${settings.address_two} <br>
+            <span style="font-size: 22px;">${validator.unescape(settings.store)}</span> <br>
+            ${validator.unescape(settings.address_one)} <br>
+            ${validator.unescape(settings.address_two)} <br>
             ${
-              settings.contact != "" ? "Tel: " + settings.contact + "<br>" : ""
+              validator.unescape(settings.contact) != "" ? "Tel: " + validator.unescape(settings.contact) + "<br>" : ""
             } 
-            ${settings.tax != "" ? "Vat No: " + settings.tax + "<br>" : ""} 
+            ${validator.unescape(settings.tax) != "" ? "Vat No: " + validator.unescape(settings.tax) + "<br>" : ""} 
         </p>
         <hr>
         <left>
@@ -812,7 +813,7 @@ if (auth == undefined) {
             <tr>                        
                 <td><b>Subtotal</b></td>
                 <td>:</td>
-                <td class="text-right"><b>${settings.symbol}${moneyFormat(
+                <td class="text-right"><b>${validator.unescape(settings.symbol)}${moneyFormat(
                   subTotal.toFixed(2),
                 )}</b></td>
             </tr>
@@ -821,7 +822,7 @@ if (auth == undefined) {
                 <td>:</td>
                 <td class="text-right">${
                   discount > 0
-                    ? settings.symbol +
+                    ? validator.unescape(settings.symbol) +
                       moneyFormat(parseFloat(discount).toFixed(2))
                     : ""
                 }</td>
@@ -831,7 +832,7 @@ if (auth == undefined) {
                 <td><h5>Total</h5></td>
                 <td><h5>:</h5></td>
                 <td class="text-right">
-                    <h5>${settings.symbol} ${moneyFormat(
+                    <h5>${validator.unescape(settings.symbol)} ${moneyFormat(
                       parseFloat(orderTotal).toFixed(2),
                     )}</h3>
                 </td>
@@ -843,7 +844,7 @@ if (auth == undefined) {
             <hr>
             <br>
             <p style="text-align: center;">
-             ${settings.footer}
+             ${validator.unescape(settings.footer)}
              </p>
             </div>`;
 
@@ -1345,9 +1346,9 @@ if (auth == undefined) {
 
       $("#user_id").val(allUsers[index]._id);
       $("#fullname").val(allUsers[index].fullname);
-      $("#username").val(allUsers[index].username);
+      $("#username").val(validator.unescape(allUsers[index].username));
       $("#password").attr("placeholder", "New Password");
-      // $('#password').val(secure.getDecrypted(allUsers[index].username));
+    
 
       for (perm of permissions) {
         var el = "#" + perm;
@@ -1598,7 +1599,7 @@ if (auth == undefined) {
             <td><img style="max-height: 50px; max-width: 50px; border: 1px solid #ddd;" src="${product_img}" id="product_img"></td>
             <td>${product.name}
             ${product.expiryAlert}</td>
-            <td>${settings.symbol}${product.price}</td>
+            <td>${validator.unescape(settings.symbol)}${product.price}</td>
             <td>${product.stock == 1 ? product.quantity : "N/A"}
             ${product.stockAlert}
             </td>
@@ -1886,29 +1887,29 @@ if (auth == undefined) {
         $("#settings_form").show(500);
 
         $("#settings_id").val("1");
-        $("#store").val(settings.store);
-        $("#address_one").val(settings.address_one);
-        $("#address_two").val(settings.address_two);
-        $("#contact").val(settings.contact);
-        $("#tax").val(settings.tax);
-        $("#symbol").val(settings.symbol);
-        $("#percentage").val(settings.percentage);
-        $("#footer").val(settings.footer);
-        $("#logo_img").val(settings.img);
-        if (settings.charge_tax == "on") {
+        $("#store").val(validator.unescape(settings.store));
+        $("#address_one").val(validator.unescape(settings.address_one));
+        $("#address_two").val(validator.unescape(settings.address_two));
+        $("#contact").val(validator.unescape(settings.contact));
+        $("#tax").val(validator.unescape(settings.tax));
+        $("#symbol").val(validator.unescape(settings.symbol));
+        $("#percentage").val(validator.unescape(settings.percentage));
+        $("#footer").val(validator.unescape(settings.footer));
+        $("#logo_img").val(validator.unescape(settings.img));
+        if (validator.unescape(settings.charge_tax) == "on") {
           $("#charge_tax").prop("checked", true);
         }
-        if (settings.img != "") {
+        if (validator.unescape(settings.img) != "") {
           $("#logoname").hide();
           $("#current_logo").html(
-            `<img src="${img_path + settings.img}" alt="">`,
+            `<img src="${img_path + validator.unescape(settings.img)}" alt="">`,
           );
           $("#rmv_logo").show();
         }
 
         $("#app option")
           .filter(function () {
-            return $(this).text() == settings.app;
+            return $(this).text() == validator.unescape(settings.app);
           })
           .prop("selected", true);
       }
@@ -1978,16 +1979,16 @@ function loadTransactions() {
                                   "DD-MM-YYYY",
                                 )}</td>
                                 <td>${
-                                  settings.symbol + moneyFormat(trans.total)
+                                  validator.unescape(settings.symbol) + moneyFormat(trans.total)
                                 }</td>
                                 <td>${
                                   trans.paid == ""
                                     ? ""
-                                    : settings.symbol + moneyFormat(trans.paid)
+                                    : validator.unescape(settings.symbol) + moneyFormat(trans.paid)
                                 }</td>
                                 <td>${
                                   trans.change
-                                    ? settings.symbol +
+                                    ? validator.unescape(settings.symbol) +
                                       moneyFormat(
                                         Math.abs(trans.change).toFixed(2),
                                       )
@@ -2013,7 +2014,7 @@ function loadTransactions() {
 
         if (counter == transactions.length) {
           $("#total_sales #counter").text(
-            settings.symbol + moneyFormat(parseFloat(sales).toFixed(2)),
+            validator.unescape(settings.symbol) + moneyFormat(parseFloat(sales).toFixed(2)),
           );
           $("#total_transactions #counter").text(transact);
 
@@ -2113,7 +2114,7 @@ function loadSoldProducts() {
                 : "N/A"
             }</td>
             <td>${
-              settings.symbol +
+              validator.unescape(settings.symbol) +
               moneyFormat((item.qty * parseFloat(item.price)).toFixed(2))
             }</td>
             </tr>`;
@@ -2168,7 +2169,7 @@ $.fn.viewTransaction = function (index) {
   products.forEach((item) => {
     items += `<tr><td>${item.product_name}</td><td>${
       item.quantity
-    } </td><td class="text-right"> ${settings.symbol} ${moneyFormat(
+    } </td><td class="text-right"> ${validator.unescape(settings.symbol)} ${moneyFormat(
       Math.abs(item.price).toFixed(2),
     )} </td></tr>`;
   });
@@ -2186,14 +2187,14 @@ $.fn.viewTransaction = function (index) {
     payment = `<tr>
                     <td>Paid</td>
                     <td>:</td>
-                    <td class="text-right">${settings.symbol} ${moneyFormat(
+                    <td class="text-right">${validator.unescape(settings.symbol)} ${moneyFormat(
                       Math.abs(allTransactions[index].paid).toFixed(2),
                     )}</td>
                 </tr>
                 <tr>
                     <td>Change</td>
                     <td>:</td>
-                    <td class="text-right">${settings.symbol} ${moneyFormat(
+                    <td class="text-right">${validator.unescape(settings.symbol)} ${moneyFormat(
                       Math.abs(allTransactions[index].change).toFixed(2),
                     )}</td>
                 </tr>
@@ -2204,11 +2205,11 @@ $.fn.viewTransaction = function (index) {
                 </tr>`;
   }
 
-  if (settings.charge_tax) {
+  if (validator.unescape(settings.charge_tax)) {
     tax_row = `<tr>
-                <td>Vat(${settings.percentage})% </td>
+                <td>Vat(${validator.unescape(settings.percentage)})% </td>
                 <td>:</td>
-                <td class="text-right">${settings.symbol}${parseFloat(
+                <td class="text-right">${validator.unescape(settings.symbol)}${parseFloat(
                   allTransactions[index].tax,
                 ).toFixed(2)}</td>
             </tr>`;
@@ -2217,20 +2218,20 @@ $.fn.viewTransaction = function (index) {
   receipt = `<div style="font-size: 10px;">                            
         <p style="text-align: center;">
         ${
-          settings.img == ""
-            ? settings.img
+          validator.unescape(settings.img) == ""
+            ? validator.unescape(settings.img)
             : '<img style="max-width: 50px;" src ="' +
               img_path +
-              settings.img +
+              validator.unescape(settings.img) +
               '" /><br>'
         }
-            <span style="font-size: 22px;">${settings.store}</span> <br>
-            ${settings.address_one} <br>
-            ${settings.address_two} <br>
+            <span style="font-size: 22px;">${validator.unescape(settings.store)}</span> <br>
+            ${validator.unescape(settings.address_one)} <br>
+            ${validator.unescape(settings.address_two)} <br>
             ${
-              settings.contact != "" ? "Tel: " + settings.contact + "<br>" : ""
+              validator.unescape(settings.contact) != "" ? "Tel: " + validator.unescape(settings.contact) + "<br>" : ""
             } 
-            ${settings.tax != "" ? "Vat No: " + settings.tax + "<br>" : ""} 
+            ${validator.unescape(settings.tax) != "" ? "Vat No: " + validator.unescape(settings.tax) + "<br>" : ""} 
     </p>
     <hr>
     <left>
@@ -2264,7 +2265,7 @@ $.fn.viewTransaction = function (index) {
         <tr>                        
             <td><b>Subtotal</b></td>
             <td>:</td>
-            <td class="text-right"><b>${settings.symbol}${moneyFormat(
+            <td class="text-right"><b>${validator.unescape(settings.symbol)}${moneyFormat(
               allTransactions[index].subtotal,
             )}</b></td>
         </tr>
@@ -2273,7 +2274,7 @@ $.fn.viewTransaction = function (index) {
             <td>:</td>
             <td class="text-right">${
               discount > 0
-                ? settings.symbol +
+                ? validator.unescape(settings.symbol) +
                   moneyFormat(
                     parseFloat(allTransactions[index].discount).toFixed(2),
                   )
@@ -2287,7 +2288,7 @@ $.fn.viewTransaction = function (index) {
             <td><h5>Total</h5></td>
             <td><h5>:</h5></td>
             <td>
-                <h5>${settings.symbol}${moneyFormat(
+                <h5>${validator.unescape(settings.symbol)}${moneyFormat(
                   allTransactions[index].total,
                 )}</h5>
             </td>
@@ -2299,7 +2300,7 @@ $.fn.viewTransaction = function (index) {
         <hr>
         <br>
         <p style="text-align: center;">
-         ${settings.footer}
+         ${validator.unescape(settings.footer)}
          </p>
         </div>`;
 

@@ -114,7 +114,7 @@ app.post("/post", upload.single("imagename"), function (req, res) {
             tax: validator.escape(req.body.tax),
             symbol: validator.escape(req.body.symbol),
             percentage: validator.escape(req.body.percentage),
-            charge_tax: validator.escape(req.body.charge_tax),
+            charge_tax: req.body.charge_tax,
             footer: validator.escape(req.body.footer),
             img: image,
         },
@@ -128,7 +128,7 @@ app.post("/post", upload.single("imagename"), function (req, res) {
                     error: "Internal Server Error",
                     message: "An unexpected error occurred.",
                 });
-            } else res.send(settings);
+            } else res.sendStatus(200);
         });
     } else {
         settingsDB.update(
