@@ -5,7 +5,7 @@ if (setupEvents.handleSquirrelEvent()) {
     return;
 }
 const server = require('./server');
-const { app, BrowserWindow, ipcMain} = require("electron");
+const { app, BrowserWindow, ipcMain, screen} = require("electron");
 const path = require("path");
 const contextMenu = require("electron-context-menu");
 let { Menu, template } = require("./assets/js/native_menu/menu");
@@ -16,12 +16,13 @@ Menu.setApplicationMenu(menu);
 let mainWindow;
 
 function createWindow() {
+
+    const primaryDisplay = screen.getPrimaryDisplay();
+    const { width, height } = primaryDisplay.workAreaSize;
     mainWindow = new BrowserWindow({
-        width: 1500,
-        height: 1200,
+        width: width,
+        height: height,
         frame: true,
-        minWidth: 1200,
-        minHeight: 750,
         webPreferences: {
             nodeIntegration: true,
             enableRemoteModule: false,
