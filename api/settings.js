@@ -3,7 +3,7 @@ const server = require("http").Server(app);
 const bodyParser = require("body-parser");
 const Datastore = require("@seald-io/nedb");
 const multer = require("multer");
-const fileUpload = require("express-fileupload");
+const sanitizeFilename = require('sanitize-filename');
 const fs = require("fs");
 const path = require("path");
 const validator = require("validator");
@@ -78,28 +78,35 @@ app.post("/post", upload.single("imagename"), function (req, res) {
     let image = "";
 
     if (validator.escape(req.body.img) != "") {
-        image = validator.escape(req.body.img);
+        image = sanitizeFilename(req.body.img);
     }
 
     if (req.file) {
-        image = validator.escape(req.file.filename);
+        image = sanitizeFilename(req.body.img);
     }
 
     if (validator.escape(req.body.remove) == 1) {
-        const imgPath = path.join(
-            appData,
-            appName,
-            "uploads",
-            validator.escape(req.body.img),
-        );
-        try {
-            fs.unlinkSync(imgPath);
-        } catch (err) {
-            console.error(err);
-        }
+        const imgName = path.basename(image);
+        const isValidimage =
+            allowedExtensions.includes(path.extname(imgName).toLowerCase()) &&
+            validator.isAlphanumeric(imgName);
 
-        if (!req.file) {
-            image = "";
+        if (isValidimage) {
+            const imgPath = path.join(
+                appData,
+                process.env.APPNAME,
+                "uploads",
+                image,
+            );
+            try {
+                fs.unlinkSync(imgPath);
+            } catch (err) {
+                console.error(err);
+            }
+
+            if (!req.file) {
+                image = "";
+            }
         }
     }
 

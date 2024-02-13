@@ -232,7 +232,15 @@ app.post("/post", function (req, res) {
                 );
             }
         })
-        .catch((err) => res.sendStatus(500).send(err.message));
+        .catch((err) => 
+        {
+          
+                console.error(err);
+                res.status(500).json({
+                    error: "Internal Server Error",
+                    message: "An unexpected error occurred.",
+                });
+        });
 });
 
 /**
