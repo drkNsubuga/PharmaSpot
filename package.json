@@ -43,6 +43,7 @@
     "notiflix": "^3.2.5",
     "print-js": "^1.6.0",
     "sanitize": "^2.1.2",
+    "sanitize-filename": "^1.6.3",
     "socket.io": "^4.5.4",
     "up": "^1.0.2",
     "validator": "^13.11.0",

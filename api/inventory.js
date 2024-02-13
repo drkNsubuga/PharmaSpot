@@ -3,7 +3,7 @@ const server = require("http").Server(app);
 const bodyParser = require("body-parser");
 const Datastore = require("@seald-io/nedb");
 const async = require("async");
-// const fileUpload = require("express-fileupload");
+const sanitizeFilename = require('sanitize-filename');
 const multer = require("multer");
 const fs = require("fs");
 const path = require("path");
@@ -96,15 +96,15 @@ app.post("/product", upload.single("imagename"), function (req, res) {
     let image = "";
 
     if (req.body.img != "") {
-        image = validator.escape(req.body.img);
+        image = sanitizeFilename(req.body.img);
     }
 
     if (req.file) {
-        image = req.file.filename;
+        image = sanitizeFilename(req.file.filename);
     }
 
     if (validator.escape(req.body.remove) == 1) {
-        const imgName = path.basename(req.body.img);
+        const imgName = path.basename(image);
         const isValidimage =
             allowedExtensions.includes(path.extname(imgName).toLowerCase()) &&
             validator.isAlphanumeric(imgName);
@@ -114,7 +114,7 @@ app.post("/product", upload.single("imagename"), function (req, res) {
                 appData,
                 process.env.APPNAME,
                 "uploads",
-                validator.escape(req.body.img),
+                image,
             );
             try {
                 fs.unlinkSync(imgPath);
