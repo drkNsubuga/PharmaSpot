@@ -1,5 +1,5 @@
 const gulp = require("gulp");
-const { paralle, series } = require("gulp");
+const { parallel, series } = require("gulp");
 const bs = require("browser-sync").create();
 const concat = require("gulp-concat");
 const minify = require("gulp-minify");
