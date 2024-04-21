@@ -84,7 +84,7 @@
     "electron-is-dev": "^2.0.0",
     "electron-log": "^4.4.8",
     "electron-reloader": "^1.2.3",
-    "gulp": "^4.0.2",
+    "gulp": "^5.0.0",
     "gulp-clean-css": "^4.3.0",
     "gulp-concat": "^2.6.1",
     "gulp-javascript-obfuscator": "^1.1.6",
