@@ -216,7 +216,7 @@ if (auth == undefined) {
         $("#settingsModal").modal("show");
       } else {
         vat = parseFloat(validator.unescape(settings.percentage));
-        $("#taxInfo").text(validator.unescape(settings.charge_tax) ? vat : 0);
+        $("#taxInfo").text(settings.charge_tax ? vat : 0);
       }
     }, 1500);
 
@@ -520,7 +520,7 @@ if (auth == undefined) {
         $("#inputDiscount").val(0);
       }
 
-      if (validator.unescape(settings.charge_tax)) {
+      if (settings.charge_tax) {
         totalVat = (total * vat) / 100;
         grossTotal = total + totalVat;
       } else {
@@ -738,7 +738,7 @@ if (auth == undefined) {
                     </tr>`;
       }
 
-      if (validator.unescape(settings.charge_tax)) {
+      if (settings.charge_tax) {
         tax_row = `<tr>
                     <td>VAT(${validator.unescape(settings.percentage)})% </td>
                     <td>:</td>
@@ -1896,7 +1896,7 @@ if (auth == undefined) {
         $("#percentage").val(validator.unescape(settings.percentage));
         $("#footer").val(validator.unescape(settings.footer));
         $("#logo_img").val(validator.unescape(settings.img));
-        if (validator.unescape(settings.charge_tax) == "on") {
+        if (settings.charge_tax) {
           $("#charge_tax").prop("checked", true);
         }
         if (validator.unescape(settings.img) != "") {
@@ -2205,7 +2205,7 @@ $.fn.viewTransaction = function (index) {
                 </tr>`;
   }
 
-  if (validator.unescape(settings.charge_tax)) {
+  if (settings.charge_tax) {
     tax_row = `<tr>
                 <td>Vat(${validator.unescape(settings.percentage)})% </td>
                 <td>:</td>
@@ -2305,7 +2305,7 @@ $.fn.viewTransaction = function (index) {
         </div>`;
 
   $("#viewTransaction").html("");
-  $("#viewTransaction").text(receipt);
+  $("#viewTransaction").html(receipt);
 
   $("#orderModal").modal("show");
 };

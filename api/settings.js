@@ -9,6 +9,8 @@ const path = require("path");
 const validator = require("validator");
 const appName = process.env.APPNAME;
 const appData = process.env.APPDATA;
+const allowedExtensions = ["jpg","jpeg","png","webp"];
+const defaultLogoName = "logo.jpg";
 const dbPath = path.join(
     appData,
     appName,
@@ -20,7 +22,7 @@ const dbPath = path.join(
 const storage = multer.diskStorage({
     destination: path.join(appData, appName, "uploads"),
     filename: function (req, file, callback) {
-        callback(null, Date.now() + ".jpg"); //
+        callback(null, defaultLogoName); //
     },
 });
 
@@ -82,7 +84,7 @@ app.post("/post", upload.single("imagename"), function (req, res) {
     }
 
     if (req.file) {
-        image = sanitizeFilename(req.body.img);
+        image = sanitizeFilename(req.file.filename);
     }
 
     if (validator.escape(req.body.remove) == 1) {
@@ -108,6 +110,10 @@ app.post("/post", upload.single("imagename"), function (req, res) {
                 image = "";
             }
         }
+        else
+        {
+            console.error(`File type is not allowed. Only these image types are allowed: ${ allowedExtensions.map(item => item.toUpperCase()).join(", ")}`);
+        }
     }
 
     let Settings = {
@@ -121,7 +127,7 @@ app.post("/post", upload.single("imagename"), function (req, res) {
             tax: validator.escape(req.body.tax),
             symbol: validator.escape(req.body.symbol),
             percentage: validator.escape(req.body.percentage),
-            charge_tax: req.body.charge_tax,
+            charge_tax: req.body.charge_tax === 'on',
             footer: validator.escape(req.body.footer),
             img: image,
         },
