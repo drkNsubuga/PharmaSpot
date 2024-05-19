@@ -307,7 +307,7 @@ if (auth == undefined) {
                                 onclick="$(this).addToCart(${item._id}, ${
                                   item.quantity
                                 }, ${item.stock})">
-                            <div class="widget-panel widget-style-2 ">                    
+                            <div class="widget-panel widget-style-2 " title="${item.name}">                    
                             <div id="image"><img src="${item_img}" id="product_img" alt=""></div>                    
                                         <div class="text-muted m-t-5 text-center">
                                         <div class="name" id="product_name"><span class="${
@@ -1783,8 +1783,6 @@ if (auth == undefined) {
     $("#saveUser").on("submit", function (e) {
       e.preventDefault();
       let formData = $(this).serializeObject();
-
-      console.log(formData);
 
       if (formData.password != formData.pass) {
         notiflix.Report.warning("Oops!", "Passwords do not match!", "Ok");
