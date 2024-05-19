@@ -908,7 +908,7 @@ if (auth == undefined) {
         error: function (data) {
           $(".loading").hide();
           $("#dueModal").modal("toggle");
-          notiflix.Report.error(
+          notiflix.Report.failure(
             "Something went wrong!",
             "Please refresh this page and try again",
             "Ok",
@@ -1811,8 +1811,12 @@ if (auth == undefined) {
               notiflix.Report.success("Great!", "User details saved!", "Ok");
             }
           },
-          error: function (data) {
-            console.log(data);
+          error: function (jqXHR,textStatus, errorThrown) {
+            notiflix.Report.failure(
+              jqXHR.responseJSON.error,
+              jqXHR.responseJSON.message,
+              "Ok",
+            );
           },
         });
       }

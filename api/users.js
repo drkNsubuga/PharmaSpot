@@ -203,15 +203,19 @@ app.post("/post", function (req, res) {
                 status: "",
             };
             delete User.id;
+            delete User.pass;
             if (req.body.id == "") {
-                req.body._id = Math.floor(Date.now() / 1000);
+                User._id = Math.floor(Date.now() / 1000);
                 usersDB.insert(User, function (err, user) {
                     if (err) {
                         console.error(err);
                         res.status(500).json({
                             error: "Internal Server Error",
-                            message: "An unexpected error occurred.",
+                            message: `An unexpected error occurred. ${err}`,
                         });
+                    }
+                    else {
+                        res.send( user);
                     }
                 });
             } else {
@@ -238,7 +242,7 @@ app.post("/post", function (req, res) {
                 console.error(err);
                 res.status(500).json({
                     error: "Internal Server Error",
-                    message: "An unexpected error occurred.",
+                    message: `An unexpected error occurred. ${err}`,
                 });
         });
 });
