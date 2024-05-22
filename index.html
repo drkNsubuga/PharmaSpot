@@ -209,7 +209,7 @@
                                     <div class="col-md-10 m-t-5">
                                         <form action="" id="searchBarCode">
                                             <div class="input-group">
-                                                <input type="text" required id="skuCode" name="skuCode" class="form-control" placeholder="Scan barcode or type the number then hit enter" aria-label="barcode" aria-describedby="basic-addon2">
+                                                <input type="text" required id="skuCode" name="skuCode" class="form-control number-input" placeholder="Scan barcode or type the number then hit enter" aria-label="barcode" aria-describedby="basic-addon2">
                                                 <span class="input-group-btn">
                                                     <button type="submit" class="btn btn-default search-barcode-btn"><i class="glyphicon glyphicon-ok"></i></button>
                                                 </span>
@@ -522,11 +522,11 @@
                             </div>
                             <div class="form-group">
                                 <label for="barcode">BarCode</label>
-                                <input type="text" required="required" name="barcode" parsley-trigger="change" placeholder="Enter product barcode" class="form-control" id="barcode">
+                                <input type="text" required="required" name="barcode" parsley-trigger="change" placeholder="Enter product barcode" class="form-control number-input" id="barcode">
                             </div>
                             <div class="form-group">
                                 <label for="product_price">Price</label>
-                                <input type="text" required="required" name="price" placeholder="Price" class="form-control" id="product_price">
+                                <input type="text" required="required" name="price" placeholder="Price" class="form-control number-input" id="product_price">
                             </div>
                             <div class="form-group">
                                 <label for="expirationDate">Expiry Date</label>
@@ -827,7 +827,7 @@
                                         </div>
                                         <div class="form-group">
                                             <label for="userName">Vat Number</label>
-                                            <input type="text" name="tax" parsley-trigger="change" class="form-control" id="tax">
+                                            <input type="text" name="tax" parsley-trigger="change" class="form-control number-input" id="tax">
                                         </div>
                                     </div>
                                     <div class="col-md-6">

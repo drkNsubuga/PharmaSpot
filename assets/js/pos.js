@@ -147,6 +147,24 @@ $(function () {
   });
 });
 
+//Allow only numbers in input field
+$.fn.allowOnlyNumbers = function() {
+  return this.on('keydown', function(e) {
+  // Allow: backspace, delete, tab, escape, enter, ., ctrl/cmd+A, ctrl/cmd+C, ctrl/cmd+X, ctrl/cmd+V, end, home, left, right, down, up
+    if ($.inArray(e.keyCode, [46, 8, 9, 27, 13, 110, 190]) !== -1 || 
+      (e.keyCode >= 35 && e.keyCode <= 40) || 
+      ((e.keyCode === 65 || e.keyCode === 67 || e.keyCode === 86 || e.keyCode === 88) && (e.ctrlKey === true || e.metaKey === true))) {
+      return;
+  }
+  // Ensure that it is a number and stop the keypress
+  if ((e.shiftKey || (e.keyCode < 48 || e.keyCode > 57)) && (e.keyCode < 96 || e.keyCode > 105)) {
+    e.preventDefault();
+  }
+});
+};
+$('.number-input').allowOnlyNumbers();
+
+//Serialize Object
 $.fn.serializeObject = function () {
   var o = {};
   var a = this.serializeArray();
