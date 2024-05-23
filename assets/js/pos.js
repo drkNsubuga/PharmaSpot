@@ -383,7 +383,7 @@ if (auth == undefined) {
         if (isExpired(product.expirationDate)) {
           notiflix.Report.failure(
             "Expired",
-            `${product.name} is expired! Please restock`,
+            `${product.name} is expired! Please restock.`,
             "Ok",
           );
         } else {
@@ -393,7 +393,7 @@ if (auth == undefined) {
             if (stock == 1) {
               notiflix.Report.failure(
                 "Out of stock!",
-                '<span class="text-center">This item is currently unavailable</span>',
+                `${product.name} is out of stock! Please restock.`,
                 "Ok",
               );
             }
