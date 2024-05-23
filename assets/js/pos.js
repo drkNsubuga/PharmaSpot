@@ -88,7 +88,8 @@ const {
   moneyFormat,
   isExpired,
   daysToExpire,
-  checkImageExists,
+  getStockStatus,
+  checkFileExists,
   setContentSecurityPolicy,
 } = require("./utils");
 
@@ -310,6 +311,7 @@ if (auth == undefined) {
             categories.push(item.category);
           }
           let item_isExpired = isExpired(item.expirationDate);
+          let item_stockStatus = getStockStatus(item.quantity,item.minStock);
           if(item.img==="")
           {
             item_img = default_item_img;
@@ -317,7 +319,7 @@ if (auth == undefined) {
           else
           {
             item_img = path.join(img_path, item.img);
-            item_img = checkImageExists(item_img) ? item_img : default_item_img;
+            item_img = checkFileExists(item_img) ? item_img : default_item_img;
           }
           
 
@@ -334,11 +336,11 @@ if (auth == undefined) {
                                         <span class="sku">${
                                           item.barcode || item._id
                                         }</span>
-                                        <span class="stock">STOCK </span><span class="count">${
+                                        <span class="${item_stockStatus<1?'text-danger':''}"><span class="stock">STOCK </span><span class="count">${
                                           item.stock == 1
                                             ? item.quantity
                                             : "N/A"
-                                        }</span></div>
+                                        }</span></span></div>
                                         <span class="text-success text-center"><b data-plugin="counterup">${
                                           validator.unescape(settings.symbol) +
                                           moneyFormat(item.price)
@@ -1567,12 +1569,15 @@ if (auth == undefined) {
         let todayDate = moment();
         let expiryDate = moment(product.expirationDate, DATE_FORMAT);
 
-        //calculate stock level
-        if (product.quantity <= product.minStock) {
-          if (product.quantity == 0) {
+        //show stock status indicator
+        let stockStatus = getStockStatus(product.quantity,product.minStock);
+          if(stockStatus<1)
+          {
+          if (stockStatus === 0) {
             product.stockStatus = "No Stock";
             icon = "fa fa-exclamation-triangle";
-          } else {
+          }
+          if (stockStatus === -1) {
             product.stockStatus = "Low Stock";
             icon = "fa fa-caret-down";
           }

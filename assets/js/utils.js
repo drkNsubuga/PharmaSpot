@@ -4,6 +4,7 @@ let moment = require("moment");
 const DATE_FORMAT = "DD-MMM-YYYY";
 const PORT = process.env.PORT;
 let path = require("path");
+const magicBytes = require("magic-bytes.js");
 const moneyFormat = (amount, locale = "en-US") => {
   return new Intl.NumberFormat(locale).format(amount);
 };
@@ -27,14 +28,38 @@ const daysToExpire = (dueDate) => {
   return expiryDate.diff(todayDate, "days");
 };
 
-/** File **/
-const checkImageExists = (imageUrl) => {
-  try {
-    fs.accessSync(imageUrl, fs.constants.F_OK);
-    return true; // Image exists
-  } catch (err) {
-    return false; // Image does not exist
+/** Inventory **/
+/**
+ * Determines the stock status based on current stock and minimum stock levels.
+ *
+ * @param {number} currentStock - The current quantity of stock.
+ * @param {number} minimumStock - The minimum required quantity of stock.
+ * @returns {number} - Returns 0 if there is no stock, -1 if the stock is low, and 1 if the stock level is normal.
+ */
+const getStockStatus = (currentStock, minimumStock)=>{
+  if (currentStock === 0) {
+    return 0; // No stock
   }
+
+  if (currentStock <= minimumStock) {
+    return -1; // Low stock
+  }
+  return 1; // Normal stock
+}
+
+
+/** File **/
+const checkFileExists = (filePath) => {
+  try {
+    fs.accessSync(filePath, fs.constants.F_OK);
+    return true; // File exists
+  } catch (err) {
+    return false; // File does not exist
+  }
+};
+
+const checkFileType = (fileType, validFileTypes) => {
+  return validFileTypes.includes(fileType);
 };
 
 const getFileHash = (filePath) => {
@@ -42,6 +67,9 @@ const getFileHash = (filePath) => {
   const hash = crypto.createHash("sha256").update(fileData).digest("hex");
   return hash;
 };
+
+
+/*Security*/
 
 const setContentSecurityPolicy = () => {
   let scriptHash = getFileHash(path.join(__dirname,"../dist","js","bundle.min.js"))
@@ -57,8 +85,10 @@ module.exports = {
   DATE_FORMAT,
   moneyFormat,
   isExpired,
+  getStockStatus,
   getFileHash,
   daysToExpire,
-  checkImageExists,
+  checkFileExists,
+  checkFileType,
   setContentSecurityPolicy
 };
