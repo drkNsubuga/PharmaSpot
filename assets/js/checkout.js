@@ -53,15 +53,13 @@ $(document).ready(function () {
     case "del" : { 
       if(isdue)
       {
-        $('#refNumber').val($('#refNumber').val().substr(0,$('#refNumber').val().length -1))
+        $('#refNumber').val((i, val) => val.slice(0, -1));
       }
       else
       {
-        $("#payment,#paymentText").val(
-        $("#payment")
-          .val()
-          .substr(0, $("#payment").val().length - 1),
-      );
+        $("#payment").val((i, val) => val.slice(0, -1));
+      //re-format displayed amount after deletion 
+      $("#paymentText").val((i, val) => utils.moneyFormat($("#payment").val()));
       }
       $(this).calculateChange()
     }; break;
