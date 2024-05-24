@@ -1274,6 +1274,16 @@ if (auth == undefined) {
             },
           );
         },
+        //error for product
+       error: function (jqXHR,textStatus, errorThrown) {
+      console.error(jqXHR.responseJSON.message);
+      notiflix.Report.failure(
+        jqXHR.responseJSON.error,
+        jqXHR.responseJSON.message,
+        "Ok",
+      );
+      }
+
       });
     });
 
@@ -1750,9 +1760,12 @@ if (auth == undefined) {
       formData["mac"] = mac_address;
       formData["till"] = 1;
 
-      $("#settings_form").append(
-        `<input type="hidden" name="app" value="${formData.app}" />`,
-      );
+      // Update application field in settings form
+      let $appField = $("#settings_form input[name='app']");
+        $appField.length 
+            ? $appField.val(formData.app) 
+            : $("#settings_form").append(`<input type="hidden" name="app" value="${formData.app}" />`);
+
 
       if (formData.percentage != "" && !$.isNumeric(formData.percentage)) {
         notiflix.Report.warning(
@@ -1771,12 +1784,17 @@ if (auth == undefined) {
           success: function (response) {
             ipcRenderer.send("app-reload", "");
           },
-          error: function (data) {
-            console.log(data);
-          },
-        });
+          error: function (jqXHR,textStatus, errorThrown) {
+            console.error(jqXHR.responseJSON.message);
+            notiflix.Report.failure(
+              jqXHR.responseJSON.error,
+              jqXHR.responseJSON.message,
+              "Ok",
+            );
       }
     });
+    }
+  });
 
     $("#net_settings_form").on("submit", function (e) {
       e.preventDefault();
@@ -1939,10 +1957,11 @@ if (auth == undefined) {
           .prop("selected", true);
       }
     });
-  });
+ });
 
   $("#rmv_logo").on("click", function () {
     $("#remove_logo").val("1");
+    // $("#logo_img").val('');
     $("#current_logo").hide(500);
     $(this).hide(500);
     $("#logoname").show(500);
@@ -1950,6 +1969,7 @@ if (auth == undefined) {
 
   $("#rmv_img").on("click", function () {
     $("#remove_img").val("1");
+    // $("#img").val('');
     $("#current_img").hide(500);
     $(this).hide(500);
     $("#imagename").show(500);

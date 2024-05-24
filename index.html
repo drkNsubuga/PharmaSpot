@@ -258,7 +258,7 @@
                                 <button onclick="$(this).cancelOrder()" type="button" class="btn btn-danger waves-effect waves-light">
                                     <span class="btn-label"><i class="fa fa-ban"></i></span>Cancel
                                 </button>
-                                <button type="button" id="hold" class="btn btn-success waves-effect waves-light">
+                                <button type="button" id="hold" class="btn btn-info waves-effect waves-light">
                                     <span class="btn-label"><i class="fa fa-hand-paper-o"></i></span>Hold
                                 </button>
                                 <button type="button" id="payButton" class="btn btn-success waves-effect waves-light">
@@ -293,7 +293,6 @@
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
                         <h4 class="modal-title" id="mySmallModalLabel">Hold Order
-                            <img class="loading m-t-5" src="assets/images/loading.gif" alt="loading...">
                         </h4>
                     </div>
                     <div class="modal-body">
@@ -471,7 +470,6 @@
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
                         <h4 class="modal-title" id="mySmallModalLabel">New Customer
-                            <img class="loading m-t-5" src="assets/images/loading.gif" alt="">
                         </h4>
                     </div>
                     <div class="modal-body">
@@ -504,7 +502,6 @@
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
                         <h4 class="modal-title" id="mySmallModalLabel">Product
-                            <img class="loading m-t-5" src="assets/images/loading.gif" alt="">
                         </h4>
                     </div>
                     <div class="modal-body">
@@ -561,7 +558,6 @@
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
                         <h4 class="modal-title" id="mySmallModalLabel">Category
-                            <img class="loading m-t-5" src="assets/images/loading.gif" alt="">
                         </h4>
                     </div>
                     <div class="modal-body">
@@ -611,7 +607,6 @@
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
                         <h4 class="modal-title" id="mySmallModalLabel">Users
-                            <img class="loading m-t-5" src="assets/images/loading.gif" alt="">
                         </h4>
                     </div>
                     <div class="modal-body p-20 p-r-20" id="all_userss">
@@ -636,7 +631,6 @@
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
                         <h4 class="modal-title" id="mySmallModalLabel">Categories
-                            <img class="loading m-t-5" src="assets/images/loading.gif" alt="">
                         </h4>
                     </div>
                     <div class="modal-body">
@@ -659,7 +653,6 @@
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
                         <h4 class="modal-title" id="mySmallModalLabel">Account Infomarion
-                            <img class="loading m-t-5" src="assets/images/loading.gif" alt="">
                         </h4>
                     </div>
                     <div class="modal-body">
@@ -766,7 +759,6 @@
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
                         <h4 class="modal-title" id="mySmallModalLabel">Settings
-                            <img class="loading m-t-5" src="assets/images/loading.gif" alt="">
                         </h4>
                     </div>
                     <div class="modal-body">
@@ -775,9 +767,9 @@
                                 <div class="form-group">
                                     <label for="app">Application</label>
                                     <select name="app" id="app" class="form-control">
-                                        <option>Standalone Point of Sale</option>
-                                        <option>Network Point of Sale Terminal</option>
-                                        <option>Network Point of Sale Server</option>
+                                        <option value="Standalone Point of Sale">Standalone Point of Sale</option>
+                                        <option value="Network Point of Sale Terminal">Network Point of Sale Terminal</option>
+                                        <option value="Network Point of Sale Server">Network Point of Sale Server</option>
                                     </select>
                                 </div>
                                 <form id="net_settings_form">
@@ -811,19 +803,19 @@
                                     <div class="col-md-6">
                                         <div class="form-group">
                                             <label for="userName">Store Name</label>
-                                            <input type="text" required="required" name="store" class="form-control" id="store">
+                                            <input type="text" required="required" name="store" class="form-control" id="store" placeholder="Cool Pharmacy">
                                         </div>
                                         <div class="form-group">
                                             <label for="userName">Address Line 1</label>
-                                            <input type="text" required="required" name="address_one" class="form-control" id="address_one">
+                                            <input type="text" required="required" name="address_one" class="form-control" id="address_one" placeholder="123 Main Street, Building#">
                                         </div>
                                         <div class="form-group">
                                             <label for="userName">Address Line 2</label>
-                                            <input type="text" required="required" name="address_two" class="form-control" id="address_two">
+                                            <input type="text" required="required" name="address_two" class="form-control" id="address_two" placeholder="City, Country">
                                         </div>
                                         <div class="form-group">
                                             <label for="userName">Contact Number</label>
-                                            <input type="text" name="contact" class="form-control" id="contact">
+                                            <input type="tel" name="contact" class="form-control" id="contact" placeholder="0800 111 000">
                                         </div>
                                         <div class="form-group">
                                             <label for="userName">Vat Number</label>
@@ -833,7 +825,7 @@
                                     <div class="col-md-6">
                                         <div class="form-group">
                                             <label for="userName">Currency Symbol</label>
-                                            <input type="text" required="required" name="symbol" class="form-control" id="symbol" minlength="1" maxlength="4">
+                                            <input type="text" required="required" name="symbol" class="form-control" id="symbol" minlength="1" maxlength="3" placeholder="USD">
                                         </div>
                                         <div class="form-group">
                                             <label for="userName">Vat Percentage</label>
@@ -854,7 +846,10 @@
                                         <div class="form-group">
                                             <label for="userName"><span id="rmv_logo" class="btn btn-xs btn-warning">Remove</span> Logo </label>
                                             <div id="current_logo"></div>
-                                            <input type="file" name="imagename" id="logoname">
+                                            <input type="file" name="imagename" id="logoname" accept=".jpg,.jpeg,.png,.webp">
+                                            <small class="text-gray">
+                                            Max filesize: <strong>2MB</strong>; Allowed image types:<strong> jpeg, jpg, png or webp</strong></small>
+
                                         </div>
                                         <div class="form-group">
                                             <label for="userName">Receipt Footer</label>

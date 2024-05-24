@@ -7,7 +7,13 @@ const sanitizeFilename = require('sanitize-filename');
 const multer = require("multer");
 const fs = require("fs");
 const path = require("path");
-const allowedExtensions = [".jpg", ".jpeg", ".png"];
+const {filterFile} = require('../assets/js/utils');
+const validFileTypes = [
+    "image/jpg",
+    "image/jpeg",
+    "image/png",
+    "image/webp"];
+const maxFileSize = 2097152 //2MB = 2*1024*1024
 const validator = require("validator");
 const appName = process.env.APPNAME;
 const appData = process.env.APPDATA;
@@ -20,13 +26,18 @@ const dbPath = path.join(
 );
 
 const storage = multer.diskStorage({
-    destination: path.join(appData, process.env.APPNAME, "uploads"),
+    destination: path.join(appData, appName, "uploads"),
     filename: function (req, file, callback) {
-        callback(null, Date.now() + ".jpg");
+        callback(null, Date.now()+path.extname(file.originalname));
     },
 });
 
-let upload = multer({ storage: storage });
+const upload = multer({
+  storage: storage,
+  limits: { fileSize: maxFileSize },
+  fileFilter: filterFile,
+}).single("imagename");
+
 
 app.use(bodyParser.json());
 
@@ -92,10 +103,28 @@ app.get("/products", function (req, res) {
  * @param {Object} res response object.
  * @returns {void}
  */
-app.post("/product", upload.single("imagename"), function (req, res) {
+app.post("/product", function (req, res) {
+    upload(req, res, function (err) {
+
+        if (err) {
+            if (err instanceof multer.MulterError) {
+                console.error('Upload Error:', err);
+                return res.status(400).json({
+                    error: 'Upload Error',
+                    message: err.message,
+                });
+            } else {
+                console.error('Unknown Error:', err);
+                return res.status(500).json({
+                    error: 'Internal Server Error',
+                    message: err.message,
+                });
+            }
+        }
+
     let image = "";
 
-    if (req.body.img != "") {
+    if (validator.escape(req.body.img) !== "") {
         image = sanitizeFilename(req.body.img);
     }
 
@@ -103,30 +132,30 @@ app.post("/product", upload.single("imagename"), function (req, res) {
         image = sanitizeFilename(req.file.filename);
     }
 
-    if (validator.escape(req.body.remove) == 1) {
-        const imgName = path.basename(image);
-        const isValidimage =
-            allowedExtensions.includes(path.extname(imgName).toLowerCase()) &&
-            validator.isAlphanumeric(imgName);
 
-        if (isValidimage) {
-            const imgPath = path.join(
+    if (validator.escape(req.body.remove) === "1") {
+            try {
+                let imgPath = path.join(
                 appData,
-                process.env.APPNAME,
+                appName,
                 "uploads",
                 image,
-            );
-            try {
+                );
+
+                if (!req.file) {
                 fs.unlinkSync(imgPath);
+                image = "";
+                }
+                
             } catch (err) {
                 console.error(err);
+                res.status(500).json({
+                    error: "Internal Server Error",
+                    message: "An unexpected error occurred.",
+                });
             }
 
-            if (!req.file) {
-                image = "";
-            }
         }
-    }
 
     let Product = {
         _id: parseInt(validator.escape(req.body.id)),
@@ -139,12 +168,12 @@ app.post("/product", upload.single("imagename"), function (req, res) {
                 ? 0
                 : validator.escape(req.body.quantity),
         name: validator.escape(req.body.name),
-        stock: req.body.stock == "on" ? 0 : 1,
+        stock: req.body.stock === "on" ? 0 : 1,
         minStock: validator.escape(req.body.minStock),
         img: image,
     };
 
-    if (validator.escape(req.body.id) == "") {
+    if (validator.escape(req.body.id) === "") {
         Product._id = Math.floor(Date.now() / 1000);
         inventoryDB.insert(Product, function (err, product) {
             if (err) {
@@ -154,7 +183,7 @@ app.post("/product", upload.single("imagename"), function (req, res) {
                     message: "An unexpected error occurred.",
                 });
             } else {
-                res.send(product);
+                res.sendStatus(200);
             }
         });
     } else {
@@ -177,6 +206,7 @@ app.post("/product", upload.single("imagename"), function (req, res) {
             },
         );
     }
+    });
 });
 
 /**

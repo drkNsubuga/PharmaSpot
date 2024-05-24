@@ -9,8 +9,14 @@ const path = require("path");
 const validator = require("validator");
 const appName = process.env.APPNAME;
 const appData = process.env.APPDATA;
-const allowedExtensions = ["jpg","jpeg","png","webp"];
-const defaultLogoName = "logo.jpg";
+const validFileTypes = [
+    "image/jpg",
+    "image/jpeg",
+    "image/png",
+    "image/webp"];
+const maxFileSize = 2097152 //2MB = 2*1024*1024
+const defaultLogoName = "logo";
+const {filterFile} = require('../assets/js/utils');
 const dbPath = path.join(
     appData,
     appName,
@@ -22,11 +28,16 @@ const dbPath = path.join(
 const storage = multer.diskStorage({
     destination: path.join(appData, appName, "uploads"),
     filename: function (req, file, callback) {
-        callback(null, defaultLogoName); //
+        callback(null, defaultLogoName+path.extname(file.originalname));
     },
 });
 
-let upload = multer({ storage: storage });
+const upload = multer({
+  storage: storage,
+  limits: { fileSize: maxFileSize },
+  fileFilter: filterFile,
+}).single("imagename");
+
 
 app.use(bodyParser.json());
 
@@ -76,10 +87,28 @@ app.get("/get", function (req, res) {
  * @returns {void}
  */
 
-app.post("/post", upload.single("imagename"), function (req, res) {
+app.post("/post", function (req, res) {
+    upload(req, res, function (err) {
+
+        if (err) {
+            if (err instanceof multer.MulterError) {
+                console.error('Upload Error:', err);
+                return res.status(400).json({
+                    error: 'Upload Error',
+                    message: err.message,
+                });
+            } else {
+                console.error('Unknown Error:', err);
+                return res.status(500).json({
+                    error: 'Internal Server Error',
+                    message: err.message,
+                });
+            }
+        }
+
     let image = "";
 
-    if (validator.escape(req.body.img) != "") {
+    if (validator.escape(req.body.img) !== "") {
         image = sanitizeFilename(req.body.img);
     }
 
@@ -87,35 +116,27 @@ app.post("/post", upload.single("imagename"), function (req, res) {
         image = sanitizeFilename(req.file.filename);
     }
 
-    if (validator.escape(req.body.remove) == 1) {
-        const imgName = path.basename(image);
-        const isValidimage =
-            allowedExtensions.includes(path.extname(imgName).toLowerCase()) &&
-            validator.isAlphanumeric(imgName);
 
-        if (isValidimage) {
-            const imgPath = path.join(
+    if (validator.escape(req.body.remove) === "1") {
+            try {
+                let imgPath = path.join(
                 appData,
-                process.env.APPNAME,
+                appName,
                 "uploads",
                 image,
-            );
-            try {
+                );
+
+                if (!req.file) {
                 fs.unlinkSync(imgPath);
+                image = "";
+                }
+                
             } catch (err) {
                 console.error(err);
             }
 
-            if (!req.file) {
-                image = "";
-            }
         }
-        else
-        {
-            console.error(`File type is not allowed. Only these image types are allowed: ${ allowedExtensions.map(item => item.toUpperCase()).join(", ")}`);
-        }
-    }
-
+        
     let Settings = {
         _id: 1,
         settings: {
@@ -133,7 +154,7 @@ app.post("/post", upload.single("imagename"), function (req, res) {
         },
     };
 
-    if (validator.escape(req.body.id) == "") {
+    if (validator.escape(req.body.id) === "") {
         settingsDB.insert(Settings, function (err, settings) {
             if (err) {
                 console.error(err);
@@ -141,7 +162,9 @@ app.post("/post", upload.single("imagename"), function (req, res) {
                     error: "Internal Server Error",
                     message: "An unexpected error occurred.",
                 });
-            } else res.sendStatus(200);
+            } else {
+                res.sendStatus(200);
+            }
         });
     } else {
         settingsDB.update(
@@ -163,4 +186,6 @@ app.post("/post", upload.single("imagename"), function (req, res) {
             },
         );
     }
+});
+
 });
