@@ -790,10 +790,11 @@ if (auth == undefined) {
       }
 
       logo = path.join(img_path, validator.unescape(settings.img));
+
       receipt = `<div style="font-size: 10px">                            
         <p style="text-align: center;">
         ${
-          checkImageExists(logo)
+          checkFileExists(logo)
             ? `<img style='max-width: 50px' src='${logo}' /><br>`
             : ``
         }
@@ -1618,7 +1619,7 @@ if (auth == undefined) {
         else
         {
           product_img = img_path + product.img;
-          product_img = checkImageExists(product_img)
+          product_img = checkFileExists(product_img)
           ? product_img
           : default_item_img;
         }
@@ -2260,15 +2261,14 @@ $.fn.viewTransaction = function (index) {
             </tr>`;
   }
 
-  receipt = `<div style="font-size: 10px;">                            
+    logo = path.join(img_path, validator.unescape(settings.img));
+      
+      receipt = `<div style="font-size: 10px">                            
         <p style="text-align: center;">
         ${
-          validator.unescape(settings.img) == ""
-            ? validator.unescape(settings.img)
-            : '<img style="max-width: 50px;" src ="' +
-              img_path +
-              validator.unescape(settings.img) +
-              '" /><br>'
+          checkFileExists(logo)
+            ? `<img style='max-width: 50px' src='${logo}' /><br>`
+            : ``
         }
             <span style="font-size: 22px;">${validator.unescape(settings.store)}</span> <br>
             ${validator.unescape(settings.address_one)} <br>

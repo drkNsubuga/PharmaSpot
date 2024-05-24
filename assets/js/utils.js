@@ -50,10 +50,10 @@ const getStockStatus = (currentStock, minimumStock)=>{
 /** File **/
 const checkFileExists = (filePath) => {
   try {
-    fs.accessSync(filePath, fs.constants.F_OK);
-    return true; // File exists
+    const stats = fs.statSync(filePath);
+    return stats.isFile(); 
   } catch (err) {
-    return false; // File does not exist
+    return false;
   }
 };
 
