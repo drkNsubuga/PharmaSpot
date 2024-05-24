@@ -80,8 +80,7 @@ notiflix.Notify.init({
   cssAnimationDuration: 600,
   messageMaxLength: 150,
   clickToClose: true,
-  closeButton: true,
-  // timeOut:10000
+  closeButton: true
 });
 const {
   DATE_FORMAT,
@@ -1096,7 +1095,7 @@ if (auth == undefined) {
         okButtonColor: "#3085d6",
         cancelButtonColor: "#d33",
         okButtonText: "Yes, delete it!",
-        cancelButtonText: "",
+        cancelButtonText: "Cancel",
       };
 
       notiflix.Confirm.show(
@@ -1131,7 +1130,7 @@ if (auth == undefined) {
 
     $.fn.getCustomerOrders = function () {
       $.get(api + "customer-orders", function (data) {
-        clearInterval(dotInterval);
+        //clearInterval(dotInterval);
         customerOrderList = data;
         customerOrderLocation.empty();
         $(this).renderHoldOrders(customerOrderList, customerOrderLocation, 2);
@@ -1256,10 +1255,6 @@ if (auth == undefined) {
           diagOptions = {
             title: "Product Saved",
             text: "Select an option below to continue.",
-            icon: "success",
-            showCancelButton: true,
-            okButtonColor: "#3085d6",
-            cancelButtonColor: "#d33",
             okButtonText: "Add another",
             cancelButtonText: "Close",
           };
@@ -1308,17 +1303,13 @@ if (auth == undefined) {
           diagOptions = {
             title: "Category Saved",
             text: "Select an option below to continue.",
-            icon: "success",
-            showCancelButton: true,
-            okButtonColor: "#3085d6",
-            cancelButtonColor: "#d33",
             okButtonText: "Add another",
             cancelButtonText: "Close",
           };
 
           notiflix.Confirm.show(
             diagOptions.title,
-            diagOptions.title,
+            diagOptions.text,
             diagOptions.okButtonText,
             diagOptions.cancelButtonText,
             ()=>{},
@@ -1404,17 +1395,13 @@ if (auth == undefined) {
       diagOptions = {
         title: "Are you sure?",
         text: "You are about to delete this product.",
-        icon: "warning",
-        showCancelButton: true,
-        okButtonColor: "#3085d6",
-        cancelButtonColor: "#d33",
         okButtonText: "Yes, delete it!",
         cancelButtonText: "Cancel",
       };
 
       notiflix.Confirm.show(
         diagOptions.title,
-        diagOptions.title,
+        diagOptions.text,
         diagOptions.okButtonText,
         diagOptions.cancelButtonText,
         () => {
@@ -1434,16 +1421,13 @@ if (auth == undefined) {
       diagOptions = {
         title: "Are you sure?",
         text: "You are about to delete this user.",
-        icon: "warning",
-        showCancelButton: true,
-        okButtonColor: "#3085d6",
         cancelButtonColor: "#d33",
         okButtonText: "Yes, delete!",
       };
 
       notiflix.Confirm.show(
         diagOptions.title,
-        diagOptions.title,
+        diagOptions.text,
         diagOptions.okButtonText,
         diagOptions.cancelButtonText,
         () => {
@@ -1463,16 +1447,12 @@ if (auth == undefined) {
       diagOptions = {
         title: "Are you sure?",
         text: "You are about to delete this category.",
-        icon: "warning",
-        showCancelButton: true,
-        okButtonColor: "#3085d6",
-        cancelButtonColor: "#d33",
         okButtonText: "Yes, delete it!",
       };
 
       notiflix.Confirm.show(
         diagOptions.title,
-        diagOptions.title,
+        diagOptions.text,
         diagOptions.okButtonText,
         diagOptions.cancelButtonText,
         () => {
@@ -1703,29 +1683,11 @@ if (auth == undefined) {
       }
     }
 
-    $.fn.serializeObject = function () {
-      var o = {};
-      var a = this.serializeArray();
-      $.each(a, function () {
-        if (o[this.name]) {
-          if (!o[this.name].push) {
-            o[this.name] = [o[this.name]];
-          }
-          o[this.name].push(this.value || "");
-        } else {
-          o[this.name] = this.value || "";
-        }
-      });
-      return o;
-    };
 
     $("#log-out").on("click", function () {
       const diagOptions = {
         title: "Are you sure?",
         text: "You are about to log out.",
-        icon: "warning",
-        showCancelButton: true,
-        okButtonColor: "#d33",
         cancelButtonColor: "#3085d6",
         okButtonText: "Logout",
       };
