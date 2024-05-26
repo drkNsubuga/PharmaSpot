@@ -160,7 +160,7 @@ app.delete("/user/:userId", function (req, res) {
                 console.error(err);
                 res.status(500).json({
                     error: "Internal Server Error",
-                    message: "An unexpected error occurred.",
+                    message: `An unexpected error occurred. ${err}`,
                 });
             } else {
                 res.sendStatus(200);
@@ -192,9 +192,14 @@ app.post("/post", function (req, res) {
 
             for (const perm of perms) {
                 if (!!req.body[perm]) {
-                    req.body[perm] = req.body[perm] == "on" ? 1 : 0;
+                    req.body[perm] = req.body[perm] === "on" ? 1 : 0;
                 } else {
-                    req.body[perm] = 0;
+                    //create missing permission only with new users
+                    if(req.body.id==="")
+                    {
+                      req.body[perm] = 0;  
+                    }
+                    
                 }
             }
 
@@ -204,7 +209,7 @@ app.post("/post", function (req, res) {
             };
             delete User.id;
             delete User.pass;
-            if (req.body.id == "") {
+            if (req.body.id === "") {
                 User._id = Math.floor(Date.now() / 1000);
                 usersDB.insert(User, function (err, user) {
                     if (err) {
@@ -228,7 +233,13 @@ app.post("/post", function (req, res) {
                     },
                     {},
                     function (err, numReplaced, user) {
-                        if (err) res.sendStatus(500).send(err);
+                        if (err) {
+                        console.error(err);
+                        res.status(500).json({
+                            error: "Internal Server Error",
+                            message: `An unexpected error occurred. ${err}`,
+                        });
+                    }
                         else {
                             res.sendStatus(200);
                         }
@@ -281,12 +292,19 @@ app.get("/check", function (req, res) {
                                 console.error(err);
                                 res.status(500).json({
                                     error: "Internal Server Error",
-                                    message: "An unexpected error occurred.",
+                                    message: `An unexpected error occurred. ${err}`,
                                 });
                             }
                         });
                     })
-                    .catch((err) => res.sendStatus(500).send(err.message));
+                    .catch((err) => 
+                        {
+                            console.error(err);
+                            res.sendStatus(500).json({
+                                    error: "Internal Server Error",
+                                    message: `An unexpected error occurred. ${err}`
+                                });
+                        });
             }
         },
     );
