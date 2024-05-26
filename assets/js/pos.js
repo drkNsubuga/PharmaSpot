@@ -4,6 +4,7 @@ const JsBarcode = require("jsbarcode");
 const macaddress = require("macaddress");
 const notiflix = require("notiflix");
 const validator = require("validator");
+const DOMPurify = require("dompurify");
 let fs = require("fs");
 let path = require("path");
 let moment = require("moment");
@@ -45,7 +46,6 @@ let port = process.env.PORT;
 let img_path = path.join(appData, appName, "uploads", "/");
 let api = "http://" + host + ":" + port + "/api/";
 const bcrypt = require("bcrypt");
-const saltRounds = 24;
 let categories = [];
 let holdOrderList = [];
 let customerOrderList = [];
@@ -912,6 +912,7 @@ if (auth == undefined) {
         processData: false,
         success: function (data) {
           cart = [];
+          receipt = DOMPurify.sanitize(receipt,{ ALLOW_UNKNOWN_PROTOCOLS: true });
           $("#viewTransaction").html("");
           $("#viewTransaction").html(receipt);
           $("#orderModal").modal("show");
@@ -2315,6 +2316,9 @@ $.fn.viewTransaction = function (index) {
          ${validator.unescape(settings.footer)}
          </p>
         </div>`;
+
+        //prevent DOM XSS; allow windows paths in img src
+        receipt = DOMPurify.sanitize(receipt,{ ALLOW_UNKNOWN_PROTOCOLS: true });
 
   $("#viewTransaction").html("");
   $("#viewTransaction").html(receipt);
