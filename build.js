@@ -1,15 +1,16 @@
 const electronInstaller = require("electron-winstaller");
 const path = require("path");
+const pkg = require("./package.json");
 
 const rootPath = path.join("./");
 
 resultPromise = electronInstaller.createWindowsInstaller({
-    appDirectory: "./release-builds/PharmaSpot-win32-x64",
-    outputDirectory: "./installers",
-    authors: "Hosting Domain",
+    appDirectory: path.join(rootPath, "release-builds",`${pkg.name}-win32-x64`),
+    outputDirectory: path.join(rootPath,"installers"),
+    authors: pkg.author,
     noMsi: true,
-    exe: "PharmaSpot.exe",
-    setupExe: "pharmaspot-setup-win32-x64.exe",
+    exe: `${pkg.name}.exe`,
+    setupExe: "${pkg.name.toLowerCase()}-setup-win32-x64.exe",
     setupIcon: path.join(rootPath, "assets", "images", "icon.ico"),
 });
 
