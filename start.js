@@ -61,6 +61,14 @@ app.on("activate", () => {
     }
 });
 
+process.on('uncaughtException', (error) => {
+    console.error('Uncaught Exception:', error);
+});
+
+process.on('unhandledRejection', (reason, promise) => {
+    console.error('Unhandled Rejection:', reason);
+});
+
 ipcMain.on("app-quit", (evt, arg) => {
     app.quit();
 });
