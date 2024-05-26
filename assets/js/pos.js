@@ -1725,12 +1725,17 @@ if (auth == undefined) {
 
       // Update application field in settings form
       let $appField = $("#settings_form input[name='app']");
+      let $hiddenAppField = $('<input>', {
+        type: 'hidden',
+        name: 'app',
+        value: formData.app
+    });
         $appField.length 
             ? $appField.val(formData.app) 
-            : $("#settings_form").append(`<input type="hidden" name="app" value="${formData.app}" />`);
+            : $("#settings_form").append(`<input type="hidden" name="app" value="${$hiddenAppField}" />`);
 
 
-      if (formData.percentage != "" && !$.isNumeric(formData.percentage)) {
+      if (formData.percentage != "" && typeof formData.percentage === 'number') {
         notiflix.Report.warning(
           "Oops!",
           "Please make sure the tax value is a number",
@@ -1744,10 +1749,10 @@ if (auth == undefined) {
 
         $(this).ajaxSubmit({
           contentType: "application/json",
-          success: function (response) {
+          success: function () {
             ipcRenderer.send("app-reload", "");
           },
-          error: function (jqXHR,textStatus, errorThrown) {
+          error: function (jqXHR) {
             console.error(jqXHR.responseJSON.message);
             notiflix.Report.failure(
               jqXHR.responseJSON.error,
@@ -2384,10 +2389,8 @@ $("#quit").on("click", function () {
     title: "Are you sure?",
     text: "You are about to close the application.",
     icon: "warning",
-    showCancelButton: true,
-    okButtonColor: "#d33",
-    cancelButtonColor: "#3085d6",
     okButtonText: "Close Application",
+    cancelButtonText: "Cancel"
   };
 
   notiflix.Confirm.show(
