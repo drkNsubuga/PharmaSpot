@@ -11,6 +11,8 @@ const {
 } = require("../assets/js/utils");
 
 //Mock fs and crypto for controlled testig
+//added crypto function
+//another function added 
 jest.mock("fs");
 jest.mock("crypto");
 
