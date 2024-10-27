@@ -124,7 +124,7 @@ const template = [
       },
       {
         label: "Send feedback",
-        click: () => sendFeeBack(),
+        click: () => sendFeedBack(),
       },
       { type: "separator" },
       {
