@@ -9,7 +9,6 @@ const moneyFormat = (amount, locale = "en-US") => {
 };
 
 /** Date functions **/
-
 const isExpired = (dueDate) => {
   let todayDate = moment();
   let expiryDate = moment(dueDate, DATE_FORMAT);
@@ -36,7 +35,14 @@ const daysToExpire = (dueDate) => {
  * @returns {number} - Returns 0 if there is no stock, -1 if the stock is low, and 1 if the stock level is normal.
  */
 const getStockStatus = (currentStock, minimumStock)=>{
-  if (currentStock === 0) {
+  currentStock = Number(currentStock);
+  minimumStock = Number(minimumStock);
+
+   if (isNaN(currentStock) || isNaN(minimumStock)) {
+    throw new Error("Invalid input: both currentStock and minimumStock should be numbers.");
+  }
+
+  if (currentStock <= 0) {
     return 0; // No stock
   }
 

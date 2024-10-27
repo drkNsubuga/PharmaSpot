@@ -710,8 +710,6 @@ if (auth == undefined) {
     )} </td></tr>`;
 });
 
-      // items = DOMPurify.sanitize(items);
-
       let currentTime = new Date(moment());
       let discount = $("#inputDiscount").val();
       let customer = JSON.parse($("#customer").val());
@@ -1560,12 +1558,12 @@ if (auth == undefined) {
         });
 
         product.stockAlert = "";
-        let todayDate = moment();
-        let expiryDate = moment(product.expirationDate, DATE_FORMAT);
+        const todayDate = moment();
+        const expiryDate = moment(product.expirationDate, DATE_FORMAT);
 
         //show stock status indicator
-        let stockStatus = getStockStatus(product.quantity,product.minStock);
-          if(stockStatus<1)
+        const stockStatus = getStockStatus(product.quantity,product.minStock);
+          if(stockStatus<=0)
           {
           if (stockStatus === 0) {
             product.stockStatus = "No Stock";
