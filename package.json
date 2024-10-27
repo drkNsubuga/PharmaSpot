@@ -79,7 +79,7 @@
     "@electron-forge/maker-squirrel": "^6.0.4",
     "@electron-forge/maker-zip": "^6.0.4",
     "@electron-forge/publisher-github": "^6.0.4",
-    "browser-sync": "^2.23.7",
+    "browser-sync": "^3.0.3",
     "cross-env": "^7.0.3",
     "electron": "^22.3.27",
     "electron-is-dev": "^2.0.0",
