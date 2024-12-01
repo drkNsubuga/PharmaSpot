@@ -5,6 +5,7 @@ const macaddress = require("macaddress");
 const notiflix = require("notiflix");
 const validator = require("validator");
 const DOMPurify = require("dompurify");
+const _ = require("lodash");
 let fs = require("fs");
 let path = require("path");
 let moment = require("moment");
@@ -811,7 +812,7 @@ if (auth == undefined) {
             Order No : ${orderNumber} <br>
             Ref No : ${refNumber == "" ? orderNumber : refNumber} <br>
             Customer : ${
-              customer == 0 ? "Walk in customer" : customer.name
+              customer == 0 ? "Walk in customer" : _.escape(customer.name)
             } <br>
             Cashier : ${user.fullname} <br>
             Date : ${date}<br>
