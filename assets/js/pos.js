@@ -810,7 +810,7 @@ if (auth == undefined) {
         <left>
             <p>
             Order No : ${orderNumber} <br>
-            Ref No : ${refNumber == "" ? orderNumber : refNumber} <br>
+            Ref No : ${refNumber == "" ? orderNumber : _.escape(refNumber)} <br>
             Customer : ${
               customer == 0 ? "Walk in customer" : _.escape(customer.name)
             } <br>
