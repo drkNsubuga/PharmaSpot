@@ -1990,7 +1990,7 @@ function loadTransactions() {
         transaction_list += `<tr>
                                 <td>${trans.order}</td>
                                 <td class="nobr">${moment(trans.date).format(
-                                  "DD-MM-YYYY",
+                                  "DD-MMM-YYYY HH:mm:ss",
                                 )}</td>
                                 <td>${
                                   validator.unescape(settings.symbol) + moneyFormat(trans.total)
