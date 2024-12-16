@@ -703,6 +703,7 @@ if (auth == undefined) {
     $.fn.submitDueOrder = function (status) {
       let items = "";
       let payment = 0;
+      paymentType = $('.list-group-item.active').data('payment-type');
       cart.forEach((item) => {
     items += `<tr><td>${DOMPurify.sanitize(item.product_name)}</td><td>${
       DOMPurify.sanitize(item.quantity)
@@ -727,13 +728,11 @@ if (auth == undefined) {
       let tax_row = "";
       switch (paymentType) {
         case 1:
-          type = "Cheque";
+          type = "Cash";
           break;
-        case 2:
+        case 3:
           type = "Card";
           break;
-        default:
-          type = "Cash";
       }
 
       if (paid != "") {
@@ -754,7 +753,7 @@ if (auth == undefined) {
                     <tr>
                         <td>Method</td>
                         <td>:</td>
-                        <td>${type}</td>
+                        <td class="text-right">${type}</td>
                     </tr>`;
       }
 
@@ -2176,7 +2175,7 @@ $.fn.viewTransaction = function (index) {
       ? allTransactions[index].ref_number
       : allTransactions[index].order;
   let orderNumber = allTransactions[index].order;
-  let type = "";
+  let paymentMethod = "";
   let tax_row = "";
   let items = "";
   let products = allTransactions[index].items;
@@ -2189,14 +2188,8 @@ $.fn.viewTransaction = function (index) {
     )} </td></tr>`;
   });
 
-  switch (allTransactions[index].payment_type) {
-    case 2:
-      type = "Card";
-      break;
-
-    default:
-      type = "Cash";
-  }
+  paymentMethod = allTransactions[index].payment_type;
+ 
 
   if (allTransactions[index].paid != "") {
     payment = `<tr>
@@ -2216,7 +2209,7 @@ $.fn.viewTransaction = function (index) {
                 <tr>
                     <td>Method</td>
                     <td>:</td>
-                    <td>${type}</td>
+                    <td class="text-right">${paymentMethod}</td>
                 </tr>`;
   }
 
@@ -2301,7 +2294,7 @@ $.fn.viewTransaction = function (index) {
         <tr>
             <td><h5>Total</h5></td>
             <td><h5>:</h5></td>
-            <td>
+            <td class="text-right">
                 <h5>${validator.unescape(settings.symbol)}${moneyFormat(
                   allTransactions[index].total,
                 )}</h5>
