@@ -2011,9 +2011,7 @@ function loadTransactions() {
                                 <td>${
                                   trans.paid == ""
                                     ? ""
-                                    : trans.payment_type == 0
-                                      ? "Cash"
-                                      : "Card"
+                                    : trans.payment_type
                                 }</td>
                                 <td>${trans.till}</td>
                                 <td>${trans.user}</td>
