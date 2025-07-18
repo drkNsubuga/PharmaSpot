@@ -40,7 +40,7 @@
     "jspdf": "^3.0.1",
     "macaddress": "^0.5.3",
     "moment": "^2.29.4",
-    "multer": "^2.0.1",
+    "multer": "^2.0.2",
     "notiflix": "^3.2.5",
     "print-js": "^1.6.0",
     "sanitize": "^2.1.2",
