@@ -47,7 +47,11 @@ const template = [
           },
         ],
       },
-      { label: "Backup" },
+      { 
+        label: "Backup",
+        click: ()=>handleClick('backup')
+
+      },
       { label: "Restore" },
       {
         label: "Logout",
