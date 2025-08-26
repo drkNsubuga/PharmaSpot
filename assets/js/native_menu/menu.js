@@ -3,9 +3,13 @@ const isMac = process.platform === "darwin";
 const {
   showAbout,
   checkForUpdates,
-  sendFeeBack,
+  // sendFeedback,
   getDocs,
-  handleClick
+  handleClick,
+  saveBackupDialog,
+  restoreBackupDialog,
+  dbFolderPath,
+  uploadsFolderPath
 } = require("./menuController");
 const template = [
   ...(isMac
@@ -49,10 +53,12 @@ const template = [
       },
       { 
         label: "Backup",
-        click: ()=>handleClick('backup')
+        click: ()=>saveBackupDialog(dbFolderPath,uploadsFolderPath)
 
       },
-      { label: "Restore" },
+      { label: "Restore",
+      click: ()=>restoreBackupDialog(dbFolderPath,uploadsFolderPath)
+       },
       {
         label: "Logout",
         click: () => handleClick("log-out"),
@@ -128,7 +134,7 @@ const template = [
       },
       {
         label: "Send feedback",
-        click: () => sendFeedBack(),
+        // click: () => sendFeedBack(),
       },
       { type: "separator" },
       {
