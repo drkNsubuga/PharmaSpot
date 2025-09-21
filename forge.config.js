@@ -35,7 +35,6 @@ module.exports = {
 
   // macOS
   { name: '@electron-forge/maker-dmg', config: { format: 'ULFO' } },
-  { name: '@electron-forge/maker-pkg', config: {identity:null} }
   ],
 
   publishers: [

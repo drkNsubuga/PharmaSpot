@@ -80,7 +80,6 @@
     "@electron-forge/maker-appx": "^7.9.0",
     "@electron-forge/maker-deb": "^6.0.4",
     "@electron-forge/maker-dmg": "^7.9.0",
-    "@electron-forge/maker-pkg": "^7.9.0",
     "@electron-forge/maker-rpm": "^6.0.4",
     "@electron-forge/maker-snap": "^7.9.0",
     "@electron-forge/maker-squirrel": "^6.0.4",

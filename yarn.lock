@@ -410,15 +410,6 @@
   optionalDependencies:
     electron-installer-dmg "^5.0.1"
 
-"@electron-forge/maker-pkg@^7.9.0":
-  version "7.9.0"
-  resolved "https://registry.npmjs.org/@electron-forge/maker-pkg/-/maker-pkg-7.9.0.tgz"
-  integrity sha512-GwsUawLr+n2SRJQ/hL2S1ELFbjqp/BsZmTGsYU0pwVzXkAHQZouONUI9e8pZbXTbbRu5oR8gmvpdM56zxtP9hw==
-  dependencies:
-    "@electron-forge/maker-base" "7.9.0"
-    "@electron-forge/shared-types" "7.9.0"
-    "@electron/osx-sign" "^1.0.5"
-
 "@electron-forge/maker-rpm@^6.0.4":
   version "6.4.2"
   resolved "https://registry.npmjs.org/@electron-forge/maker-rpm/-/maker-rpm-6.4.2.tgz"
