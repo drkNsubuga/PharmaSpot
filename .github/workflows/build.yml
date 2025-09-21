@@ -39,7 +39,8 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install -y fakeroot rpm
-          sudo snap install --channel=7.x --classic snapcraft
+          # sudo snap install --channel=7.x --classic snapcraft
+          
 
       - name: Build installers
         env:

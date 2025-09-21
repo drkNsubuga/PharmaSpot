@@ -30,7 +30,7 @@ module.exports = {
   // Linux
   { name: '@electron-forge/maker-deb', config: {} },
   { name: '@electron-forge/maker-rpm', config: {} },
-  { name: '@electron-forge/maker-snap', config: {} },
+  // { name: '@electron-forge/maker-snap', config: {} },
 
   // macOS
   { name: '@electron-forge/maker-dmg', config: { format: 'ULFO' } },
