@@ -15,6 +15,9 @@ const menu = Menu.buildFromTemplate(template);
 Menu.setApplicationMenu(menu);
 let mainWindow;
 
+//stop app from launching multiple times during these squirrel spawning events
+if (require('electron-squirrel-startup')) app.quit();
+
 function createWindow() {
 
     const primaryDisplay = screen.getPrimaryDisplay();
@@ -99,3 +102,5 @@ if (!isPackaged) {
         require("electron-reloader")(module);
     } catch (_) {}
 }
+
+
