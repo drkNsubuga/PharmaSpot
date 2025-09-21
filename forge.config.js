@@ -25,7 +25,7 @@ module.exports = {
   // Windows
   { name: '@electron-forge/maker-squirrel', config: {} },
   { name: '@electron-forge/maker-wix', config: { language: 1033, manufacturer: pkg.author} },
-  { name: '@electron-forge/maker-appx', config: {} },
+  // { name: '@electron-forge/maker-appx', config: {} },
 
   // Linux
   { name: '@electron-forge/maker-deb', config: {} },
