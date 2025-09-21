@@ -2,7 +2,6 @@ const fs = require('fs');
 const path = require('path');
 const glob = require('glob');
 const pkg = require("./package.json");
-const { identity } = require('lodash');
 
 module.exports = {
   packagerConfig: {
@@ -35,6 +34,7 @@ module.exports = {
 
   // macOS
   { name: '@electron-forge/maker-dmg', config: { format: 'ULFO' } },
+  // { name: '@electron-forge/maker-pkg', config: {} }
   ],
 
   publishers: [
