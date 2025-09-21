@@ -1,4 +1,6 @@
+# .github/workflows/release.yml
 name: Release
+
 on:
   push:
     tags:
@@ -25,10 +27,25 @@ jobs:
         with:
           node-version: "23.x"
 
+      - name: Cache Node.js modules
+        uses: actions/cache@v4
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+
       - name: Install dependencies
-        run: npm install
-        
-      - name: publish
+        run: npm ci
+
+      - name: Install Linux packaging dependencies
+        if: matrix.os == 'ubuntu-latest'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y fakeroot rpm snapcraft
+
+      - name: Publish installers
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          CSC_IDENTITY_AUTO: false
         run: npm run publish
