@@ -420,16 +420,6 @@
   optionalDependencies:
     electron-installer-redhat "^3.2.0"
 
-"@electron-forge/maker-snap@^7.9.0":
-  version "7.9.0"
-  resolved "https://registry.npmjs.org/@electron-forge/maker-snap/-/maker-snap-7.9.0.tgz"
-  integrity sha512-qjGFR8AG2lFz5IZUGttPyffCuY8CkDZtUcUNAWROg98mhQoA9HB/sU4g7gWbvpQ/fvRJ7yywPgyfUKmcXw/G2A==
-  dependencies:
-    "@electron-forge/maker-base" "7.9.0"
-    "@electron-forge/shared-types" "7.9.0"
-  optionalDependencies:
-    electron-installer-snap "^5.2.0"
-
 "@electron-forge/maker-squirrel@^6.0.4":
   version "6.4.2"
   resolved "https://registry.npmjs.org/@electron-forge/maker-squirrel/-/maker-squirrel-6.4.2.tgz"
@@ -3298,22 +3288,6 @@ electron-installer-redhat@^3.2.0:
     word-wrap "^1.2.3"
     yargs "^16.0.2"
 
-electron-installer-snap@^5.2.0:
-  version "5.2.0"
-  resolved "https://registry.npmjs.org/electron-installer-snap/-/electron-installer-snap-5.2.0.tgz"
-  integrity sha512-SRm7pCpNHMXV545JjScV8fLC9NhFli5r8L8Ju4EHdXwRh76+mwrJoUEDLItixBudZ5Mcgz1SJcDPJfWpEQWX7Q==
-  dependencies:
-    "@malept/cross-spawn-promise" "^1.0.0"
-    debug "^4.3.4"
-    electron-installer-common "^0.10.2"
-    fs-extra "^9.0.0"
-    js-yaml "^3.10.0"
-    lodash "^4.17.15"
-    semver "^7.1.1"
-    tmp-promise "^3.0.2"
-    which "^2.0.1"
-    yargs "^16.0.2"
-
 electron-is-dev@^1.2.0:
   version "1.2.0"
   resolved "https://registry.npmjs.org/electron-is-dev/-/electron-is-dev-1.2.0.tgz"
@@ -5700,7 +5674,7 @@ js-tokens@^4.0.0:
   resolved "https://registry.npmjs.org/js-tokens/-/js-tokens-4.0.0.tgz"
   integrity sha512-RdJUflcE3cUzKiMqQgsCu06FPu9UdIJO0beYbPhHN4k6apgJtifcoCtT9bcxOpYBtpD2kCM6Sbzg4CausW/PKQ==
 
-js-yaml@^3.10.0, js-yaml@^3.13.1:
+js-yaml@^3.13.1:
   version "3.14.1"
   resolved "https://registry.npmjs.org/js-yaml/-/js-yaml-3.14.1.tgz"
   integrity sha512-okMH7OXXJ7YrN9Ok3/SXrnu4iX9yOk+25nqX4imS2npuvTYDmo/QEZoqwZkYaIDk3jVvBOTOIEgEhaLOynBS9g==

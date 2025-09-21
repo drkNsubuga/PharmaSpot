@@ -77,11 +77,9 @@
   },
   "devDependencies": {
     "@electron-forge/cli": "^6.0.4",
-    "@electron-forge/maker-appx": "^7.9.0",
     "@electron-forge/maker-deb": "^6.0.4",
     "@electron-forge/maker-dmg": "^7.9.0",
     "@electron-forge/maker-rpm": "^6.0.4",
-    "@electron-forge/maker-snap": "^7.9.0",
     "@electron-forge/maker-squirrel": "^6.0.4",
     "@electron-forge/maker-wix": "^7.9.0",
     "@electron-forge/maker-zip": "^6.0.4",
