@@ -1,3 +1,4 @@
+// generate-latest.js (root of project)
 const fs = require('fs');
 const path = require('path');
 const { getChannelYml } = require('electron-updater-yaml');
@@ -14,8 +15,7 @@ async function sha512(filePath) {
   });
 }
 
-async function generateWindowsMacYml(installerDir) {
-  // Use electron-updater-yaml for Windows/macOS
+async function generateWinMac(installerDir) {
   const version = pkg.version;
   const releaseDate = new Date().toISOString();
   const channel = 'latest';
@@ -24,35 +24,39 @@ async function generateWindowsMacYml(installerDir) {
     version,
     releaseDate,
     channel,
-    installerPath: installerDir,
-    // platform: you can explicitly set, but defaults to the host platform
+    installerPath: installerDir
   };
 
   const yml = await getChannelYml(options);
   const outPath = path.join(installerDir, 'latest.yml');
   fs.writeFileSync(outPath, yml, 'utf8');
-  console.log('Generated latest.yml (win/mac) at', outPath);
+  console.log('Generated latest.yml (Windows/macOS) at', outPath);
 }
 
-async function generateLinuxYml(installerDir) {
-  // Manually create linux metadata
+async function generateLinux(installerDir) {
   const version = pkg.version;
   const releaseDate = new Date().toISOString();
 
+  // accepted Linux installer extensions including zip
+  const linuxExts = ['.deb', '.rpm', '.zip', /* add others you build */];
+
   const files = fs.readdirSync(installerDir)
-    .filter(f => /\.(deb|rpm|zip)$/.test(f));
+    .filter(fn => {
+      const ext = path.extname(fn).toLowerCase();
+      return linuxExts.includes(ext);
+    });
 
   if (files.length === 0) {
-    console.log('No Linux installers found; skipping linux metadata');
+    console.log('No Linux installers found (zip, rpm, deb)… skipping Linux metadata');
     return;
   }
 
   const entries = await Promise.all(files.map(async f => {
     const full = path.join(installerDir, f);
-    const checksum = await sha512(full);
+    const hash = await sha512(full);
     return {
       file: f,
-      sha512: checksum,
+      sha512: hash
     };
   }));
 
@@ -72,18 +76,16 @@ async function generateLinuxYml(installerDir) {
 async function main() {
   const installerDir = path.resolve(__dirname, 'out/make');
   if (!fs.existsSync(installerDir)) {
-    console.error('Installer directory not found:', installerDir);
+    console.error('Installer directory does not exist:', installerDir);
     process.exit(1);
   }
 
-  // Windows/macOS jobs will generate `latest.yml`
-  if (process.platform === 'darwin' || process.platform === 'win32') {
-    await generateWindowsMacYml(installerDir);
-  }
-
-  // Linux job
-  if (process.platform === 'linux') {
-    await generateLinuxYml(installerDir);
+  if (process.platform === 'win32' || process.platform === 'darwin') {
+    await generateWinMac(installerDir);
+  } else if (process.platform === 'linux') {
+    await generateLinux(installerDir);
+  } else {
+    console.log('Platform not covered for metadata generation:', process.platform);
   }
 }
 
