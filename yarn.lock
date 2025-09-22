@@ -3270,6 +3270,11 @@ electron-to-chromium@^1.5.218:
   resolved "https://registry.npmjs.org/electron-to-chromium/-/electron-to-chromium-1.5.222.tgz"
   integrity sha512-gA7psSwSwQRE60CEoLz6JBCQPIxNeuzB2nL8vE03GK/OHxlvykbLyeiumQy1iH5C2f3YbRAZpGCMT12a/9ih9w==
 
+electron-updater-yaml@^1.1.2:
+  version "1.1.2"
+  resolved "https://registry.npmjs.org/electron-updater-yaml/-/electron-updater-yaml-1.1.2.tgz"
+  integrity sha512-rxlWK50wntisM2MkoyRMKNi31LO5PZuVgL5QVTTafuCkCWNEh+m/MfwAXL5dcrgDOMcj8aTUiAsCFcdOOkG+Tw==
+
 electron-updater@^6.3.0:
   version "6.6.2"
   resolved "https://registry.npmjs.org/electron-updater/-/electron-updater-6.6.2.tgz"
