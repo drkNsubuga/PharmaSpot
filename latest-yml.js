@@ -1,18 +1,9 @@
-// latest-yml.js
 const fs = require('fs');
 const path = require('path');
 const { getChannelYml } = require('electron-updater-yaml');
 const pkg = require('./package.json');
 
-async function main() {
-  // Path where your installers go
-  const installerDir = path.resolve(__dirname, 'out/make');
-  // Ensure directory exists, or adjust if your installers are in different paths
-  if (!fs.existsSync(installerDir)) {
-    console.error('Installer directory not found:', installerDir);
-    process.exit(1);
-  }
-
+async function generateLatestYml(platform, installerPath) {
   const version = pkg.version;
   const releaseDate = new Date().toISOString();
   const channel = 'latest';
@@ -21,13 +12,35 @@ async function main() {
     version,
     releaseDate,
     channel,
-    installerPath: installerDir
+    installerPath
   };
 
   const yml = await getChannelYml(options);
-  const latestPath = path.join(installerDir, 'latest.yml');
+  const latestPath = path.join(installerPath, 'latest.yml');
   fs.writeFileSync(latestPath, yml, 'utf8');
-  console.log('Generated latest.yml at', latestPath);
+  console.log(`Generated latest.yml for ${platform} at`, latestPath);
+}
+
+async function main() {
+  const platform = process.platform;
+  const installerDir = path.resolve(__dirname, 'out/make');
+
+  if (!fs.existsSync(installerDir)) {
+    console.error('Installer directory not found:', installerDir);
+    process.exit(1);
+  }
+
+  if (platform === 'linux') {
+    const formats = ['deb', 'rpm', 'zip', 'AppImage'];
+    for (const format of formats) {
+      const formatDir = path.join(installerDir, format);
+      if (fs.existsSync(formatDir)) {
+        await generateLatestYml('linux', formatDir);
+      }
+    }
+  } else {
+    await generateLatestYml(platform, installerDir);
+  }
 }
 
 main().catch(err => {
