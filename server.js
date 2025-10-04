@@ -48,3 +48,21 @@ server.listen(PORT, () => {
     process.env.PORT = server.address().port;
     console.log("Listening on PORT", process.env.PORT);
 });
+
+/**
+ * Restarts the server process.
+ */
+function restartServer() {
+    server.close(() => {
+        // Remove cached modules so require() reloads them
+        Object.keys(require.cache).forEach(key => {
+            if (key.includes('api') || key.endsWith('server.js')) {
+                delete require.cache[key];
+            }
+        });
+        // Re-require server.js to restart everything
+        require('./server');
+    });
+}
+
+module.exports = { restartServer };

@@ -27,6 +27,7 @@ const updateServer = appConfig.UPDATE_SERVER;
 const updateUrl = `${updateServer}/update/${
   process.platform
 }/${app.getVersion()}`;
+const { restartServer } = require('../../../server');
 
 function showAbout() {
   const options = {
@@ -295,6 +296,16 @@ const restoreBackupDialog = async (dbFolderPath, uploadsFolderPath) => {
   });
 
   if (!canceled && filePaths && filePaths[0]) {
+    const confirm = await dialog.showMessageBox({
+      type: "warning",
+      title: "Confirm Restore",
+      message: "Restoring a backup will overwrite your current database and uploads. Are you sure?",
+      buttons: ["Restore", "Cancel"],
+      defaultId: 1,
+      cancelId: 1
+    });
+    if (confirm.response !== 0) return;
+
     try {
       await restoreBackup(filePaths[0], dbFolderPath, uploadsFolderPath);
       dialog.showMessageBox({
@@ -303,6 +314,10 @@ const restoreBackupDialog = async (dbFolderPath, uploadsFolderPath) => {
         message: "Backup restored successfully.",
         detail: filePaths[0]
       });
+      if (mainWindow) {
+        mainWindow.reload();
+      }
+      restartServer();
     } catch (err) {
       dialog.showErrorBox("Restore Failed", err.message || String(err));
     }
