@@ -1,21 +1,22 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 
 <head>
     <meta charset="UTF-8">
-    <title></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PharmaSpot - Point of Sale System</title>
     <link href="assets/dist/css/bundle.min.css" rel="stylesheet" type="text/css" />
 </head>
 
 <body>
     <div class="splash loading">
-        <img src="assets/images/logo.svg" />
+        <img src="assets/images/logo.svg" alt="PharmaSpot Logo" />
         <h1 class="pull-right pt-3"><i class="fa fa-spinner fa-spin"></i> Please wait...</h1>
     </div>
     <div id="login">
         <div class="login-box">
             <div id="load" class="login-box-body">
-                <center><img src="assets/images/logo.svg" /></center>
+                <center><img src="assets/images/logo.svg" alt="PharmaSpot Logo" /></center>
                 <form id="account">
                     <div class="form-group">
                         <input type="text" placeholder="Username" name="username" class="form-control">
@@ -37,7 +38,7 @@
                             <button id="productModal" data-toggle="modal" data-target="#Products" type="button" class="btn btn-success waves-effect waves-light">
                                 <span class="btn-label"><i class="  glyphicon glyphicon-barcode"></i> </span> Products
                             </button>
-                            <button id="newProductModal" data-toggle="modal" data-target="#newProduct" type="button" class="btn btn-warning waves-effect waves-light">
+                            <button id="newProductModal" data-toggle="modal" data-target="#newProduct" type="button" class="btn btn-warning waves-effect waves-light" title="Add New Product">
                                 <i class="fa fa-plus"></i>
                             </button>
                         </div>
@@ -45,7 +46,7 @@
                             <button id="categoryModal" data-toggle="modal" data-target="#Categories" type="button" class="btn btn-success waves-effect waves-light">
                                 <span class="btn-label"><i class="glyphicon glyphicon-th"></i> </span> Categories
                             </button>
-                            <button id="newCategoryModal" data-toggle="modal" data-target="#newCategory" type="button" class="btn btn-warning waves-effect waves-light">
+                            <button id="newCategoryModal" data-toggle="modal" data-target="#newCategory" type="button" class="btn btn-warning waves-effect waves-light" title="Add New Category">
                                 <i class="fa fa-plus"></i>
                             </button>
                         </div>
@@ -59,7 +60,7 @@
                 </div>
                 <div class="col-md-6">
                     <div class="button-list m-t-15">
-                        <button id="settings" data-toggle="modal" data-target="#settingsModal" type="button" class="btn btn-success waves-effect waves-light p_five">
+                        <button id="settings" data-toggle="modal" data-target="#settingsModal" type="button" class="btn btn-success waves-effect waves-light p_five" title="Settings">
                             <i class="glyphicon glyphicon-cog"></i>
                         </button>
                         <button id="transactions" type="button" class="btn btn-success waves-effect waves-light p_three">
@@ -74,7 +75,7 @@
                             <button id="usersModal" data-toggle="modal" data-target="#Users" type="button" class="btn btn-success waves-effect waves-light">
                                 <span class="btn-label"><i class="  glyphicon glyphicon-user"></i> </span> Users
                             </button>
-                            <button id="add-user" data-toggle="modal" type="button" class="btn btn-warning waves-effect waves-light">
+                            <button id="add-user" data-toggle="modal" type="button" class="btn btn-warning waves-effect waves-light" title="Add New User">
                                 <i class="fa fa-plus"></i>
                             </button>
                         </div>
@@ -112,21 +113,21 @@
                         <div class="col-md-2">
                             <div class="input-group">
                                 <span class="input-group-addon" id="till-addon">Till</span>
-                                <select id="tills" class="form-control" aria-describedby="till-addon">
+                                <select id="tills" class="form-control" aria-describedby="till-addon" aria-label="Select Till">
                                 </select>
                             </div>
                         </div>
                         <div class="col-md-2">
                             <div class="input-group">
                                 <span class="input-group-addon" id="cashier-addon">Cashier</span>
-                                <select id="users" class="form-control" aria-describedby="cashier-addon">
+                                <select id="users" class="form-control" aria-describedby="cashier-addon" aria-label="Select Cashier">
                                 </select>
                             </div>
                         </div>
                         <div class="col-md-2">
                             <div class="input-group">
                                 <span class="input-group-addon" id="status-addon">Status</span>
-                                <select id="status" class="form-control" aria-describedby="">
+                                <select id="status" class="form-control" aria-describedby="status-addon" aria-label="Select Status">
                                     <option value="1">Paid</option>
                                     <option value="0">Unpaid</option>
                                 </select>
@@ -199,10 +200,10 @@
                                 <div class="row">
                                     <div class="col-md-10">
                                         <div class="input-group">
-                                            <select name="" id="customer" class="form-control">
+                                            <select name="" id="customer" class="form-control" aria-label="Select Customer">
                                             </select>
                                             <span class="input-group-btn">
-                                                <button id="newCustomerModal" data-toggle="modal" data-target="#newCustomer" class="btn btn-success"><i class="fa fa-plus"></i></button>
+                                                <button id="newCustomerModal" data-toggle="modal" data-target="#newCustomer" class="btn btn-success" title="Add New Customer"><i class="fa fa-plus"></i></button>
                                             </span>
                                         </div>
                                     </div>
@@ -211,7 +212,7 @@
                                             <div class="input-group">
                                                 <input type="text" required id="skuCode" name="skuCode" class="form-control number-input" placeholder="Scan barcode or type the number then hit enter" aria-label="barcode" aria-describedby="basic-addon2">
                                                 <span class="input-group-btn">
-                                                    <button type="submit" class="btn btn-default search-barcode-btn"><i class="glyphicon glyphicon-ok"></i></button>
+                                                    <button type="submit" class="btn btn-default search-barcode-btn" title="Submit Barcode"><i class="glyphicon glyphicon-ok"></i></button>
                                                 </span>
                                             </div>
                                         </form>
@@ -225,7 +226,7 @@
                                                 <div class="col-md-3"><strong>Item</strong></div>
                                                 <div class="col-md-3"><strong>Qty</strong></div>
                                                 <div class="col-md-3"><strong>Price</strong></div>
-                                                <div class="col-md-1"><button onclick="$(this).cancelOrder()" class="btn btn-light btn-xs"><i class="fa fa-times"></i></button>
+                                                <div class="col-md-1"><button onclick="$(this).cancelOrder()" class="btn btn-light btn-xs" title="Cancel Order"><i class="fa fa-times"></i></button>
                                                 </div>
                                             </div>
                                         </div>
@@ -252,7 +253,7 @@
                                 </div>
                             </div>
                             <div class="button-list pull-right">
-                                <button onclick="$(this).submitDueOrder(3);" type="button" class="btn btn-info waves-effect waves-light">
+                                <button onclick="$(this).submitDueOrder(3);" type="button" class="btn btn-info waves-effect waves-light" title="Print Receipt">
                                     <i class="fa fa-print"></i>
                                 </button>
                                 <button onclick="$(this).cancelOrder()" type="button" class="btn btn-danger waves-effect waves-light">
@@ -275,7 +276,7 @@
                                     <input type="text" id="search" class="form-control" placeholder="Search product by name or sku">
                                 </div>
                                 <div class="col-md-6">
-                                    <select id="categories" class="form-control">
+                                    <select id="categories" class="form-control" aria-label="Filter by Category" title="Filter by Category">
                                     </select>
                                 </div>
                             </div>
@@ -380,7 +381,7 @@
                                 <br>
                                 <div class="input-group">
                                     <span class="input-group-addon" id="basic-addon3">Payment <span id="payment_curr"></span> </span>
-                                    <input type="text" placeholder="0.0" class="form-control" id="paymentText" aria-describedby="basic-addon3" readonly>
+                                    <input type="text" placeholder="0.0" class="form-control" id="paymentText" aria-describedby="basic-addon3">
                                     <input type="hidden" class="form-control" id="payment" aria-describedby="basic-addon3">
                                 </div>
                                 <hr>
@@ -496,57 +497,139 @@
                 </div>
             </div>
         </div>
-        <div id="newProduct" class="modal fade bs-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
-            <div class="modal-dialog modal-sm">
+        <div id="newProduct" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+            <div class="modal-dialog" style="width: 95%; max-width: 1400px;">
                 <div class="modal-content">
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                        <h4 class="modal-title" id="mySmallModalLabel">Product
+                        <h4 class="modal-title" id="mySmallModalLabel"><i class="fa fa-plus-circle"></i> Product Management (UoM)
                         </h4>
                     </div>
-                    <div class="modal-body">
+                    <div class="modal-body" style="max-height: 80vh; overflow-y: auto;">
                         <form id="saveProduct" encType="multipart/form-data">
                             <input type="hidden" name="id" id="product_id">
                             <input type="hidden" name="img" id="img">
                             <input type="hidden" name="remove" id="remove_img">
-                            <div class="form-group">
-                                <label for="category">Category</label>
-                                <select name="category" class="form-control" id="category"></select>
+                            
+                            <!-- Basic Information -->
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="category">Category <span class="text-danger">*</span></label>
+                                        <select name="category" class="form-control" id="category" required></select>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="productName">Product Name <span class="text-danger">*</span></label>
+                                        <input type="text" required="required" name="name" parsley-trigger="change" placeholder="e.g., Paracetamol 500mg" class="form-control" id="productName">
+                                    </div>
+                                </div>
                             </div>
-                            <div class="form-group">
-                                <label for="productName">Product Name</label>
-                                <input type="text" required="required" name="name" parsley-trigger="change" placeholder="Enter a product name" class="form-control" id="productName">
+                            
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="barcode">Barcode (Optional)</label>
+                                        <input type="text" name="barcode" parsley-trigger="change" placeholder="Enter product barcode" class="form-control" id="barcode">
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="expirationDate">Expiry Date</label>
+                                        <input type="text" name="expirationDate" parsley-trigger="change" placeholder="dd/mm/yyyy" class="form-control" id="expirationDate" readonly>
+                                    </div>
+                                </div>
                             </div>
-                            <div class="form-group">
-                                <label for="barcode">BarCode</label>
-                                <input type="text" required="required" name="barcode" parsley-trigger="change" placeholder="Enter product barcode" class="form-control number-input" id="barcode">
+                            
+                            <!-- UoM Section -->
+                            <div class="panel panel-info">
+                                <div class="panel-heading">
+                                    <h4 class="panel-title">Unit of Measure (UoM)</h4>
+                                </div>
+                                <div class="panel-body">
+                                    <div class="row">
+                                        <div class="col-md-4">
+                                            <div class="form-group">
+                                                <label for="base_unit_name">Base Unit <span class="text-danger">*</span></label>
+                                                <input type="text" required="required" name="base_unit_name" placeholder="e.g., Tablet, Capsule, Pill, ml" class="form-control" id="base_unit_name">
+                                                <small class="text-muted">The smallest measurable unit</small>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="form-group">
+                                                <label for="total_stock_base_units">Stock (in base units) <span class="text-danger">*</span></label>
+                                                <input type="number" required="required" name="total_stock_base_units" placeholder="0" min="0" class="form-control" id="total_stock_base_units">
+                                                <small class="text-muted">Total quantity in base units</small>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="form-group">
+                                                <label for="min_stock_base_units">Minimum Stock (auto 50%)</label>
+                                                <input type="number" name="min_stock_base_units" placeholder="Auto" min="0" class="form-control" id="min_stock_base_units">
+                                                <small class="text-muted">Alert when stock falls below</small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="row">
+                                        <div class="col-md-4">
+                                            <div class="form-group">
+                                                <label for="cost_price">Cost Price (per unit) <span class="text-danger">*</span></label>
+                                                <input type="number" required="required" name="cost_price" placeholder="0.00" step="0.01" min="0" class="form-control" id="cost_price">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="form-group">
+                                                <label for="selling_price">Retail Price (per unit) <span class="text-danger">*</span></label>
+                                                <input type="number" required="required" name="selling_price" placeholder="0.00" step="0.01" min="0" class="form-control" id="selling_price">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="form-group">
+                                                <label for="wholesale_price">Wholesale Price (per unit)</label>
+                                                <input type="number" name="wholesale_price" placeholder="0.00" step="0.01" min="0" class="form-control" id="wholesale_price">
+                                                <small class="text-muted">Leave blank to use retail price</small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
-                            <div class="form-group">
-                                <label for="product_price">Price</label>
-                                <input type="text" required="required" name="price" placeholder="Price" class="form-control number-input" id="product_price">
+                            
+                            <!-- Packages Section -->
+                            <div class="panel panel-success">
+                                <div class="panel-heading">
+                                    <h4 class="panel-title">
+                                        Packages (Optional)
+                                        <button type="button" class="btn btn-xs btn-success pull-right" onclick="addPackageRow()">
+                                            <i class="fa fa-plus"></i> Add Package
+                                        </button>
+                                    </h4>
+                                </div>
+                                <div class="panel-body">
+                                    <small class="text-muted">Define package types (e.g., Strip of 10 tablets, Box of 100 tablets)</small>
+                                    <div id="packages_container" style="margin-top: 10px;">
+                                        <!-- Package rows will be added here -->
+                                    </div>
+                                </div>
                             </div>
-                            <div class="form-group">
-                                <label for="expirationDate">Expiry Date</label>
-                                <input type="text" name="expirationDate" parsley-trigger="change" placeholder="dd/mm/yyyy" class="form-control" id="expirationDate" readonly>
+                            
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label><input type="checkbox" name="stock" id="stock"> Disable stock check</label>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="imagename"><span id="rmv_img" class="btn btn-xs btn-warning">Remove</span> Picture</label>
+                                        <div id="current_img"></div>
+                                        <input type="file" name="imagename" id="imagename">
+                                    </div>
+                                </div>
                             </div>
-                            <div class="form-group">
-                                <label for="quantity">Stock</label>
-                                <input type="number" name="quantity" placeholder="Available stock" class="form-control" id="quantity" min="0">
-                            </div>
-                            <div class="form-group">
-                                <label for="quantity">Minimum Stock</label>
-                                <input type="number" name="minStock" placeholder="Minimum Stock" class="form-control" id="minStock" min="1">
-                            </div>
-                            <div class="form-group">
-                                <label><input type="checkbox" name="stock" id="stock"> Disable stock check </label>
-                            </div>
-                            <div class="form-group">
-                                <label for="imagename"><span id="rmv_img" class="btn btn-xs btn-warning">Remove</span>
-                                Picture </label>
-                                <div id="current_img"></div>
-                                <input type="file" name="imagename" id="imagename">
-                            </div>
-                            <input type="submit" id="submitProduct" class="btn btn-primary btn-block waves-effect waves-light">
+                            
+                            <input type="submit" id="submitProduct" class="btn btn-primary btn-block waves-effect waves-light" value="Save Product">
                         </form>
                     </div>
                 </div>
@@ -579,16 +662,23 @@
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
                         <h4 class="modal-title" id="mySmallModalLabel">Products
+                            <button type="button" class="btn btn-info btn-sm pull-right" onclick="openBulkUpload()" style="margin-left: 10px;">
+                                <i class="fa fa-upload"></i> Bulk Upload
+                            </button>
+                            <a href="javascript:void(0)" class="btn btn-success btn-sm pull-right" onclick="downloadTemplate()">
+                                <i class="fa fa-download"></i> CSV Template
+                            </a>
                         </h4>
                     </div>
                     <div class="modal-body p-20 p-r-40" id="all_products">
                         <table class="table table-bordered" id="productList">
                             <thead>
                                 <tr>
-                                    <th>Barcode</th>
-                                    <th>Item</th>
                                     <th>Name</th>
-                                    <th>Price</th>
+                                    <th>Base Unit</th>
+                                    <th>Cost Price</th>
+                                    <th>Retail Price</th>
+                                    <th>Packages</th>
                                     <th>Stock</th>
                                     <th>Expiry Date</th>
                                     <th>Category</th>
@@ -601,6 +691,51 @@
                 </div>
             </div>
         </div>
+        
+        <!-- Bulk Upload Modal -->
+        <div id="BulkUpload" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="bulkUploadLabel" aria-hidden="true">
+            <div class="modal-dialog modal-md">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                        <h4 class="modal-title" id="bulkUploadLabel"><i class="fa fa-cloud-upload"></i> Bulk Upload Products</h4>
+                    </div>
+                    <div class="modal-body p-20">
+                        <div class="alert alert-info">
+                            <h5><i class="fa fa-info-circle"></i> Important Notes:</h5>
+                            <ul style="margin-bottom: 0;">
+                                <li><strong>Duplicate Products:</strong> If a product with the same name and category exists, stock will be <strong>incremented</strong> (not replaced)</li>
+                                <li><strong>Required Columns:</strong> Name, Category, Base Unit, Cost Price, Selling Price, Stock</li>
+                                <li><strong>Stock Logic:</strong> Stock is in base units. Min stock defaults to 50% if not specified</li>
+                                <li><strong>Packages:</strong> Use JSON format: <code>[{"package_name":"Strip","units_contained":10,"retail_price":100,"wholesale_price":85}]</code></li>
+                            </ul>
+                        </div>
+                        <div class="form-group">
+                            <label>Select CSV File</label>
+                            <input type="file" id="csvFileInput" accept=".csv" class="form-control">
+                            <small class="text-muted">
+                                <strong>Columns:</strong> Name, Category, Base Unit, Cost Price, Selling Price, Wholesale Price, 
+                                Stock, Barcode, Expiry Date (YYYY-MM-DD), Min Stock, Packages (JSON)
+                            </small>
+                        </div>
+                        <div class="form-group">
+                            <button type="button" class="btn btn-primary" onclick="processBulkUpload()">
+                                <i class="fa fa-upload"></i> Upload Products
+                            </button>
+                        </div>
+                        <div id="uploadProgress" style="display: none;">
+                            <div class="progress">
+                                <div class="progress-bar progress-bar-striped active" role="progressbar" style="width: 0%">
+                                    <span class="sr-only">0% Complete</span>
+                                </div>
+                            </div>
+                            <p id="uploadStatus"></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
         <div id="Users" class="modal fade bs-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
             <div class="modal-dialog modal-lg">
                 <div class="modal-content">
@@ -858,7 +993,7 @@
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <input id="save_settings" type="submit" class="btn btn-success btn-block waves-effect waves-light" value="Save Settings">
+                                    <input id="save_settings_receipt" type="submit" class="btn btn-success btn-block waves-effect waves-light" value="Save Settings">
                                 </div>
                             </div>
                             </form>
@@ -869,6 +1004,7 @@
         </div>
     </div>
     <script src="assets/dist/js/bundle.min.js"></script>
+    <script src="assets/js/enhanced-uom.js"></script>
 </body>
 
 </html>
