@@ -712,7 +712,14 @@
                         </div>
                         <div class="form-group">
                             <label>Select CSV File</label>
-                            <input type="file" id="csvFileInput" accept=".csv" class="form-control">
+                            <div class="input-group">
+                                <input type="file" id="csvFileInput" accept=".csv" class="form-control">
+                                <span class="input-group-btn">
+                                    <button type="button" class="btn btn-info" onclick="downloadBulkUploadTemplate()" title="Download CSV Template">
+                                        <i class="fa fa-download"></i> Template
+                                    </button>
+                                </span>
+                            </div>
                             <small class="text-muted">
                                 <strong>Columns:</strong> Name, Category, Base Unit, Cost Price, Selling Price, Wholesale Price, 
                                 Stock, Barcode, Expiry Date (YYYY-MM-DD), Min Stock, Packages (JSON)

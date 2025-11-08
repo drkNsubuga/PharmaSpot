@@ -106,9 +106,23 @@ app.post("/post", function (req, res) {
             }
         }
 
+    // Helper function to safely escape values
+    const safeEscape = (value) => {
+        if (value === undefined || value === null || value === '') return '';
+        if (typeof value === 'object') return '';
+        
+        try {
+            const strValue = String(value);
+            if (!strValue || strValue === 'undefined' || strValue === 'null') return '';
+            return validator.escape(strValue);
+        } catch (e) {
+            return '';
+        }
+    };
+
     let image = "";
 
-    if (validator.escape(req.body.img) !== "") {
+    if (req.body.img && req.body.img !== "") {
         image = sanitizeFilename(req.body.img);
     }
 
@@ -117,7 +131,7 @@ app.post("/post", function (req, res) {
     }
 
 
-    if (validator.escape(req.body.remove) === "1") {
+    if (safeEscape(req.body.remove) === "1") {
             try {
                 let imgPath = path.join(
                 appData,
@@ -140,22 +154,26 @@ app.post("/post", function (req, res) {
     let Settings = {
         _id: 1,
         settings: {
-            app: validator.escape(req.body.app),
-            store: validator.escape(req.body.store),
-            address_one: validator.escape(req.body.address_one),
-            address_two: validator.escape(req.body.address_two),
-            contact: validator.escape(req.body.contact),
-            tax: validator.escape(req.body.tax),
-            symbol: validator.escape(req.body.symbol),
-            percentage: validator.escape(req.body.percentage),
+            app: safeEscape(req.body.app),
+            store: safeEscape(req.body.store),
+            address_one: safeEscape(req.body.address_one),
+            address_two: safeEscape(req.body.address_two),
+            contact: safeEscape(req.body.contact),
+            tax: safeEscape(req.body.tax),
+            symbol: safeEscape(req.body.symbol),
+            percentage: safeEscape(req.body.percentage),
             charge_tax: req.body.charge_tax === 'on',
-            footer: validator.escape(req.body.footer),
+            footer: safeEscape(req.body.footer),
             img: image,
         },
     };
 
-    if (validator.escape(req.body.id) === "") {
-        settingsDB.insert(Settings, function (err, settings) {
+    // Always use update with upsert to avoid duplicate key error
+    settingsDB.update(
+        { _id: 1 },
+        Settings,
+        { upsert: true },
+        function (err, numReplaced, settings) {
             if (err) {
                 console.error(err);
                 res.status(500).json({
@@ -165,27 +183,8 @@ app.post("/post", function (req, res) {
             } else {
                 res.sendStatus(200);
             }
-        });
-    } else {
-        settingsDB.update(
-            {
-                _id: 1,
-            },
-            Settings,
-            {},
-            function (err, numReplaced, settings) {
-                if (err) {
-                    console.error(err);
-                    res.status(500).json({
-                        error: "Internal Server Error",
-                        message: "An unexpected error occurred.",
-                    });
-                } else {
-                    res.sendStatus(200);
-                }
-            },
-        );
-    }
+        },
+    );
 });
 
 });

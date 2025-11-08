@@ -99,4 +99,45 @@ $(document).ready(function () {
       $("#cardInfo").hide();
     }
   });
+
+  // Handle keyboard input for payment field
+  $("#paymentText").on("input", function() {
+    let value = $(this).val().replace(/[^0-9.]/g, ''); // Only allow numbers and decimal
+    
+    // Prevent multiple decimal points
+    const parts = value.split('.');
+    if (parts.length > 2) {
+      value = parts[0] + '.' + parts.slice(1).join('');
+    }
+    
+    $("#payment").val(value);
+    $(this).val(value);
+    $(this).calculateChange();
+  });
+
+  // Allow keyboard input on payment field
+  $("#paymentText").on("keypress", function(e) {
+    // Allow only numbers, decimal point, backspace, delete
+    const charCode = e.which || e.keyCode;
+    
+    // Enter key triggers payment confirmation
+    if (charCode === 13) { // Enter key
+      e.preventDefault();
+      if ($("#confirmPayment").is(":visible")) {
+        $("#confirmPayment").click();
+      }
+      return false;
+    }
+    
+    if (charCode === 46) { // decimal point
+      // Only allow one decimal point
+      if ($(this).val().indexOf('.') !== -1) {
+        e.preventDefault();
+        return false;
+      }
+    } else if (charCode > 31 && (charCode < 48 || charCode > 57)) {
+      e.preventDefault();
+      return false;
+    }
+  });
 });

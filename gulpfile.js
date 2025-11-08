@@ -28,6 +28,7 @@ const paths = {
         "assets/css/pages.css",
     ],
     js: [
+        "node_modules/moment/min/moment.min.js",
         "renderer.js",
         "assets/plugins/bootstrap/bootstrap.min.js",
         "assets/plugins/chosen/chosen.jquery.min.js",
@@ -77,3 +78,5 @@ function reload(done) {
 
 const watch = () => gulp.watch(paths.syncFiles, gulp.series(reload));
 exports.default = gulp.parallel(watch, sync);
+exports.packJs = packJs;
+exports.packCss = packCss;

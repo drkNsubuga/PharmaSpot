@@ -33,6 +33,10 @@ let perms = null;
 let deleteId = 0;
 let paymentType = 0;
 let receipt = "";
+
+// Make allProducts globally accessible for enhanced-uom.js
+window.allProducts = allProducts;
+window.allCategories = allCategories;
 let totalVat = 0;
 let subTotal = 0;
 let method = "";
@@ -54,6 +58,9 @@ let ownUserEdit = null;
 let totalPrice = 0;
 let orderTotal = 0;
 let auth_error = "Incorrect username or password";
+
+// Make api globally accessible for enhanced-uom.js
+window.api = api;
 let auth_empty = "Please enter a username and password";
 let holdOrderlocation = $("#renderHoldOrders");
 let customerOrderLocation = $("#renderCustomerOrders");
@@ -187,7 +194,7 @@ user = storage.get("user");
 
 $("#main_app").hide();
 if (auth == undefined) {
-  $.get(api + "users/check/", function (data) {});
+  // $.get(api + "users/check/", function (data) {}); // Removed - endpoint doesn't exist
 
   authenticate();
 } else {
@@ -263,143 +270,40 @@ if (auth == undefined) {
       $(".p_five").hide();
     }
 
-    function loadProducts() {
-      $.get(api + "inventory/products", function (data) {
-        data.forEach((item) => {
-          item.price = parseFloat(item.price).toFixed(2);
-        });
-
-        allProducts = [...data];
-
-        loadProductList();
-
-        let delay = 0;
-        let expiredCount = 0;
-        allProducts.forEach((product) => {
-          let todayDate = moment();
-          let expiryDate = moment(product.expirationDate, DATE_FORMAT);
-
-          if (!isExpired(expiryDate)) {
-            const diffDays = daysToExpire(expiryDate);
-
-            if (diffDays > 0 && diffDays <= 30) {
-              var days_noun = diffDays > 1 ? "days" : "day";
-              notiflix.Notify.warning(
-                `${product.name} has only ${diffDays} ${days_noun} left to expiry`,
-              );
-            }
-          } else {
-            expiredCount++;
-          }
-        });
-
-        //Show notification if there are any expired goods.
-        if(expiredCount>0)
-        {
-           notiflix.Notify.failure(
-          `${expiredCount} ${
-            expiredCount > 0 ? "products" : "product"
-          } expired. Please restock!`,
-        );
-        }
-
-       
-        $("#parent").text("");
-
-        data.forEach((item) => {
-          if (!categories.includes(item.category)) {
-            categories.push(item.category);
-          }
-          let item_isExpired = isExpired(item.expirationDate);
-          let item_stockStatus = getStockStatus(item.quantity,item.minStock);
-          if(item.img==="")
-          {
-            item_img = default_item_img;
-          }
-          else
-          {
-            item_img = path.join(img_path, item.img);
-            item_img = checkFileExists(item_img) ? item_img : default_item_img;
-          }
-          
-
-          let item_info = `<div class="col-lg-2 box ${item.category}"
-                                onclick="$(this).addToCart(${item._id}, ${
-                                  item.quantity
-                                }, ${item.stock})">
-                            <div class="widget-panel widget-style-2 " title="${item.name}">                    
-                            <div id="image"><img src="${item_img}" id="product_img" alt=""></div>                    
-                                        <div class="text-muted m-t-5 text-center">
-                                        <div class="name" id="product_name"><span class="${
-                                          item_isExpired ? "text-danger" : ""
-                                        }">${item.name}</span></div> 
-                                        <span class="sku">${
-                                          item.barcode || item._id
-                                        }</span>
-                                        <span class="${item_stockStatus<1?'text-danger':''}"><span class="stock">STOCK </span><span class="count">${
-                                          item.stock == 1
-                                            ? item.quantity
-                                            : "N/A"
-                                        }</span></span></div>
-                                        <span class="text-success text-center"><b data-plugin="counterup">${
-                                          validator.unescape(settings.symbol) +
-                                          moneyFormat(item.price)
-                                        }</b> </span>
-                            </div>
-                        </div>`;
-          $("#parent").append(item_info);
-        });
-      });
-    }
-
-    function loadCategories() {
-      $.get(api + "categories/all", function (data) {
-        allCategories = data;
-        loadCategoryList();
-        $("#category,#categories").html(`<option value="0">Select</option>`);
-        allCategories.forEach((category) => {
-          $("#category,#categories").append(
-            `<option value="${category._id}">${category.name}</option>`,
-          );
-        });
-      });
-    }
-
-    function loadCustomers() {
-      $.get(api + "customers/all", function (customers) {
-        $("#customer").html(
-          `<option value="0" selected="selected">Walk in customer</option>`,
-        );
-
-        customers.forEach((cust) => {
-          let customer = `<option value='{"id": ${cust._id}, "name": "${cust.name}"}'>${cust.name}</option>`;
-          $("#customer").append(customer);
-        });
-      });
-    }
-
     $.fn.addToCart = function (id, count, stock) {
-      $.get(api + "inventory/product/" + id, function (product) {
-        if (isExpired(product.expirationDate)) {
-          notiflix.Report.failure(
-            "Expired",
-            `${product.name} is expired! Please restock.`,
-            "Ok",
-          );
-        } else {
-          if (count > 0) {
-            $(this).addProductToCart(product);
-          } else {
-            if (stock == 1) {
-              notiflix.Report.failure(
-                "Out of stock!",
-                `${product.name} is out of stock! Please restock.`,
-                "Ok",
-              );
-            }
-          }
-        }
-      });
+      // Find product index in allProducts
+      const productIndex = allProducts.findIndex(p => p._id === id);
+      
+      if (productIndex === -1) {
+        notiflix.Notify.failure('Product not found');
+        return;
+      }
+      
+      const product = allProducts[productIndex];
+      
+      // Check expiry
+      if (isExpired(moment(product.expirationDate, DATE_FORMAT))) {
+        notiflix.Report.failure(
+          "Expired",
+          `${product.name} is expired! Please restock.`,
+          "Ok",
+        );
+        return;
+      }
+      
+      // Check stock
+      const currentStock = product.total_stock_base_units || product.quantity || 0;
+      if (currentStock <= 0 && product.stock == 1) {
+        notiflix.Report.failure(
+          "Out of stock!",
+          `${product.name} is out of stock! Please restock.`,
+          "Ok",
+        );
+        return;
+      }
+      
+      // Use package selector for products with packages
+      $(this).selectProductPackage(productIndex);
     };
 
     function barcodeSearch(e) {
@@ -490,13 +394,156 @@ if (auth == undefined) {
       }
     });
 
+    // Select product package before adding to cart
+    $.fn.selectProductPackage = function (productIndex) {
+      const product = allProducts[productIndex];
+      
+      if (!product) {
+        notiflix.Notify.failure('Product not found');
+        return;
+      }
+      
+      // Check if product is expired or out of stock
+      if (isExpired(moment(product.expirationDate, DATE_FORMAT))) {
+        notiflix.Report.failure(
+          "Expired!",
+          `${product.name} is expired`,
+          "Ok"
+        );
+        return;
+      }
+      
+      const currentStock = product.total_stock_base_units || product.quantity || 0;
+      if (currentStock < 1) {
+        notiflix.Report.info(
+          "Out of stock!",
+          "This item is currently unavailable",
+          "Ok"
+        );
+        return;
+      }
+      
+      // Parse packages
+      let packages = [];
+      try {
+        packages = typeof product.packages === 'string' ? JSON.parse(product.packages) : product.packages || [];
+      } catch (e) {
+        packages = [];
+      }
+      
+      // Check if product has packages
+      if (!packages || packages.length === 0) {
+        // No packages, add base unit directly
+        $(this).addProductToCart(product);
+        $('#Products').modal('hide');
+        notiflix.Notify.success(`${product.name} added to cart`);
+        return;
+      }
+      
+      // Show package selection modal
+      let packageOptions = `
+        <div class="form-group">
+          <label>Select Package Type:</label>
+          <select id="packageSelector" class="form-control">
+            <option value="base">Base Unit (${product.base_unit_name || 'Unit'}) - ${validator.unescape(settings.symbol)}${product.selling_price || product.price}</option>
+      `;
+      
+      packages.forEach((pkg, idx) => {
+        packageOptions += `<option value="${idx}">${pkg.package_name} (${pkg.units_contained} ${product.base_unit_name || 'Units'}) - Retail: ${validator.unescape(settings.symbol)}${pkg.retail_price}, Wholesale: ${validator.unescape(settings.symbol)}${pkg.wholesale_price}</option>`;
+      });
+      
+      packageOptions += `
+          </select>
+        </div>
+        <div class="form-group" id="priceTierGroup" style="display: none;">
+          <label>Price Tier:</label>
+          <select id="priceTierSelector" class="form-control">
+            <option value="retail">Retail</option>
+            <option value="wholesale">Wholesale</option>
+          </select>
+        </div>
+      `;
+      
+      notiflix.Confirm.show(
+        'Add to Cart',
+        packageOptions,
+        'Add',
+        'Cancel',
+        function() {
+          const selectedPackage = $('#packageSelector').val();
+          const selectedTier = $('#priceTierSelector').val() || 'retail';
+          
+          let item = {
+            id: product._id,
+            product_name: product.name,
+            sku: product.sku || product.barcode,
+            quantity: 1,
+            price_tier: selectedTier,
+            base_unit: product.base_unit_name || 'Unit',
+            cost_price: parseFloat(product.cost_price) || 0
+          };
+          
+          if (selectedPackage === 'base') {
+            // Base unit
+            item.package_name = product.base_unit_name || 'Unit';
+            item.package_units = 1;
+            item.retail_price = parseFloat(product.selling_price) || parseFloat(product.price) || 0;
+            item.wholesale_price = item.retail_price;
+            item.price = item.retail_price;
+          } else {
+            // Package
+            const pkg = packages[parseInt(selectedPackage)];
+            item.package_name = pkg.package_name;
+            item.package_units = pkg.units_contained;
+            item.retail_price = parseFloat(pkg.retail_price) || 0;
+            item.wholesale_price = parseFloat(pkg.wholesale_price) || 0;
+            item.price = selectedTier === 'retail' ? item.retail_price : item.wholesale_price;
+          }
+          
+          // Add to cart
+          if ($.fn.isExist(item)) {
+            $.fn.qtIncrement(index);
+          } else {
+            cart.push(item);
+            $.fn.renderTable(cart);
+          }
+          
+          $('#Products').modal('hide');
+          notiflix.Notify.success(`${product.name} added to cart`);
+        },
+        function() {
+          // Cancel
+        },
+        {
+          messageMaxLength: 1000,
+          plainText: false
+        }
+      );
+      
+      // Show price tier selector when package (not base unit) is selected
+      $('#packageSelector').on('change', function() {
+        if ($(this).val() === 'base') {
+          $('#priceTierGroup').hide();
+        } else {
+          $('#priceTierGroup').show();
+        }
+      });
+    };
+
     $.fn.addProductToCart = function (data) {
       item = {
         id: data._id,
         product_name: data.name,
-        sku: data.sku,
-        price: data.price,
+        sku: data.sku || data.barcode,
+        price: parseFloat(data.selling_price) || parseFloat(data.price) || 0,
+        retail_price: parseFloat(data.selling_price) || parseFloat(data.price) || 0,
+        wholesale_price: parseFloat(data.wholesale_price) || parseFloat(data.selling_price) || parseFloat(data.price) || 0,
+        cost_price: parseFloat(data.cost_price) || 0,
         quantity: 1,
+        price_tier: 'retail',
+        package_name: data.base_unit_name || 'Unit',
+        package_units: 1,
+        base_unit: data.base_unit_name || 'Unit'
       };
 
       if ($(this).isExist(item)) {
@@ -527,7 +574,11 @@ if (auth == undefined) {
       let grossTotal;
       let total_items = 0;
       $.each(cart, function (index, data) {
-        total += data.quantity * data.price;
+        // Use the appropriate price based on tier
+        const itemPrice = data.price_tier === 'wholesale' ? 
+          (data.wholesale_price || data.price) : 
+          (data.retail_price || data.price);
+        total += data.quantity * itemPrice;
         total_items += parseInt(data.quantity);
       });
       $("#total").text(total_items);
@@ -557,15 +608,33 @@ if (auth == undefined) {
       $("#cartTable .card-body").empty();
       $(this).calculateCart();
       $.each(cartList, function (index, data) {
+        // Determine current price based on tier
+        const currentPrice = parseFloat(data.price_tier === 'wholesale' ? (data.wholesale_price || data.price) : (data.retail_price || data.price)) || 0;
+        const currencySymbol = settings && settings.symbol ? validator.unescape(settings.symbol) : '₦';
+        
+        // Package display
+        const packageDisplay = data.package_name ? 
+          `<small class="text-muted">${data.package_name} (${data.package_units || 1} ${data.base_unit || 'units'})</small>` : '';
+        
+        // Price tier display
+        const priceTierDisplay = data.price_tier ? 
+          `<small class="text-info">${data.price_tier === 'wholesale' ? 'Wholesale' : 'Retail'}: ${currencySymbol}${moneyFormat(currentPrice.toFixed(2))}</small>` : '';
+        
         $("#cartTable .card-body").append(
-          $("<div>", { class: "row m-t-10" }).append(
+          $("<div>", { class: "row m-t-10 border-bottom pb-2" }).append(
             $("<div>", { class: "col-md-1", text: index + 1 }),
-            $("<div>", { class: "col-md-3", text: data.product_name }),
             $("<div>", { class: "col-md-3" }).append(
-              $("<div>", { class: "input-group" }).append(
+              $("<strong>", { text: data.product_name }),
+              $("<br>"),
+              packageDisplay ? $(packageDisplay) : '',
+              $("<br>"),
+              priceTierDisplay ? $(priceTierDisplay) : ''
+            ),
+            $("<div>", { class: "col-md-3" }).append(
+              $("<div>", { class: "input-group input-group-sm" }).append(
                 $("<span>", { class: "input-group-btn" }).append(
                   $("<button>", {
-                    class: "btn btn-light",
+                    class: "btn btn-light btn-sm",
                     onclick: "$(this).qtDecrement(" + index + ")",
                   }).append($("<i>", { class: "fa fa-minus" })),
                 ),
@@ -579,7 +648,7 @@ if (auth == undefined) {
                 }),
                 $("<span>", { class: "input-group-btn" }).append(
                   $("<button>", {
-                    class: "btn btn-light",
+                    class: "btn btn-light btn-sm",
                     onclick: "$(this).qtIncrement(" + index + ")",
                   }).append($("<i>", { class: "fa fa-plus" })),
                 ),
@@ -588,8 +657,8 @@ if (auth == undefined) {
             $("<div>", {
               class: "col-md-3",
               text:
-                validator.unescape(settings.symbol) +
-                moneyFormat((data.price * data.quantity).toFixed(2)),
+                currencySymbol +
+                moneyFormat((currentPrice * data.quantity).toFixed(2)),
             }),
             $("<div>", { class: "col-md-1" }).append(
               $("<button>", {
@@ -613,14 +682,19 @@ if (auth == undefined) {
         return selected._id == parseInt(item.id);
       });
 
-      if (product[0].stock == 1) {
-        if (item.quantity < product[0].quantity) {
+      if (product[0] && product[0].stock == 1) {
+        // Calculate how many base units are needed
+        const packageUnits = item.package_units || 1;
+        const baseUnitsNeeded = (parseInt(item.quantity) + 1) * packageUnits;
+        const availableStock = product[0].total_stock_base_units || product[0].quantity || 0;
+        
+        if (baseUnitsNeeded <= availableStock) {
           item.quantity = parseInt(item.quantity) + 1;
           $(this).renderTable(cart);
         } else {
           notiflix.Report.info(
             "No more stock!",
-            "You have already added all the available stock.",
+            `Only ${Math.floor(availableStock / packageUnits)} ${item.package_name || 'units'} available.`,
             "Ok",
           );
         }
@@ -683,6 +757,10 @@ if (auth == undefined) {
     $("#payButton").on("click", function () {
       if (cart.length != 0) {
         $("#paymentModel").modal("toggle");
+        // Auto-focus payment input after modal opens - reduced delay for faster typing
+        setTimeout(function() {
+          $("#paymentText").focus().select();
+        }, 300);
       } else {
         notiflix.Report.warning("Oops!", "There is nothing to pay!", "Ok");
       }
@@ -705,12 +783,35 @@ if (auth == undefined) {
       let payment = 0;
       paymentType = $('.list-group-item.active').data('payment-type');
       cart.forEach((item) => {
-    items += `<tr><td>${DOMPurify.sanitize(item.product_name)}</td><td>${
-      DOMPurify.sanitize(item.quantity)
-    } </td><td class="text-right"> ${DOMPurify.sanitize(validator.unescape(settings.symbol))} ${moneyFormat(
-      DOMPurify.sanitize(Math.abs(item.price).toFixed(2)),
-    )} </td></tr>`;
-});
+        // Build item display with UoM information
+        let itemName = DOMPurify.sanitize(item.product_name);
+        let qtyDisplay = DOMPurify.sanitize(item.quantity);
+        
+        // Add package info if available
+        if (item.package_name) {
+          qtyDisplay = `${item.quantity} ${item.package_name}`;
+          if (item.units_per_package) {
+            qtyDisplay += ` (${item.quantity * item.units_per_package} ${item.base_unit || 'units'})`;
+          }
+        } else if (item.base_unit) {
+          qtyDisplay += ` ${item.base_unit}`;
+        }
+        
+        // Show price tier if available
+        let priceDisplay = DOMPurify.sanitize(validator.unescape(settings.symbol)) + ' ' + moneyFormat(
+          DOMPurify.sanitize(Math.abs(item.price).toFixed(2))
+        );
+        
+        if (item.price_tier) {
+          priceDisplay += ` (${item.price_tier})`;
+        }
+        
+        items += `<tr>
+          <td>${itemName}</td>
+          <td>${qtyDisplay}</td>
+          <td class="text-right">${priceDisplay}</td>
+        </tr>`;
+      });
 
       let currentTime = new Date(moment());
       let discount = $("#inputDiscount").val();
@@ -916,6 +1017,12 @@ if (auth == undefined) {
           $("#viewTransaction").html("");
           $("#viewTransaction").html(receipt);
           $("#orderModal").modal("show");
+          
+          // Auto-print receipt after successful payment
+          setTimeout(function() {
+            printJS({ printable: receipt, type: "raw-html" });
+          }, 500);
+          
           loadProducts();
           loadCustomers();
           $(".loading").hide();
@@ -1238,21 +1345,73 @@ if (auth == undefined) {
     $("#newProductModal").on("click", function () {
       $("#saveProduct").get(0).reset();
       $("#current_img").text("");
+      $("#packages_container").empty();
+      $("#product_id").val("");
+      packageCounter = 0;
     });
 
     $("#saveProduct").submit(function (e) {
       e.preventDefault();
 
+      // Collect packages from form
+      const packages = collectPackagesFromForm();
+      
+      // Get form data
+      const productId = $("#product_id").val();
+      const isEdit = productId && productId !== "";
+      
+      // Create a hidden input for packages if it doesn't exist
+      if ($('#packages_input').length === 0) {
+        $('<input>').attr({
+          type: 'hidden',
+          id: 'packages_input',
+          name: 'packages'
+        }).appendTo('#saveProduct');
+      }
+      $('#packages_input').val(JSON.stringify(packages));
+      
+      // Set default values for min stock if not provided
+      const totalStock = $("#total_stock_base_units").val();
+      const minStock = $("#min_stock_base_units").val() || Math.floor(totalStock / 2);
+      $("#min_stock_base_units").val(minStock);
+      
+      // Set wholesale price if not provided
+      if (!$("#wholesale_price").val()) {
+        $("#wholesale_price").val($("#selling_price").val());
+      }
+      
+      // Set quantity field (for backward compatibility)
+      if ($('#quantity_hidden').length === 0) {
+        $('<input>').attr({
+          type: 'hidden',
+          id: 'quantity_hidden',
+          name: 'quantity'
+        }).appendTo('#saveProduct');
+      }
+      $('#quantity_hidden').val(totalStock);
+      
+      // Set minStock field (for backward compatibility)
+      if ($('#minStock_hidden').length === 0) {
+        $('<input>').attr({
+          type: 'hidden',
+          id: 'minStock_hidden',
+          name: 'minStock'
+        }).appendTo('#saveProduct');
+      }
+      $('#minStock_hidden').val(minStock);
+
       $(this).attr("action", api + "inventory/product");
       $(this).attr("method", "POST");
 
       $(this).ajaxSubmit({
-        contentType: "application/json",
         success: function (response) {
           $("#saveProduct").get(0).reset();
           $("#current_img").text("");
+          $("#packages_container").empty();
+          packageCounter = 0;
 
           loadProducts();
+          
           diagOptions = {
             title: "Product Saved",
             text: "Select an option below to continue.",
@@ -1273,10 +1432,12 @@ if (auth == undefined) {
         },
         //error for product
        error: function (jqXHR,textStatus, errorThrown) {
-      console.error(jqXHR.responseJSON.message);
+      console.error(jqXHR);
+      const errorMsg = jqXHR.responseJSON ? jqXHR.responseJSON.message : "Failed to save product";
+      const errorTitle = jqXHR.responseJSON ? jqXHR.responseJSON.error : "Error";
       notiflix.Report.failure(
-        jqXHR.responseJSON.error,
-        jqXHR.responseJSON.message,
+        errorTitle,
+        errorMsg,
         "Ok",
       );
       }
@@ -1325,32 +1486,64 @@ if (auth == undefined) {
 
     $.fn.editProduct = function (index) {
       $("#Products").modal("hide");
+      
+      const product = allProducts[index];
 
+      // Set category
       $("#category option")
         .filter(function () {
-          return $(this).val() == allProducts[index].category;
+          return $(this).val() == product.category || $(this).val() == product.category_id;
         })
         .prop("selected", true);
 
-      $("#productName").val(allProducts[index].name);
-      $("#product_price").val(allProducts[index].price);
-      $("#quantity").val(allProducts[index].quantity);
-      $("#barcode").val(allProducts[index].barcode || allProducts[index]._id);
-      $("#expirationDate").val(allProducts[index].expirationDate);
-      $("#minStock").val(allProducts[index].minStock || 1);
-      $("#product_id").val(allProducts[index]._id);
-      $("#img").val(allProducts[index].img);
+      // Basic fields
+      $("#productName").val(product.name);
+      $("#barcode").val(product.barcode || product._id);
+      $("#expirationDate").val(product.expirationDate);
+      $("#product_id").val(product._id);
+      $("#img").val(product.img);
+      
+      // UoM fields
+      $("#base_unit_name").val(product.base_unit_name || "Unit");
+      $("#total_stock_base_units").val(product.total_stock_base_units || product.quantity || 0);
+      $("#min_stock_base_units").val(product.min_stock_base_units || product.minStock || 0);
+      $("#cost_price").val(product.cost_price || product.price || 0);
+      $("#selling_price").val(product.selling_price || product.price || 0);
+      $("#wholesale_price").val(product.wholesale_price || product.selling_price || product.price || 0);
+      
+      // Stock check
+      if (product.stock == 0) {
+        $("#stock").prop("checked", true);
+      } else {
+        $("#stock").prop("checked", false);
+      }
 
-      if (allProducts[index].img != "") {
+      // Image handling
+      if (product.img != "") {
         $("#imagename").hide();
         $("#current_img").html(
-          `<img src="${img_path + allProducts[index].img}" alt="">`,
+          `<img src="${img_path + product.img}" alt="">`,
         );
         $("#rmv_img").show();
       }
-
-      if (allProducts[index].stock == 0) {
-        $("#stock").prop("checked", true);
+      
+      // Populate packages
+      $("#packages_container").empty();
+      packageCounter = 0;
+      
+      if (product.packages) {
+        let packageArray = [];
+        try {
+          packageArray = typeof product.packages === 'string' ? JSON.parse(product.packages) : product.packages;
+        } catch (e) {
+          console.error('Error parsing packages:', e);
+        }
+        
+        if (Array.isArray(packageArray) && packageArray.length > 0) {
+          packageArray.forEach((pkg) => {
+            addPackageRow(pkg);
+          });
+        }
       }
 
       $("#newProduct").modal("show");
@@ -1543,148 +1736,6 @@ if (auth == undefined) {
       });
     }
 
-    function loadProductList() {
-      let products = [...allProducts];
-      let product_list = "";
-      let counter = 0;
-      $("#product_list").empty();
-      $("#productList").DataTable().destroy();
-
-      products.forEach((product, index) => {
-        counter++;
-
-        let category = allCategories.filter(function (category) {
-          return category._id == product.category;
-        });
-
-        product.stockAlert = "";
-        const todayDate = moment();
-        const expiryDate = moment(product.expirationDate, DATE_FORMAT);
-
-        //show stock status indicator
-        const stockStatus = getStockStatus(product.quantity,product.minStock);
-          if(stockStatus<=0)
-          {
-          if (stockStatus === 0) {
-            product.stockStatus = "No Stock";
-            icon = "fa fa-exclamation-triangle";
-          }
-          if (stockStatus === -1) {
-            product.stockStatus = "Low Stock";
-            icon = "fa fa-caret-down";
-          }
-
-          product.stockAlert = `<p class="text-danger"><small><i class="${icon}"></i> ${product.stockStatus}</small></p>`;
-        }
-        //calculate days to expiry
-        product.expiryAlert = "";
-        if (!isExpired(expiryDate)) {
-          const diffDays = daysToExpire(expiryDate);
-
-          if (diffDays > 0 && diffDays <= 30) {
-            var days_noun = diffDays > 1 ? "days" : "day";
-            icon = "fa fa-clock-o";
-            product.expiryStatus = `${diffDays} ${days_noun} left`;
-            product.expiryAlert = `<p class="text-danger"><small><i class="${icon}"></i> ${product.expiryStatus}</small></p>`;
-          }
-        } else {
-          icon = "fa fa-exclamation-triangle";
-          product.expiryStatus = "Expired";
-          product.expiryAlert = `<p class="text-danger"><small><i class="${icon}"></i> ${product.expiryStatus}</small></p>`;
-        }
-
-        if(product.img==="")
-        {
-          product_img=default_item_img;
-        }
-        else
-        {
-          product_img = img_path + product.img;
-          product_img = checkFileExists(product_img)
-          ? product_img
-          : default_item_img;
-        }
-        
-        //render product list
-        product_list +=
-          `<tr>
-            <td><img id="` +
-          product._id +
-          `"></td>
-            <td><img style="max-height: 50px; max-width: 50px; border: 1px solid #ddd;" src="${product_img}" id="product_img"></td>
-            <td>${product.name}
-            ${product.expiryAlert}</td>
-            <td>${validator.unescape(settings.symbol)}${product.price}</td>
-            <td>${product.stock == 1 ? product.quantity : "N/A"}
-            ${product.stockAlert}
-            </td>
-            <td>${product.expirationDate}</td>
-            <td>${category.length > 0 ? category[0].name : ""}</td>
-            <td class="nobr"><span class="btn-group"><button onClick="$(this).editProduct(${index})" class="btn btn-warning btn-sm"><i class="fa fa-edit"></i></button><button onClick="$(this).deleteProduct(${
-              product._id
-            })" class="btn btn-danger btn-sm"><i class="fa fa-trash"></i></button></span></td></tr>`;
-
-        if (counter == allProducts.length) {
-          $("#product_list").html(product_list);
-
-          products.forEach((product) => {
-            let bcode = product.barcode || product._id;
-            $("#" + product._id + "").JsBarcode(bcode, {
-              width: 2,
-              height: 25,
-              fontSize: 14,
-            });
-          });
-        }
-      });
-
-      $("#productList").DataTable({
-        order: [[1, "desc"]],
-        autoWidth: false,
-        info: true,
-        JQueryUI: true,
-        ordering: true,
-        paging: false,
-        dom: "Bfrtip",
-        buttons: [
-          {
-            extend: "pdfHtml5",
-            className: "btn btn-light", // Custom class name
-            text: " Download PDF", // Custom text
-            filename: "product_list.pdf", // Default filename
-          },
-        ],
-      });
-    }
-
-    function loadCategoryList() {
-      let category_list = "";
-      let counter = 0;
-      $("#category_list").empty();
-      $("#categoryList").DataTable().destroy();
-
-      allCategories.forEach((category, index) => {
-        counter++;
-
-        category_list += `<tr>
-     
-            <td>${category.name}</td>
-            <td><span class="btn-group"><button onClick="$(this).editCategory(${index})" class="btn btn-warning"><i class="fa fa-edit"></i></button><button onClick="$(this).deleteCategory(${category._id})" class="btn btn-danger"><i class="fa fa-trash"></i></button></span></td></tr>`;
-      });
-
-      if (counter == allCategories.length) {
-        $("#category_list").html(category_list);
-        $("#categoryList").DataTable({
-          autoWidth: false,
-          info: true,
-          JQueryUI: true,
-          ordering: true,
-          paging: false,
-        });
-      }
-    }
-
-
     $("#log-out").on("click", function () {
       const diagOptions = {
         title: "Are you sure?",
@@ -1754,10 +1805,12 @@ if (auth == undefined) {
             ipcRenderer.send("app-reload", "");
           },
           error: function (jqXHR) {
-            console.error(jqXHR.responseJSON.message);
+            const errorMsg = jqXHR.responseJSON?.message || jqXHR.statusText || 'An unexpected error occurred';
+            const errorTitle = jqXHR.responseJSON?.error || 'Error';
+            console.error(errorMsg);
             notiflix.Report.failure(
-              jqXHR.responseJSON.error,
-              jqXHR.responseJSON.message,
+              errorTitle,
+              errorMsg,
               "Ok",
             );
       }
@@ -2148,7 +2201,13 @@ function userFilter(users) {
       return usr._id == user;
     });
 
-    $("#users").append(`<option value="${user}">${u[0].fullname}</option>`);
+    // Only add option if user exists
+    if (u && u.length > 0 && u[0] && u[0].fullname) {
+      $("#users").append(`<option value="${user}">${u[0].fullname}</option>`);
+    } else {
+      // Fallback: show user ID if user data not found
+      $("#users").append(`<option value="${user}">User #${user}</option>`);
+    }
   });
 }
 
@@ -2179,11 +2238,31 @@ $.fn.viewTransaction = function (index) {
   let products = allTransactions[index].items;
 
   products.forEach((item) => {
-    items += `<tr><td>${item.product_name}</td><td>${
-      item.quantity
-    } </td><td class="text-right"> ${validator.unescape(settings.symbol)} ${moneyFormat(
-      Math.abs(item.price).toFixed(2),
-    )} </td></tr>`;
+    // Build item display with UoM information
+    let itemName = item.product_name;
+    let qtyDisplay = item.quantity;
+    
+    // Add package info if available
+    if (item.package_name) {
+      qtyDisplay = `${item.quantity} ${item.package_name}`;
+      if (item.units_per_package) {
+        qtyDisplay += ` (${item.quantity * item.units_per_package} ${item.base_unit || 'units'})`;
+      }
+    } else if (item.base_unit) {
+      qtyDisplay += ` ${item.base_unit}`;
+    }
+    
+    // Show price tier if available
+    let priceDisplay = validator.unescape(settings.symbol) + ' ' + moneyFormat(Math.abs(item.price).toFixed(2));
+    if (item.price_tier) {
+      priceDisplay += ` (${item.price_tier})`;
+    }
+    
+    items += `<tr>
+      <td>${itemName}</td>
+      <td>${qtyDisplay}</td>
+      <td class="text-right">${priceDisplay}</td>
+    </tr>`;
   });
 
   paymentMethod = allTransactions[index].payment_type;
@@ -2342,6 +2421,289 @@ $("#reportrange").on("apply.daterangepicker", function (ev, picker) {
 
   loadTransactions();
 });
+
+// Global functions - extracted from document.ready for enhanced-uom.js accessibility
+function loadProducts() {
+  $.get(api + "inventory/products", function (data) {
+    data.forEach((item) => {
+      item.price = parseFloat(item.price).toFixed(2);
+    });
+
+    allProducts = [...data];
+    window.allProducts = allProducts;
+
+    loadProductList();
+
+    let delay = 0;
+    let expiredCount = 0;
+    allProducts.forEach((product) => {
+      let todayDate = moment();
+      let expiryDate = moment(product.expirationDate, DATE_FORMAT);
+
+      if (!isExpired(expiryDate)) {
+        const diffDays = daysToExpire(expiryDate);
+
+        if (diffDays > 0 && diffDays <= 30) {
+          var days_noun = diffDays > 1 ? "days" : "day";
+          notiflix.Notify.warning(
+            `${product.name} has only ${diffDays} ${days_noun} left to expiry`,
+          );
+        }
+      } else {
+        expiredCount++;
+      }
+    });
+
+    if(expiredCount>0) {
+       notiflix.Notify.failure(
+      `${expiredCount} ${
+        expiredCount > 0 ? "products" : "product"
+      } expired. Please restock!`,
+    );
+    }
+
+   
+    $("#parent").text("");
+
+    data.forEach((item) => {
+      if (!categories.includes(item.category)) {
+        categories.push(item.category);
+      }
+      let item_isExpired = isExpired(item.expirationDate);
+      let item_stockStatus = getStockStatus(item.quantity,item.minStock);
+      let item_img;
+      if(!item.img || item.img === "" || item.img === undefined) {
+        item_img = default_item_img;
+      } else {
+        item_img = path.join(img_path, item.img);
+        item_img = checkFileExists(item_img) ? item_img : default_item_img;
+      }
+      
+      const currentStock = item.total_stock_base_units || item.quantity || 0;
+      const displayPrice = item.selling_price || item.price || 0;
+      const baseUnit = item.base_unit_name || '';
+      
+      const hasImage = item.img && checkFileExists(item_img);
+      const imageHtml = hasImage 
+        ? `<img src="${item_img}" id="product_img" alt="" style="width: 100%; height: 100%; object-fit: cover;">` 
+        : `<i class="glyphicon glyphicon-shopping-cart" style="font-size: 48px; color: #999; padding: 20px;"></i>`;
+      
+      let item_info = `<div class="col-lg-2 box ${item.category}"
+                            onclick="$(this).addToCart(${item._id}, ${
+                              currentStock
+                            }, ${item.stock})">
+                        <div class="widget-panel widget-style-2 " title="${item.name}">                    
+                        <div id="image" style="display: flex; align-items: center; justify-content: center; min-height: 80px;">${imageHtml}</div>                    
+                                    <div class="text-muted m-t-5 text-center">
+                                    <div class="name" id="product_name"><span class="${
+                                      item_isExpired ? "text-danger" : ""
+                                    }">${item.name}</span></div> 
+                                    <span class="sku">${
+                                      item.barcode || item._id
+                                    }</span>
+                                    <span class="${item_stockStatus<1?'text-danger':''}"><span class="stock">STOCK </span><span class="count">${
+                                      item.stock == 1
+                                        ? currentStock + (baseUnit ? ' ' + baseUnit : '')
+                                        : "N/A"
+                                    }</span></span></div>
+                                    <span class="text-success text-center"><b data-plugin="counterup">${
+                                      validator.unescape(settings.symbol) +
+                                      moneyFormat(displayPrice)
+                                    }</b> </span>
+                        </div>
+                    </div>`;
+      $("#parent").append(item_info);
+    });
+  });
+}
+
+function loadCategories() {
+  $.get(api + "categories/all", function (data) {
+    allCategories = data;
+    window.allCategories = allCategories;
+    loadCategoryList();
+    $("#category,#categories").html(`<option value="0">Select</option>`);
+    allCategories.forEach((category) => {
+      $("#category,#categories").append(
+        `<option value="${category._id}">${category.name}</option>`,
+      );
+    });
+  });
+}
+
+function loadCustomers() {
+  $.get(api + "customers/all", function (customers) {
+    $("#customer").html(
+      `<option value="0" selected="selected">Walk in customer</option>`,
+    );
+
+    customers.forEach((cust) => {
+      let customer = `<option value='{"id": ${cust._id}, "name": "${cust.name}"}'>${cust.name}</option>`;
+      $("#customer").append(customer);
+    });
+  });
+}
+
+function loadProductList() {
+  let products = [...allProducts];
+  let product_list = "";
+  let counter = 0;
+  $("#product_list").empty();
+  $("#productList").DataTable().destroy();
+
+  products.forEach((product, index) => {
+    counter++;
+
+    let category = allCategories.filter(function (category) {
+      return category._id == product.category || category._id == product.category_id;
+    });
+
+    product.stockAlert = "";
+    const todayDate = moment();
+    const expiryDate = moment(product.expirationDate, DATE_FORMAT);
+
+    const currentStock = product.total_stock_base_units || product.quantity || 0;
+    const minStock = product.min_stock_base_units || product.minStock || 0;
+    const stockStatus = getStockStatus(currentStock, minStock);
+      if(stockStatus<=0) {
+      if (stockStatus === 0) {
+        product.stockStatus = "No Stock";
+        icon = "fa fa-exclamation-triangle";
+      }
+      if (stockStatus === -1) {
+        product.stockStatus = "Low Stock";
+        icon = "fa fa-caret-down";
+      }
+
+      product.stockAlert = `<p class="text-danger"><small><i class="${icon}"></i> ${product.stockStatus}</small></p>`;
+    }
+    product.expiryAlert = "";
+    if (!isExpired(expiryDate)) {
+      const diffDays = daysToExpire(expiryDate);
+
+      if (diffDays > 0 && diffDays <= 30) {
+        var days_noun = diffDays > 1 ? "days" : "day";
+        icon = "fa fa-clock-o";
+        product.expiryStatus = `${diffDays} ${days_noun} left`;
+        product.expiryAlert = `<p class="text-danger"><small><i class="${icon}"></i> ${product.expiryStatus}</small></p>`;
+      }
+    } else {
+      icon = "fa fa-exclamation-triangle";
+      product.expiryStatus = "Expired";
+      product.expiryAlert = `<p class="text-danger"><small><i class="${icon}"></i> ${product.expiryStatus}</small></p>`;
+    }
+
+    if(product.img==="") {
+      product_img=default_item_img;
+    } else {
+      product_img = img_path + product.img;
+      product_img = checkFileExists(product_img) ? product_img : default_item_img;
+    }
+    
+    let packageInfo = "";
+    let packages = [];
+    try {
+      packages = typeof product.packages === 'string' ? JSON.parse(product.packages) : product.packages || [];
+    } catch (e) {
+      packages = [];
+    }
+    
+    if (Array.isArray(packages) && packages.length > 0) {
+      packageInfo = "<ul style='margin: 0; font-size: 11px; padding-left: 15px;'>";
+      packages.forEach(pkg => {
+        const pkgName = pkg.package_name || 'Unnamed';
+        const units = pkg.units_contained || 0;
+        const baseUnit = product.base_unit_name || 'units';
+        const retailPrice = pkg.retail_price || 0;
+        const wholesalePrice = pkg.wholesale_price || 0;
+        const symbol = settings && settings.symbol ? validator.unescape(settings.symbol) : '₦';
+        
+        packageInfo += `<li><strong>${pkgName}</strong> (${units} ${baseUnit}): 
+          R: ${symbol}${retailPrice} | W: ${symbol}${wholesalePrice}</li>`;
+      });
+      packageInfo += "</ul>";
+    } else {
+      packageInfo = "<small class='text-muted'>No packages</small>";
+    }
+    
+    const currencySymbol = settings && settings.symbol ? validator.unescape(settings.symbol) : '₦';
+    product_list +=
+      `<tr>
+        <td>${product.name}
+        ${product.expiryAlert}</td>
+        <td>${product.base_unit_name || 'Unit'}</td>
+        <td>${currencySymbol}${product.cost_price || product.price || 0}</td>
+        <td>${currencySymbol}${product.selling_price || product.price || 0}</td>
+        <td>${packageInfo}</td>
+        <td>${product.stock == 1 ? currentStock : "N/A"}
+        ${product.stockAlert}
+        </td>
+        <td>${product.expirationDate}</td>
+        <td>${category.length > 0 ? category[0].name : ""}</td>
+        <td class="nobr"><span class="btn-group">
+        <button onClick="openStockUpdate('${product._id}')" class="btn btn-info btn-sm" title="Update Stock"><i class="fa fa-cubes"></i></button>
+        <button onClick="$(this).editProduct(${index})" class="btn btn-warning btn-sm" title="Edit"><i class="fa fa-edit"></i></button>
+        <button onClick="$(this).deleteProduct(${product._id})" class="btn btn-danger btn-sm" title="Delete"><i class="fa fa-trash"></i></button>
+        </span></td></tr>`;
+
+    if (counter == allProducts.length) {
+      $("#product_list").html(product_list);
+    }
+  });
+
+  $("#productList").DataTable({
+    order: [[0, "asc"]],
+    autoWidth: false,
+    info: true,
+    JQueryUI: true,
+    ordering: true,
+    paging: false,
+    dom: "Bfrtip",
+    columnDefs: [
+      { orderable: true, targets: [0, 1, 2, 3, 5, 6, 7] },
+      { orderable: false, targets: [4, 8] }
+    ],
+    buttons: [
+      {
+        extend: "pdfHtml5",
+        className: "btn btn-light",
+        text: " Download PDF",
+        filename: "product_list.pdf",
+      },
+    ],
+  });
+}
+
+function loadCategoryList() {
+  let category_list = "";
+  let counter = 0;
+  $("#category_list").empty();
+  $("#categoryList").DataTable().destroy();
+
+  allCategories.forEach((category, index) => {
+    counter++;
+
+    category_list += `<tr>
+ 
+        <td>${category.name}</td>
+        <td><span class="btn-group"><button onClick="$(this).editCategory(${index})" class="btn btn-warning"><i class="fa fa-edit"></i></button><button onClick="$(this).deleteCategory(${category._id})" class="btn btn-danger"><i class="fa fa-trash"></i></button></span></td></tr>`;
+  });
+
+  if (counter == allCategories.length) {
+    $("#category_list").html(category_list);
+    $("#categoryList").DataTable({
+      autoWidth: false,
+      info: true,
+      JQueryUI: true,
+      ordering: true,
+      paging: false,
+    });
+  }
+}
+
+window.loadProducts = loadProducts;
+window.loadProductList = loadProductList;
+window.loadCategories = loadCategories;
 
 function authenticate() {
   $(".loading").hide();
