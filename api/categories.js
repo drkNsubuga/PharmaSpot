@@ -57,17 +57,29 @@ app.get("/all", function (req, res) {
  * @returns {void}
  */
 app.post("/category", function (req, res) {
+    // Validate required field
+    if (!req.body.name || !req.body.name.trim()) {
+        return res.status(400).json({
+            error: "Bad Request",
+            message: "Category name is required.",
+        });
+    }
+
     let newCategory = req.body;
-    newCategory._id = Math.floor(Date.now() / 1000);
+    // Use a more unique ID to avoid collisions during bulk operations
+    newCategory._id = Date.now() + Math.floor(Math.random() * 1000);
+    
     categoryDB.insert(newCategory, function (err, category) {
-            if (err) {
-                    console.error(err);
-                    res.status(500).json({
-                        error: "Internal Server Error",
-                        message: "An unexpected error occurred.",
-                    });
-                }
-        else{res.sendStatus(200);}
+        if (err) {
+            console.error('Category creation error:', err);
+            res.status(500).json({
+                error: "Internal Server Error",
+                message: err.message || "An unexpected error occurred.",
+            });
+        } else {
+            // Return the created category with its _id
+            res.status(200).json(category);
+        }
     });
 });
 

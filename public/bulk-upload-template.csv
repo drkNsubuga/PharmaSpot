@@ -1,0 +1,5 @@
+Name,Category,Base Unit,Cost Price,Selling Price,Wholesale Price,Stock,Barcode,Expiry Date (YYYY-MM-DD),Min Stock,Packages (JSON)
+Paracetamol 500mg,Analgesics,Tablet,50,100,80,500,PAR500MG,2026-12-31,100,"[{""package_name"":""Strip"",""units_contained"":10,""retail_price"":120,""wholesale_price"":100},{""package_name"":""Box"",""units_contained"":100,""retail_price"":1000,""wholesale_price"":850}]"
+Amoxicillin 250mg,Antibiotics,Capsule,80,150,120,300,AMOX250,2026-06-30,50,"[{""package_name"":""Strip"",""units_contained"":10,""retail_price"":180,""wholesale_price"":150}]"
+Vitamin C 1000mg,Vitamins & Supplements,Tablet,30,60,45,1000,VITC1000,2027-03-15,200,"[{""package_name"":""Bottle"",""units_contained"":60,""retail_price"":500,""wholesale_price"":400}]"
+Bandage Roll,First Aid,Roll,100,200,150,200,BAND001,2028-01-01,50,[]

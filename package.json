@@ -91,6 +91,7 @@
     "electron-log": "^4.4.8",
     "electron-reloader": "^1.2.3",
     "electron-updater-yaml": "^1.1.2",
+    "glob": "^11.0.3",
     "gulp": "^5.0.0",
     "gulp-clean-css": "^4.3.0",
     "gulp-concat": "^2.6.1",

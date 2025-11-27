@@ -2,22 +2,23 @@ const http = require("http");
 const express = require("express")();
 const server = http.createServer(express);
 const bodyParser = require("body-parser");
-const rateLimit = require("express-rate-limit");
+// const rateLimit = require("express-rate-limit"); // Disabled for development
 const pkg = require("./package.json");
 const {app} = require('electron');
 process.env.APPDATA = app.getPath('appData');
 process.env.APPNAME = pkg.name;
 const PORT = process.env.PORT || 0;
-const limiter = rateLimit({
-    windowMs: 15 * 60 * 1000, // 15 minutes
-    max: 100, // 100 requests per window
-});
+// Rate limiter disabled for development - can be re-enabled for production
+// const limiter = rateLimit({
+//     windowMs: 15 * 60 * 1000, // 15 minutes
+//     max: 100, // 100 requests per window
+// });
 
 console.log("Server started");
 
 express.use(bodyParser.json());
 express.use(bodyParser.urlencoded({ extended: false }));
-express.use(limiter);
+// express.use(limiter); // Disabled for development
 
 express.all("/*", function (req, res, next) {
     res.header("Access-Control-Allow-Origin", "*");

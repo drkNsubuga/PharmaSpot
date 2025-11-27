@@ -11,12 +11,23 @@ const moneyFormat = (amount, locale = "en-US") => {
 /** Date functions **/
 const isExpired = (dueDate) => {
   let todayDate = moment();
-  return todayDate.isSameOrAfter(dueDate);
+  // Accept both DD-MMM-YYYY and YYYY-MM-DD formats
+  let expiryDate = moment(dueDate, [DATE_FORMAT, "YYYY-MM-DD"], true);
+  if (!expiryDate.isValid()) {
+    // Fallback to auto-parsing
+    expiryDate = moment(dueDate);
+  }
+  return todayDate.isSameOrAfter(expiryDate);
 };
 
 const daysToExpire = (dueDate) => {
   let todayDate = moment();
-  let expiryDate = moment(dueDate, DATE_FORMAT);
+  // Accept both DD-MMM-YYYY and YYYY-MM-DD formats
+  let expiryDate = moment(dueDate, [DATE_FORMAT, "YYYY-MM-DD"], true);
+  if (!expiryDate.isValid()) {
+    // Fallback to auto-parsing
+    expiryDate = moment(dueDate);
+  }
 
   if (expiryDate.isSameOrBefore(todayDate, "day")) {
     return 0;
