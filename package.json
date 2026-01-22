@@ -39,7 +39,7 @@
     "jquery": "^3.6.3",
     "jsbarcode": "^3.11.5",
     "jspdf": "^4.0.0",
-    "lodash": "^4.17.21",
+    "lodash": "^4.17.23",
     "macaddress": "^0.5.3",
     "moment": "^2.29.4",
     "multer": "^2.0.2",
