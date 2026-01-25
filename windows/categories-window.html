@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Kategoriler</title>
+    <link href="../assets/dist/css/bundle.min.css" rel="stylesheet" type="text/css" />
+    <link href="../assets/css/tebeos-theme.css" rel="stylesheet" type="text/css" />
+    <style>
+        html, body { height: 100%; margin: 0; padding: 0; overflow: hidden; }
+        .window-container { display: flex; flex-direction: column; height: 100vh; overflow: hidden; }
+        .window-toolbar { background: linear-gradient(180deg, #fafafa 0%, #e0e0e0 100%); border-bottom: 1px solid #bdbdbd; padding: 8px 10px; display: flex; gap: 10px; align-items: center; flex-shrink: 0; }
+        .window-content { flex: 1; overflow: auto; padding: 15px; background: #f5f5f5; }
+        .category-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 15px; }
+        .category-card { background: white; border: 1px solid #e0e0e0; border-radius: 8px; padding: 20px; text-align: center; cursor: pointer; transition: all 0.2s; }
+        .category-card:hover { border-color: #1976d2; box-shadow: 0 4px 12px rgba(0,0,0,0.1); transform: translateY(-2px); }
+        .category-card i { font-size: 32px; color: #1976d2; margin-bottom: 10px; }
+        .category-card .name { font-weight: 600; margin-bottom: 5px; }
+        .category-card .count { font-size: 12px; color: #666; }
+        .add-category-card { border: 2px dashed #bdbdbd; background: transparent; }
+        .add-category-card:hover { border-color: #1976d2; background: #e3f2fd; }
+        .add-category-card i { color: #bdbdbd; }
+        .add-category-card:hover i { color: #1976d2; }
+    </style>
+</head>
+<body>
+    <div class="window-container">
+        <div class="window-toolbar">
+            <button class="tebeos-btn tebeos-btn-primary" onclick="refreshCategories()">
+                <i class="fa fa-refresh"></i> Yenile
+            </button>
+            <span style="margin-left:auto;" id="category-count">0 kategori</span>
+        </div>
+
+        <div class="window-content">
+            <div class="category-grid" id="category-grid">
+                <div class="category-card add-category-card" onclick="addCategory()">
+                    <i class="fa fa-plus-circle"></i>
+                    <div class="name">Yeni Kategori Ekle</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="../assets/dist/js/bundle.min.js"></script>
+    <script>
+        function refreshCategories() { loadCategories(); }
+
+        function loadCategories() {
+            fetch('http://localhost:52484/api/category')
+                .then(res => res.json())
+                .then(data => renderCategories(data))
+                .catch(err => console.error('Hata:', err));
+        }
+
+        function renderCategories(categories) {
+            const grid = document.getElementById('category-grid');
+            grid.innerHTML = `
+                <div class="category-card add-category-card" onclick="addCategory()">
+                    <i class="fa fa-plus-circle"></i>
+                    <div class="name">Yeni Kategori Ekle</div>
+                </div>
+            `;
+            categories.forEach(c => {
+                const card = document.createElement('div');
+                card.className = 'category-card';
+                card.onclick = () => editCategory(c.id);
+                card.innerHTML = `
+                    <i class="fa fa-folder"></i>
+                    <div class="name">${c.category_name}</div>
+                    <div class="count">${c.product_count || 0} urun</div>
+                `;
+                grid.appendChild(card);
+            });
+            document.getElementById('category-count').textContent = categories.length + ' kategori';
+        }
+
+        function addCategory() {
+            const name = prompt('Kategori adi:');
+            if (name) {
+                fetch('http://localhost:52484/api/category', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ category_name: name })
+                }).then(() => loadCategories()).catch(err => alert('Hata: ' + err));
+            }
+        }
+
+        function editCategory(id) {
+            const name = prompt('Yeni kategori adi:');
+            if (name) {
+                fetch('http://localhost:52484/api/category/' + id, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ category_name: name })
+                }).then(() => loadCategories()).catch(err => alert('Hata: ' + err));
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', loadCategories);
+    </script>
+</body>
+</html>

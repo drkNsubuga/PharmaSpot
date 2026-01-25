@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Islem Listesi</title>
+    <link href="../assets/dist/css/bundle.min.css" rel="stylesheet" type="text/css" />
+    <link href="../assets/css/tebeos-theme.css" rel="stylesheet" type="text/css" />
+    <style>
+        html, body { height: 100%; margin: 0; padding: 0; overflow: hidden; }
+        .window-container { display: flex; flex-direction: column; height: 100vh; overflow: hidden; }
+        .window-toolbar { background: linear-gradient(180deg, #fafafa 0%, #e0e0e0 100%); border-bottom: 1px solid #bdbdbd; padding: 8px 10px; display: flex; gap: 10px; align-items: center; flex-shrink: 0; }
+        .window-content { flex: 1; overflow: hidden; display: flex; flex-direction: column; padding: 10px; background: #f5f5f5; }
+        .filter-row { display: flex; gap: 10px; margin-bottom: 10px; flex-shrink: 0; flex-wrap: wrap; align-items: center; background: white; padding: 10px; border-radius: 4px; border: 1px solid #e0e0e0; }
+        .table-container { flex: 1; overflow: auto; background: white; border: 1px solid #bdbdbd; border-radius: 4px; }
+        .window-statusbar { background: linear-gradient(180deg, #e0e0e0 0%, #bdbdbd 100%); padding: 4px 10px; font-size: 11px; color: #666; display: flex; justify-content: space-between; border-top: 1px solid #9e9e9e; flex-shrink: 0; }
+        .summary-cards { display: flex; gap: 10px; margin-bottom: 10px; }
+        .summary-card { background: linear-gradient(135deg, #1976d2 0%, #1565c0 100%); color: white; padding: 15px; border-radius: 6px; flex: 1; }
+        .summary-card.success { background: linear-gradient(135deg, #43a047 0%, #388e3c 100%); }
+        .summary-card.warning { background: linear-gradient(135deg, #fb8c00 0%, #ef6c00 100%); }
+        .summary-card .label { font-size: 11px; opacity: 0.9; }
+        .summary-card .value { font-size: 20px; font-weight: 700; }
+    </style>
+</head>
+<body>
+    <div class="window-container">
+        <div class="window-toolbar">
+            <button class="tebeos-btn tebeos-btn-primary" onclick="refreshTransactions()">
+                <i class="fa fa-refresh"></i> Yenile
+            </button>
+            <button class="tebeos-btn" onclick="exportTransactions()">
+                <i class="fa fa-download"></i> Excel'e Aktar
+            </button>
+            <button class="tebeos-btn" onclick="printReport()">
+                <i class="fa fa-print"></i> Yazdir
+            </button>
+        </div>
+
+        <div class="window-content">
+            <div class="summary-cards">
+                <div class="summary-card">
+                    <div class="label">Toplam Islem</div>
+                    <div class="value" id="total-count">0</div>
+                </div>
+                <div class="summary-card success">
+                    <div class="label">Toplam Satis</div>
+                    <div class="value" id="total-sales">0.00 TL</div>
+                </div>
+                <div class="summary-card warning">
+                    <div class="label">Bekleyen Odeme</div>
+                    <div class="value" id="pending-amount">0.00 TL</div>
+                </div>
+            </div>
+
+            <div class="filter-row">
+                <div class="input-group" style="width:auto;">
+                    <span class="input-group-addon">Baslangic</span>
+                    <input type="date" id="date-start" class="form-control">
+                </div>
+                <div class="input-group" style="width:auto;">
+                    <span class="input-group-addon">Bitis</span>
+                    <input type="date" id="date-end" class="form-control">
+                </div>
+                <select id="status-filter" class="form-control" style="width:150px;">
+                    <option value="">Tum Durumlar</option>
+                    <option value="1">Odendi</option>
+                    <option value="0">Bekliyor</option>
+                </select>
+                <button class="tebeos-btn tebeos-btn-primary" onclick="filterTransactions()">
+                    <i class="fa fa-search"></i> Filtrele
+                </button>
+            </div>
+
+            <div class="table-container">
+                <table class="tebeos-table">
+                    <thead>
+                        <tr>
+                            <th>Fatura No</th>
+                            <th>Tarih</th>
+                            <th>Musteri</th>
+                            <th>Toplam</th>
+                            <th>Odenen</th>
+                            <th>Kalan</th>
+                            <th>Durum</th>
+                            <th>Odeme</th>
+                            <th>Kasiyer</th>
+                            <th>Islem</th>
+                        </tr>
+                    </thead>
+                    <tbody id="transactions-body"></tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="window-statusbar">
+            <span>Toplam: <strong id="row-count">0</strong> islem</span>
+            <span id="status-time"></span>
+        </div>
+    </div>
+
+    <script src="../assets/dist/js/bundle.min.js"></script>
+    <script>
+        const { ipcRenderer } = require('electron');
+
+        function refreshTransactions() { loadTransactions(); }
+        function exportTransactions() { alert('Excel export...'); }
+        function printReport() { window.print(); }
+
+        function loadTransactions() {
+            fetch('http://localhost:52484/api/transaction')
+                .then(res => res.json())
+                .then(data => {
+                    renderTransactions(data);
+                    updateSummary(data);
+                })
+                .catch(err => console.error('Hata:', err));
+        }
+
+        function renderTransactions(transactions) {
+            const tbody = document.getElementById('transactions-body');
+            tbody.innerHTML = '';
+            transactions.forEach(t => {
+                const tr = document.createElement('tr');
+                const status = t.status == 1 ? '<span class="badge badge-success">Odendi</span>' : '<span class="badge badge-warning">Bekliyor</span>';
+                tr.innerHTML = `
+                    <td><strong>${t.invoice_number || t.id}</strong></td>
+                    <td>${new Date(t.createdAt).toLocaleString('tr-TR')}</td>
+                    <td>${t.customer_name || 'Genel'}</td>
+                    <td><strong>${parseFloat(t.total_amount || 0).toFixed(2)} TL</strong></td>
+                    <td>${parseFloat(t.paid_amount || 0).toFixed(2)} TL</td>
+                    <td>${parseFloat(t.balance || 0).toFixed(2)} TL</td>
+                    <td>${status}</td>
+                    <td>${t.payment_method || '-'}</td>
+                    <td>${t.cashier_name || '-'}</td>
+                    <td>
+                        <button class="btn btn-xs btn-primary" onclick="viewTransaction(${t.id})"><i class="fa fa-eye"></i></button>
+                        <button class="btn btn-xs btn-success" onclick="printReceipt(${t.id})"><i class="fa fa-print"></i></button>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+            document.getElementById('row-count').textContent = transactions.length;
+        }
+
+        function updateSummary(transactions) {
+            document.getElementById('total-count').textContent = transactions.length;
+            let totalSales = 0, pending = 0;
+            transactions.forEach(t => {
+                totalSales += parseFloat(t.total_amount || 0);
+                if (t.status != 1) pending += parseFloat(t.balance || 0);
+            });
+            document.getElementById('total-sales').textContent = totalSales.toFixed(2) + ' TL';
+            document.getElementById('pending-amount').textContent = pending.toFixed(2) + ' TL';
+        }
+
+        function filterTransactions() { loadTransactions(); }
+        function viewTransaction(id) { alert('Islem detayi: ' + id); }
+        function printReceipt(id) { alert('Fis yazdiriliyor: ' + id); }
+
+        function updateTime() {
+            document.getElementById('status-time').textContent = new Date().toLocaleTimeString('tr-TR');
+        }
+        setInterval(updateTime, 1000);
+        updateTime();
+
+        document.addEventListener('DOMContentLoaded', loadTransactions);
+    </script>
+</body>
+</html>

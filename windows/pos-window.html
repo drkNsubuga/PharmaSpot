@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Nakit Satis</title>
+    <link href="../assets/dist/css/bundle.min.css" rel="stylesheet" type="text/css" />
+    <link href="../assets/css/tebeos-theme.css" rel="stylesheet" type="text/css" />
+    <style>
+        html, body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        .window-container {
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            overflow: hidden;
+        }
+        .window-toolbar {
+            background: linear-gradient(180deg, #fafafa 0%, #e0e0e0 100%);
+            border-bottom: 1px solid #bdbdbd;
+            padding: 5px 10px;
+            display: flex;
+            gap: 5px;
+            flex-shrink: 0;
+        }
+        .window-content {
+            flex: 1;
+            display: flex;
+            overflow: hidden;
+            background: #f5f5f5;
+        }
+        .products-panel {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            border-right: 1px solid #bdbdbd;
+            background: white;
+        }
+        .cart-panel {
+            width: 380px;
+            display: flex;
+            flex-direction: column;
+            background: white;
+        }
+        .search-bar {
+            padding: 10px;
+            background: linear-gradient(180deg, #e3f2fd 0%, #bbdefb 100%);
+            border-bottom: 1px solid #90caf9;
+        }
+        .search-bar input {
+            width: 100%;
+            padding: 10px 15px;
+            border: 1px solid #bdbdbd;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+        .search-bar input:focus {
+            border-color: #1976d2;
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(25, 118, 210, 0.2);
+        }
+        .category-tabs {
+            display: flex;
+            background: #e0e0e0;
+            border-bottom: 1px solid #bdbdbd;
+            overflow-x: auto;
+            flex-shrink: 0;
+        }
+        .category-tab {
+            padding: 8px 15px;
+            cursor: pointer;
+            border: none;
+            background: transparent;
+            font-size: 12px;
+            white-space: nowrap;
+        }
+        .category-tab.active {
+            background: white;
+            border-bottom: 2px solid #1976d2;
+        }
+        .products-grid {
+            flex: 1;
+            padding: 10px;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+            gap: 10px;
+            overflow-y: auto;
+            align-content: start;
+        }
+        .product-card {
+            background: white;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 10px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .product-card:hover {
+            border-color: #1976d2;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        .product-card img {
+            width: 60px;
+            height: 60px;
+            object-fit: cover;
+            border-radius: 4px;
+            margin-bottom: 5px;
+        }
+        .product-card .name {
+            font-size: 11px;
+            font-weight: 500;
+            margin-bottom: 5px;
+            height: 30px;
+            overflow: hidden;
+        }
+        .product-card .price {
+            font-size: 13px;
+            font-weight: 700;
+            color: #1976d2;
+        }
+        .cart-header {
+            background: linear-gradient(180deg, #1976d2 0%, #1565c0 100%);
+            color: white;
+            padding: 12px 15px;
+            font-weight: 600;
+        }
+        .cart-items {
+            flex: 1;
+            overflow-y: auto;
+            padding: 10px;
+        }
+        .cart-item {
+            display: flex;
+            align-items: center;
+            padding: 8px;
+            border-bottom: 1px solid #e0e0e0;
+            gap: 10px;
+        }
+        .cart-item .qty {
+            width: 40px;
+            text-align: center;
+            font-weight: 600;
+        }
+        .cart-item .info {
+            flex: 1;
+        }
+        .cart-item .info .name {
+            font-size: 12px;
+            font-weight: 500;
+        }
+        .cart-item .info .price {
+            font-size: 11px;
+            color: #666;
+        }
+        .cart-item .total {
+            font-weight: 600;
+            color: #1976d2;
+        }
+        .cart-item .remove {
+            color: #e53935;
+            cursor: pointer;
+            padding: 5px;
+        }
+        .cart-summary {
+            background: #f5f5f5;
+            padding: 15px;
+            border-top: 2px solid #1976d2;
+        }
+        .summary-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+            font-size: 13px;
+        }
+        .summary-row.total {
+            font-size: 18px;
+            font-weight: 700;
+            color: #1976d2;
+            border-top: 1px solid #bdbdbd;
+            padding-top: 10px;
+            margin-top: 10px;
+        }
+        .cart-actions {
+            padding: 10px;
+            display: flex;
+            gap: 10px;
+            background: white;
+            border-top: 1px solid #e0e0e0;
+        }
+        .cart-actions .btn {
+            flex: 1;
+            padding: 12px;
+            border: none;
+            border-radius: 4px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+        .btn-pay {
+            background: linear-gradient(180deg, #66bb6a 0%, #43a047 100%);
+            color: white;
+        }
+        .btn-pay:hover {
+            background: linear-gradient(180deg, #43a047 0%, #388e3c 100%);
+        }
+        .btn-hold {
+            background: linear-gradient(180deg, #ffb74d 0%, #fb8c00 100%);
+            color: white;
+        }
+        .btn-clear {
+            background: linear-gradient(180deg, #ef5350 0%, #e53935 100%);
+            color: white;
+        }
+        .window-statusbar {
+            background: linear-gradient(180deg, #e0e0e0 0%, #bdbdbd 100%);
+            padding: 4px 10px;
+            font-size: 11px;
+            color: #666;
+            display: flex;
+            justify-content: space-between;
+            border-top: 1px solid #9e9e9e;
+            flex-shrink: 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="window-container">
+        <!-- Toolbar -->
+        <div class="window-toolbar">
+            <button class="tebeos-btn tebeos-btn-primary" id="btn-barcode">
+                <i class="fa fa-barcode"></i> Barkod Oku
+            </button>
+            <button class="tebeos-btn tebeos-btn-success" id="btn-customer">
+                <i class="fa fa-user"></i> Musteri Sec
+            </button>
+            <div style="flex:1"></div>
+            <button class="tebeos-btn" id="btn-new-window" onclick="openNewPOS()">
+                <i class="fa fa-plus"></i> Yeni Satis Penceresi
+            </button>
+        </div>
+
+        <!-- Main Content -->
+        <div class="window-content">
+            <!-- Products Panel -->
+            <div class="products-panel">
+                <div class="search-bar">
+                    <input type="text" id="product-search" placeholder="Urun ara (isim, barkod, kod)..." autofocus>
+                </div>
+                <div class="category-tabs" id="category-tabs">
+                    <div class="category-tab active" data-category="all">Tumu</div>
+                    <!-- Kategoriler JS ile yuklenecek -->
+                </div>
+                <div class="products-grid" id="products-grid">
+                    <!-- Urunler JS ile yuklenecek -->
+                </div>
+            </div>
+
+            <!-- Cart Panel -->
+            <div class="cart-panel">
+                <div class="cart-header">
+                    <i class="fa fa-shopping-cart"></i> Sepet
+                    <span id="cart-count" style="float:right; background: rgba(255,255,255,0.2); padding: 2px 8px; border-radius: 10px;">0</span>
+                </div>
+                <div class="cart-items" id="cart-items">
+                    <!-- Sepet bosken -->
+                    <div class="text-center text-muted p-20" id="empty-cart">
+                        <i class="fa fa-shopping-cart fa-3x"></i>
+                        <p>Sepet bos</p>
+                    </div>
+                </div>
+                <div class="cart-summary">
+                    <div class="summary-row">
+                        <span>Ara Toplam:</span>
+                        <span id="subtotal">0.00 TL</span>
+                    </div>
+                    <div class="summary-row">
+                        <span>KDV:</span>
+                        <span id="tax">0.00 TL</span>
+                    </div>
+                    <div class="summary-row">
+                        <span>Indirim:</span>
+                        <span id="discount">0.00 TL</span>
+                    </div>
+                    <div class="summary-row total">
+                        <span>TOPLAM:</span>
+                        <span id="total">0.00 TL</span>
+                    </div>
+                </div>
+                <div class="cart-actions">
+                    <button class="btn btn-clear" onclick="clearCart()">
+                        <i class="fa fa-trash"></i> Temizle
+                    </button>
+                    <button class="btn btn-hold" onclick="holdOrder()">
+                        <i class="fa fa-clock-o"></i> Beklet
+                    </button>
+                    <button class="btn btn-pay" onclick="processPayment()">
+                        <i class="fa fa-credit-card"></i> Ode
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Status Bar -->
+        <div class="window-statusbar">
+            <span>Kasiyer: <strong id="cashier-name">-</strong></span>
+            <span>Kasa: <strong id="till-name">Kasa 1</strong></span>
+            <span id="status-time"></span>
+        </div>
+    </div>
+
+    <script src="../assets/dist/js/bundle.min.js"></script>
+    <script>
+        const { ipcRenderer } = require('electron');
+
+        // Yeni POS penceresi ac
+        function openNewPOS() {
+            ipcRenderer.send('open-window', 'pos');
+        }
+
+        // Sepet islemleri
+        let cart = [];
+
+        function clearCart() {
+            cart = [];
+            renderCart();
+        }
+
+        function holdOrder() {
+            if (cart.length === 0) {
+                alert('Sepet bos!');
+                return;
+            }
+            // Siparisi beklet
+            alert('Siparis beklemeye alindi');
+            clearCart();
+        }
+
+        function processPayment() {
+            if (cart.length === 0) {
+                alert('Sepet bos!');
+                return;
+            }
+            // Odeme islemi
+            alert('Odeme islemi baslatiliyor...');
+        }
+
+        function renderCart() {
+            const container = document.getElementById('cart-items');
+            const emptyCart = document.getElementById('empty-cart');
+            const cartCount = document.getElementById('cart-count');
+
+            if (cart.length === 0) {
+                emptyCart.style.display = 'block';
+                container.innerHTML = '';
+                container.appendChild(emptyCart);
+            } else {
+                emptyCart.style.display = 'none';
+                // Sepet itemlerini renderla
+            }
+            cartCount.textContent = cart.length;
+        }
+
+        // Saat guncelle
+        function updateTime() {
+            const now = new Date();
+            const timeStr = now.toLocaleTimeString('tr-TR');
+            document.getElementById('status-time').textContent = timeStr;
+        }
+        setInterval(updateTime, 1000);
+        updateTime();
+
+        // Sayfa yuklendiginde
+        document.addEventListener('DOMContentLoaded', function() {
+            // Urunleri ve kategorileri yukle
+            loadCategories();
+            loadProducts();
+        });
+
+        function loadCategories() {
+            // API'den kategorileri yukle
+            fetch('http://localhost:52484/api/category')
+                .then(res => res.json())
+                .then(data => {
+                    const tabs = document.getElementById('category-tabs');
+                    data.forEach(cat => {
+                        const tab = document.createElement('div');
+                        tab.className = 'category-tab';
+                        tab.dataset.category = cat.id;
+                        tab.textContent = cat.category_name;
+                        tab.onclick = () => filterByCategory(cat.id);
+                        tabs.appendChild(tab);
+                    });
+                })
+                .catch(err => console.error('Kategori yukleme hatasi:', err));
+        }
+
+        function loadProducts() {
+            fetch('http://localhost:52484/api/inventory')
+                .then(res => res.json())
+                .then(data => {
+                    renderProducts(data);
+                })
+                .catch(err => console.error('Urun yukleme hatasi:', err));
+        }
+
+        function renderProducts(products) {
+            const grid = document.getElementById('products-grid');
+            grid.innerHTML = '';
+            products.forEach(p => {
+                const card = document.createElement('div');
+                card.className = 'product-card';
+                card.onclick = () => addToCart(p);
+                card.innerHTML = `
+                    <img src="${p.image || '../assets/images/default-product.png'}" onerror="this.src='../assets/images/default-product.png'">
+                    <div class="name">${p.product_name}</div>
+                    <div class="price">${parseFloat(p.price).toFixed(2)} TL</div>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        function addToCart(product) {
+            const existing = cart.find(item => item.id === product.id);
+            if (existing) {
+                existing.qty++;
+            } else {
+                cart.push({ ...product, qty: 1 });
+            }
+            renderCart();
+            updateTotals();
+        }
+
+        function updateTotals() {
+            let subtotal = 0;
+            cart.forEach(item => {
+                subtotal += parseFloat(item.price) * item.qty;
+            });
+            const tax = subtotal * 0.18;
+            const total = subtotal + tax;
+
+            document.getElementById('subtotal').textContent = subtotal.toFixed(2) + ' TL';
+            document.getElementById('tax').textContent = tax.toFixed(2) + ' TL';
+            document.getElementById('total').textContent = total.toFixed(2) + ' TL';
+        }
+
+        function filterByCategory(categoryId) {
+            document.querySelectorAll('.category-tab').forEach(t => t.classList.remove('active'));
+            event.target.classList.add('active');
+            // Kategoriye gore filtrele
+        }
+    </script>
+</body>
+</html>

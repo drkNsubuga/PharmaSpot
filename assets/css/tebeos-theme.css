@@ -1,0 +1,797 @@
+/* ============================================
+   TEBEOS STYLE THEME FOR ECZAPLUS
+   ============================================ */
+
+/* Color Variables */
+:root {
+  --tebeos-dark-blue: #1565c0;
+  --tebeos-navy: #0d47a1;
+  --tebeos-teal: #00838f;
+  --tebeos-teal-light: #4fb3bf;
+  --tebeos-cyan: #00acc1;
+  --tebeos-white: #ffffff;
+  --tebeos-gray-light: #f5f5f5;
+  --tebeos-gray: #e0e0e0;
+  --tebeos-text: #333333;
+  --tebeos-green: #43a047;
+  --tebeos-orange: #fb8c00;
+  --tebeos-red: #e53935;
+}
+
+/* Reset body background - SABIT LAYOUT */
+html, body {
+  background: var(--tebeos-gray-light) !important;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif !important;
+  margin: 0;
+  padding: 0;
+  height: 100vh;
+  overflow: hidden !important; /* Scroll engelle - masaustu uygulama gibi */
+}
+
+/* ============================================
+   TITLE BAR (Top header like Windows app)
+   ============================================ */
+.tebeos-titlebar {
+  background: linear-gradient(180deg, #1976d2 0%, #1565c0 100%);
+  color: white;
+  padding: 4px 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 12px;
+  border-bottom: 1px solid #0d47a1;
+}
+
+.tebeos-titlebar .app-title {
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.tebeos-titlebar .app-title img {
+  height: 20px;
+  filter: brightness(0) invert(1);
+}
+
+.tebeos-titlebar .app-version {
+  color: rgba(255,255,255,0.8);
+  font-size: 11px;
+}
+
+.tebeos-titlebar .user-info {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.tebeos-titlebar .user-info span {
+  color: rgba(255,255,255,0.9);
+}
+
+.tebeos-titlebar .user-info strong {
+  color: #ffeb3b;
+}
+
+/* ============================================
+   MAIN MENU BAR (Dropdown menus)
+   ============================================ */
+.tebeos-menubar {
+  background: linear-gradient(180deg, #e3f2fd 0%, #bbdefb 100%);
+  border-bottom: 1px solid #90caf9;
+  padding: 2px 5px;
+  display: flex;
+  gap: 0;
+}
+
+.tebeos-menubar .menu-item {
+  padding: 6px 12px;
+  font-size: 12px;
+  color: var(--tebeos-text);
+  cursor: pointer;
+  border: 1px solid transparent;
+  background: transparent;
+  transition: all 0.2s;
+}
+
+.tebeos-menubar .menu-item:hover {
+  background: #90caf9;
+  border-color: #64b5f6;
+}
+
+.tebeos-menubar .menu-item.active {
+  background: white;
+  border-color: #90caf9;
+  border-bottom-color: white;
+}
+
+.tebeos-menubar .menu-item.dropdown {
+  position: relative;
+}
+
+.tebeos-menubar .menu-item span {
+  cursor: pointer;
+}
+
+.tebeos-menubar .menu-item .fa-caret-down {
+  font-size: 10px;
+  margin-left: 3px;
+}
+
+/* TEBEOS Style Dropdown Menu */
+.tebeos-dropdown {
+  background: #ffffff;
+  border: 1px solid #bdbdbd;
+  border-radius: 0 0 3px 3px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  min-width: 180px;
+  padding: 5px 0;
+  margin-top: 0;
+  font-size: 12px;
+}
+
+.tebeos-dropdown li {
+  list-style: none;
+}
+
+.tebeos-dropdown li a {
+  display: block;
+  padding: 8px 15px;
+  color: var(--tebeos-text);
+  text-decoration: none;
+  transition: all 0.15s;
+}
+
+.tebeos-dropdown li a:hover {
+  background: linear-gradient(180deg, #e3f2fd 0%, #bbdefb 100%);
+  color: var(--tebeos-navy);
+}
+
+.tebeos-dropdown li a i {
+  margin-right: 8px;
+  width: 16px;
+  text-align: center;
+}
+
+.tebeos-dropdown .divider {
+  height: 1px;
+  background: #e0e0e0;
+  margin: 5px 0;
+}
+
+/* ============================================
+   TOOLBAR (Icon buttons with labels)
+   ============================================ */
+.tebeos-toolbar {
+  background: linear-gradient(180deg, #fafafa 0%, #e0e0e0 100%);
+  border-bottom: 1px solid #bdbdbd;
+  padding: 5px 10px;
+  display: flex;
+  gap: 3px;
+  flex-wrap: wrap;
+}
+
+.tebeos-toolbar .toolbar-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 5px 10px;
+  min-width: 60px;
+  background: linear-gradient(180deg, #ffffff 0%, #e8e8e8 100%);
+  border: 1px solid #bdbdbd;
+  border-radius: 3px;
+  cursor: pointer;
+  transition: all 0.2s;
+  text-decoration: none;
+  color: var(--tebeos-text);
+}
+
+.tebeos-toolbar .toolbar-btn:hover {
+  background: linear-gradient(180deg, #e3f2fd 0%, #bbdefb 100%);
+  border-color: #64b5f6;
+}
+
+.tebeos-toolbar .toolbar-btn:active {
+  background: linear-gradient(180deg, #bbdefb 0%, #90caf9 100%);
+}
+
+.tebeos-toolbar .toolbar-btn .btn-icon {
+  font-size: 24px;
+  color: var(--tebeos-dark-blue);
+  margin-bottom: 3px;
+}
+
+.tebeos-toolbar .toolbar-btn .btn-label {
+  font-size: 10px;
+  text-align: center;
+  white-space: nowrap;
+}
+
+.tebeos-toolbar .toolbar-separator {
+  width: 1px;
+  background: #bdbdbd;
+  margin: 5px 8px;
+}
+
+/* ============================================
+   TAB BAR
+   ============================================ */
+.tebeos-tabbar {
+  background: #e0e0e0;
+  padding: 5px 10px 0 10px;
+  display: flex;
+  gap: 2px;
+}
+
+.tebeos-tabbar .tab-item {
+  padding: 8px 20px;
+  background: linear-gradient(180deg, #f5f5f5 0%, #e0e0e0 100%);
+  border: 1px solid #bdbdbd;
+  border-bottom: none;
+  border-radius: 4px 4px 0 0;
+  cursor: pointer;
+  font-size: 12px;
+  color: var(--tebeos-text);
+}
+
+.tebeos-tabbar .tab-item.active {
+  background: white;
+  border-bottom: 1px solid white;
+  margin-bottom: -1px;
+  font-weight: 600;
+}
+
+/* ============================================
+   DASHBOARD CONTENT - SABIT LAYOUT
+   ============================================ */
+.tebeos-content {
+  background: white;
+  margin: 0;
+  padding: 15px;
+  height: calc(100vh - 145px); /* Sabit yukseklik */
+  max-height: calc(100vh - 145px);
+  overflow-y: auto; /* Sadece icerik alani scroll edilebilir */
+  border: 1px solid #bdbdbd;
+  border-top: none;
+}
+
+/* Main App Container - Sabit Layout */
+#main_app {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  overflow: hidden;
+}
+
+/* ============================================
+   DASHBOARD WIDGETS (Teal boxes)
+   ============================================ */
+.tebeos-widget-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.tebeos-widget {
+  background: linear-gradient(135deg, #00acc1 0%, #00838f 100%);
+  border-radius: 5px;
+  padding: 12px 15px;
+  color: white;
+  min-height: 80px;
+  display: flex;
+  flex-direction: column;
+  cursor: pointer;
+  transition: all 0.2s;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.tebeos-widget:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+}
+
+.tebeos-widget.widget-warning {
+  background: linear-gradient(135deg, #ffb74d 0%, #fb8c00 100%);
+}
+
+.tebeos-widget.widget-success {
+  background: linear-gradient(135deg, #81c784 0%, #43a047 100%);
+}
+
+.tebeos-widget.widget-danger {
+  background: linear-gradient(135deg, #e57373 0%, #e53935 100%);
+}
+
+.tebeos-widget .widget-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 8px;
+}
+
+.tebeos-widget .widget-icon {
+  font-size: 24px;
+  opacity: 0.9;
+}
+
+.tebeos-widget .widget-title {
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.tebeos-widget .widget-content {
+  font-size: 11px;
+  opacity: 0.95;
+  line-height: 1.4;
+}
+
+.tebeos-widget .widget-value {
+  font-size: 20px;
+  font-weight: 700;
+  margin-top: auto;
+}
+
+/* ============================================
+   DATA TABLE (TEBEOS style)
+   ============================================ */
+.tebeos-table-container {
+  background: white;
+  border: 1px solid #bdbdbd;
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.tebeos-table-title {
+  background: linear-gradient(180deg, #e3f2fd 0%, #bbdefb 100%);
+  padding: 8px 15px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--tebeos-text);
+  border-bottom: 1px solid #90caf9;
+}
+
+.tebeos-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 12px;
+}
+
+.tebeos-table th {
+  background: linear-gradient(180deg, #1976d2 0%, #1565c0 100%);
+  color: white;
+  padding: 10px 12px;
+  text-align: left;
+  font-weight: 600;
+  border: 1px solid #0d47a1;
+}
+
+.tebeos-table td {
+  padding: 8px 12px;
+  border: 1px solid #e0e0e0;
+}
+
+.tebeos-table tbody tr:nth-child(even) {
+  background: #f5f5f5;
+}
+
+.tebeos-table tbody tr:hover {
+  background: #e3f2fd;
+}
+
+/* ============================================
+   FORM CONTROLS (TEBEOS style)
+   ============================================ */
+.tebeos-form-control {
+  border: 1px solid #bdbdbd;
+  border-radius: 3px;
+  padding: 6px 10px;
+  font-size: 12px;
+  background: white;
+}
+
+.tebeos-form-control:focus {
+  border-color: #1976d2;
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(25, 118, 210, 0.2);
+}
+
+/* ============================================
+   BUTTONS (TEBEOS style)
+   ============================================ */
+.tebeos-btn {
+  padding: 6px 15px;
+  font-size: 12px;
+  border-radius: 3px;
+  border: 1px solid;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.tebeos-btn-primary {
+  background: linear-gradient(180deg, #42a5f5 0%, #1976d2 100%);
+  border-color: #1565c0;
+  color: white;
+}
+
+.tebeos-btn-primary:hover {
+  background: linear-gradient(180deg, #1976d2 0%, #1565c0 100%);
+}
+
+.tebeos-btn-success {
+  background: linear-gradient(180deg, #66bb6a 0%, #43a047 100%);
+  border-color: #388e3c;
+  color: white;
+}
+
+.tebeos-btn-success:hover {
+  background: linear-gradient(180deg, #43a047 0%, #388e3c 100%);
+}
+
+.tebeos-btn-danger {
+  background: linear-gradient(180deg, #ef5350 0%, #e53935 100%);
+  border-color: #c62828;
+  color: white;
+}
+
+.tebeos-btn-warning {
+  background: linear-gradient(180deg, #ffb74d 0%, #fb8c00 100%);
+  border-color: #ef6c00;
+  color: white;
+}
+
+/* ============================================
+   LOGIN PAGE (TEBEOS style)
+   ============================================ */
+.tebeos-login-page {
+  background: linear-gradient(135deg, #1565c0 0%, #0d47a1 50%, #002171 100%);
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.tebeos-login-box {
+  background: white;
+  border-radius: 8px;
+  padding: 40px;
+  width: 350px;
+  box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+}
+
+.tebeos-login-box .logo {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.tebeos-login-box .logo img {
+  height: 60px;
+}
+
+.tebeos-login-box .logo h2 {
+  margin: 10px 0 0 0;
+  color: var(--tebeos-dark-blue);
+  font-size: 18px;
+}
+
+.tebeos-login-box .form-group {
+  margin-bottom: 15px;
+}
+
+.tebeos-login-box label {
+  display: block;
+  font-size: 12px;
+  color: #666;
+  margin-bottom: 5px;
+}
+
+.tebeos-login-box input {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid #bdbdbd;
+  border-radius: 4px;
+  font-size: 14px;
+  box-sizing: border-box;
+}
+
+.tebeos-login-box input:focus {
+  border-color: var(--tebeos-dark-blue);
+  outline: none;
+}
+
+.tebeos-login-box button {
+  width: 100%;
+  padding: 12px;
+  background: linear-gradient(180deg, #42a5f5 0%, #1976d2 100%);
+  border: none;
+  border-radius: 4px;
+  color: white;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  margin-top: 10px;
+}
+
+.tebeos-login-box button:hover {
+  background: linear-gradient(180deg, #1976d2 0%, #1565c0 100%);
+}
+
+/* ============================================
+   SPLASH SCREEN
+   ============================================ */
+.tebeos-splash {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: linear-gradient(135deg, #1565c0 0%, #0d47a1 50%, #002171 100%);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+}
+
+.tebeos-splash img {
+  width: 120px;
+  filter: brightness(0) invert(1);
+}
+
+.tebeos-splash h1 {
+  color: white;
+  font-size: 24px;
+  margin-top: 20px;
+  font-weight: 300;
+}
+
+.tebeos-splash .loading-text {
+  color: rgba(255,255,255,0.8);
+  font-size: 14px;
+  margin-top: 30px;
+}
+
+/* ============================================
+   FOOTER BAR
+   ============================================ */
+.tebeos-footer {
+  background: linear-gradient(180deg, #e0e0e0 0%, #bdbdbd 100%);
+  padding: 5px 15px;
+  font-size: 11px;
+  color: #666;
+  display: flex;
+  justify-content: space-between;
+  border-top: 1px solid #9e9e9e;
+}
+
+.tebeos-footer .brand {
+  color: var(--tebeos-dark-blue);
+  font-weight: 600;
+}
+
+/* ============================================
+   RESPONSIVE
+   ============================================ */
+@media (max-width: 768px) {
+  .tebeos-widget-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .tebeos-toolbar .toolbar-btn {
+    min-width: 50px;
+    padding: 5px;
+  }
+
+  .tebeos-toolbar .toolbar-btn .btn-label {
+    font-size: 9px;
+  }
+}
+
+/* ============================================
+   MDI WINDOW SYSTEM - Coklu Pencere
+   ============================================ */
+
+/* MDI Container - Tum pencereler burada */
+.mdi-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  overflow: hidden;
+  pointer-events: none; /* Arkadaki icerige tiklanabilsin */
+}
+
+/* MDI Pencere */
+.mdi-window {
+  position: absolute;
+  background: white;
+  border: 1px solid #9e9e9e;
+  border-radius: 4px 4px 0 0;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+  display: flex;
+  flex-direction: column;
+  min-width: 300px;
+  min-height: 200px;
+  pointer-events: auto; /* Pencereye tiklanabilsin */
+  transition: box-shadow 0.2s;
+}
+
+.mdi-window.active {
+  box-shadow: 0 8px 30px rgba(0,0,0,0.4);
+  border-color: #1976d2;
+}
+
+/* Pencere Basligi */
+.mdi-window-titlebar {
+  background: linear-gradient(180deg, #1976d2 0%, #1565c0 100%);
+  color: white;
+  padding: 6px 10px;
+  display: flex;
+  align-items: center;
+  cursor: move;
+  user-select: none;
+  border-radius: 3px 3px 0 0;
+  flex-shrink: 0;
+}
+
+.mdi-window.inactive .mdi-window-titlebar {
+  background: linear-gradient(180deg, #9e9e9e 0%, #757575 100%);
+}
+
+.mdi-window-titlebar .window-icon {
+  margin-right: 8px;
+  font-size: 14px;
+}
+
+.mdi-window-titlebar .window-title {
+  flex: 1;
+  font-size: 12px;
+  font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.mdi-window-titlebar .window-controls {
+  display: flex;
+  gap: 2px;
+}
+
+.mdi-window-titlebar .window-controls button {
+  width: 22px;
+  height: 22px;
+  border: none;
+  background: rgba(255,255,255,0.2);
+  color: white;
+  border-radius: 2px;
+  cursor: pointer;
+  font-size: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.mdi-window-titlebar .window-controls button:hover {
+  background: rgba(255,255,255,0.3);
+}
+
+.mdi-window-titlebar .window-controls .btn-close:hover {
+  background: #e53935;
+}
+
+/* Pencere Toolbar (Opsiyonel) */
+.mdi-window-toolbar {
+  background: linear-gradient(180deg, #fafafa 0%, #e0e0e0 100%);
+  border-bottom: 1px solid #bdbdbd;
+  padding: 5px 8px;
+  display: flex;
+  gap: 5px;
+  flex-shrink: 0;
+}
+
+/* Pencere Icerigi */
+.mdi-window-content {
+  flex: 1;
+  overflow: auto;
+  background: #f5f5f5;
+}
+
+.mdi-window-content iframe {
+  width: 100%;
+  height: 100%;
+  border: none;
+}
+
+/* Pencere Statusbar */
+.mdi-window-statusbar {
+  background: linear-gradient(180deg, #e0e0e0 0%, #bdbdbd 100%);
+  padding: 3px 10px;
+  font-size: 11px;
+  color: #666;
+  border-top: 1px solid #bdbdbd;
+  flex-shrink: 0;
+}
+
+/* Resize Handle */
+.mdi-window-resize {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  width: 16px;
+  height: 16px;
+  cursor: nwse-resize;
+  background: linear-gradient(135deg, transparent 50%, #bdbdbd 50%, #bdbdbd 60%, transparent 60%, transparent 70%, #bdbdbd 70%, #bdbdbd 80%, transparent 80%);
+}
+
+/* Maximize durumu */
+.mdi-window.maximized {
+  top: 0 !important;
+  left: 0 !important;
+  width: 100% !important;
+  height: 100% !important;
+  border-radius: 0;
+}
+
+.mdi-window.maximized .mdi-window-titlebar {
+  border-radius: 0;
+}
+
+.mdi-window.maximized .mdi-window-resize {
+  display: none;
+}
+
+/* Minimize durumu */
+.mdi-window.minimized {
+  display: none;
+}
+
+/* Taskbar - Alt kisimda acik pencereler */
+.mdi-taskbar {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 32px;
+  background: linear-gradient(180deg, #e0e0e0 0%, #bdbdbd 100%);
+  border-top: 1px solid #9e9e9e;
+  display: flex;
+  align-items: center;
+  padding: 0 5px;
+  gap: 3px;
+  pointer-events: auto;
+  z-index: 9999;
+}
+
+.mdi-taskbar-btn {
+  height: 26px;
+  padding: 0 12px;
+  background: linear-gradient(180deg, #ffffff 0%, #e8e8e8 100%);
+  border: 1px solid #bdbdbd;
+  border-radius: 3px;
+  font-size: 11px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  max-width: 150px;
+  overflow: hidden;
+}
+
+.mdi-taskbar-btn.active {
+  background: linear-gradient(180deg, #e3f2fd 0%, #bbdefb 100%);
+  border-color: #1976d2;
+}
+
+.mdi-taskbar-btn:hover {
+  background: linear-gradient(180deg, #e3f2fd 0%, #bbdefb 100%);
+}
+
+.mdi-taskbar-btn span {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}

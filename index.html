@@ -3,159 +3,320 @@
 
 <head>
     <meta charset="UTF-8">
-    <title></title>
+    <title>EczaPlus - Eczane Yönetim Sistemi</title>
     <link href="assets/dist/css/bundle.min.css" rel="stylesheet" type="text/css" />
+    <link href="assets/css/tebeos-theme.css" rel="stylesheet" type="text/css" />
 </head>
 
 <body>
-    <div class="splash loading">
+    <!-- TEBEOS Style Splash Screen -->
+    <div class="tebeos-splash splash loading">
         <img src="assets/images/logo.svg" />
-        <h1 class="pull-right pt-3"><i class="fa fa-spinner fa-spin"></i> Please wait...</h1>
+        <h1>EczaPlus</h1>
+        <div class="loading-text"><i class="fa fa-spinner fa-spin"></i> Lütfen bekleyin...</div>
     </div>
-    <div id="login">
-        <div class="login-box">
-            <div id="load" class="login-box-body">
-                <center><img src="assets/images/logo.svg" /></center>
-                <form id="account">
-                    <div class="form-group">
-                        <input type="text" placeholder="Username" name="username" class="form-control">
-                    </div>
-                    <div class="form-group">
-                        <input type="password" placeholder="Password" name="password" class="form-control">
-                    </div>
-                    <button type="submit" class="btn btn-block btn-default">Login</button>
-                </form>
+
+    <!-- TEBEOS Style Login Page -->
+    <div id="login" class="tebeos-login-page">
+        <div class="tebeos-login-box">
+            <div class="logo">
+                <img src="assets/images/logo.svg" />
+                <h2>EczaPlus Giriş</h2>
             </div>
+            <form id="account">
+                <div class="form-group">
+                    <label>Kullanıcı Adı</label>
+                    <input type="text" placeholder="Kullanıcı adınızı girin" name="username">
+                </div>
+                <div class="form-group">
+                    <label>Şifre</label>
+                    <input type="password" placeholder="Şifrenizi girin" name="password">
+                </div>
+                <button type="submit">Giriş Yap</button>
+            </form>
         </div>
     </div>
+
     <div id="main_app">
-        <div class="container">
-            <div class="row">
-                <div class="col-md-6">
-                    <div class="button-list pull-left m-t-15 m-l-10">
-                        <div class="btn-group p_one">
-                            <button id="productModal" data-toggle="modal" data-target="#Products" type="button" class="btn btn-success waves-effect waves-light">
-                                <span class="btn-label"><i class="  glyphicon glyphicon-barcode"></i> </span> Products
-                            </button>
-                            <button id="newProductModal" data-toggle="modal" data-target="#newProduct" type="button" class="btn btn-warning waves-effect waves-light">
-                                <i class="fa fa-plus"></i>
-                            </button>
-                        </div>
-                        <div class="btn-group p_two">
-                            <button id="categoryModal" data-toggle="modal" data-target="#Categories" type="button" class="btn btn-success waves-effect waves-light">
-                                <span class="btn-label"><i class="glyphicon glyphicon-th"></i> </span> Categories
-                            </button>
-                            <button id="newCategoryModal" data-toggle="modal" data-target="#newCategory" type="button" class="btn btn-warning waves-effect waves-light">
-                                <i class="fa fa-plus"></i>
-                            </button>
-                        </div>
-                        <button id="viewRefOrders" data-toggle="modal" data-target="#holdOrdersModal" type="button" class="btn btn-info waves-effect waves-light">
-                            <span class="btn-label"><i class="fa fa-shopping-basket"></i> </span> Open Tabs
-                        </button>
-                        <button id="viewCustomerOrders" data-toggle="modal" data-target="#customerModal" type="button" onclick="$(this).getCustomerOrders()" class="btn btn-info waves-effect waves-light">
-                            <span class="btn-label"><i class="fa fa-shopping-cart"></i></span> Orders
-                        </button>
-                    </div>
-                </div>
-                <div class="col-md-6">
-                    <div class="button-list m-t-15">
-                        <button id="settings" data-toggle="modal" data-target="#settingsModal" type="button" class="btn btn-success waves-effect waves-light p_five">
-                            <i class="glyphicon glyphicon-cog"></i>
-                        </button>
-                        <button id="transactions" type="button" class="btn btn-success waves-effect waves-light p_three">
-                            <span class="btn-label"><i class="  glyphicon glyphicon-credit-card"></i> </span>
-                            Transactions
-                        </button>
-                        <button id="pointofsale" type="button" class="btn btn-success waves-effect waves-light">
-                            <span class="btn-label"><i class="  glyphicon glyphicon-shopping-cart"></i> </span> Point of
-                            Sale
-                        </button>
-                        <div class="btn-group p_four">
-                            <button id="usersModal" data-toggle="modal" data-target="#Users" type="button" class="btn btn-success waves-effect waves-light">
-                                <span class="btn-label"><i class="  glyphicon glyphicon-user"></i> </span> Users
-                            </button>
-                            <button id="add-user" data-toggle="modal" type="button" class="btn btn-warning waves-effect waves-light">
-                                <i class="fa fa-plus"></i>
-                            </button>
-                        </div>
-                        <button type="button" title="My Profile" class="btn btn-default waves-effect waves-light" id="cashier">
-                            <span class="btn-label"><i class="glyphicon glyphicon-user"></i> </span> <span id="loggedin-user"></span>
-                        </button>
-                        <button id="log-out" type="button" class="btn btn-warning waves-effect waves-light">
-                            <i class="glyphicon glyphicon-log-out"></i> <span>Log out</span>
-                        </button>
-                    </div>
-                </div>
+        <!-- TEBEOS Title Bar -->
+        <div class="tebeos-titlebar">
+            <div class="app-title">
+                <img src="assets/images/logo.svg" alt="EczaPlus" />
+                <span>EczaPlus</span>
+                <span class="app-version">| v1.0.0</span>
             </div>
+            <div class="user-info">
+                <span>Aktif Kullanıcı: <strong id="loggedin-user"></strong></span>
+                <button id="log-out" class="tebeos-btn tebeos-btn-danger" style="padding: 3px 10px; font-size: 11px;">
+                    <i class="glyphicon glyphicon-log-out"></i> Çıkış
+                </button>
+            </div>
+        </div>
+
+        <!-- TEBEOS Menu Bar -->
+        <div class="tebeos-menubar">
+            <div class="menu-item dropdown">
+                <span data-toggle="dropdown">Hızlı Menü <i class="fa fa-caret-down"></i></span>
+                <ul class="dropdown-menu tebeos-dropdown">
+                    <li><a href="#" id="pointofsale-menu">Nakit Satış</a></li>
+                    <li><a href="#" id="transactions-menu">Tüm İşlemler</a></li>
+                    <li class="divider"></li>
+                    <li><a href="#" data-toggle="modal" data-target="#holdOrdersModal">Açık Sekmeler</a></li>
+                </ul>
+            </div>
+            <div class="menu-item dropdown">
+                <span data-toggle="dropdown">Alış <i class="fa fa-caret-down"></i></span>
+                <ul class="dropdown-menu tebeos-dropdown">
+                    <li><a href="#" data-toggle="modal" data-target="#newProduct">Yeni Ürün Girişi</a></li>
+                    <li><a href="#" data-toggle="modal" data-target="#Products">Ürün Listesi</a></li>
+                </ul>
+            </div>
+            <div class="menu-item dropdown">
+                <span data-toggle="dropdown">Satış <i class="fa fa-caret-down"></i></span>
+                <ul class="dropdown-menu tebeos-dropdown">
+                    <li><a href="#" id="pos-menu-nakit">Nakit Satış</a></li>
+                    <li><a href="#" id="pos-menu-all">Tüm Satışlar</a></li>
+                    <li class="divider"></li>
+                    <li><a href="#" data-toggle="modal" data-target="#customerModal" onclick="$(this).getCustomerOrders()">Müşteri Siparişleri</a></li>
+                </ul>
+            </div>
+            <div class="menu-item dropdown">
+                <span data-toggle="dropdown">Stok & Sayım <i class="fa fa-caret-down"></i></span>
+                <ul class="dropdown-menu tebeos-dropdown">
+                    <li><a href="#" data-toggle="modal" data-target="#Products">Stok Listesi</a></li>
+                    <li><a href="#" data-toggle="modal" data-target="#Categories">Kategoriler</a></li>
+                    <li class="divider"></li>
+                    <li><a href="#" data-toggle="modal" data-target="#newProduct">Ürün Ekle</a></li>
+                    <li><a href="#" data-toggle="modal" data-target="#newCategory">Kategori Ekle</a></li>
+                </ul>
+            </div>
+            <div class="menu-item dropdown">
+                <span data-toggle="dropdown">Cari <i class="fa fa-caret-down"></i></span>
+                <ul class="dropdown-menu tebeos-dropdown">
+                    <li><a href="#" data-toggle="modal" data-target="#customerModal" onclick="$(this).getCustomerOrders()">Müşteri Listesi</a></li>
+                    <li><a href="#" data-toggle="modal" data-target="#newCustomer">Yeni Müşteri</a></li>
+                </ul>
+            </div>
+            <div class="menu-item dropdown">
+                <span data-toggle="dropdown">Raporlar <i class="fa fa-caret-down"></i></span>
+                <ul class="dropdown-menu tebeos-dropdown">
+                    <li><a href="#" id="reports-daily">Günlük Rapor</a></li>
+                    <li><a href="#" id="reports-transactions">İşlem Raporu</a></li>
+                    <li><a href="#" id="reports-products">Ürün Satış Raporu</a></li>
+                </ul>
+            </div>
+            <div class="menu-item dropdown p_four">
+                <span data-toggle="dropdown">Kullanıcılar <i class="fa fa-caret-down"></i></span>
+                <ul class="dropdown-menu tebeos-dropdown">
+                    <li><a href="#" data-toggle="modal" data-target="#Users">Kullanıcı Listesi</a></li>
+                    <li><a href="#" id="add-user" data-toggle="modal">Yeni Kullanıcı</a></li>
+                </ul>
+            </div>
+            <div class="menu-item dropdown p_five">
+                <span data-toggle="dropdown">Ayarlar <i class="fa fa-caret-down"></i></span>
+                <ul class="dropdown-menu tebeos-dropdown">
+                    <li><a href="#" data-toggle="modal" data-target="#settingsModal">Genel Ayarlar</a></li>
+                    <li><a href="#" id="cashier">Profilim</a></li>
+                </ul>
+            </div>
+            <div class="menu-item dropdown">
+                <span data-toggle="dropdown">Yardım <i class="fa fa-caret-down"></i></span>
+                <ul class="dropdown-menu tebeos-dropdown">
+                    <li><a href="#">Hakkında</a></li>
+                    <li><a href="#">Kılavuz</a></li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- TEBEOS Toolbar (Like original TEBEOS) -->
+        <div class="tebeos-toolbar">
+            <div class="toolbar-btn" id="pointofsale">
+                <i class="fa fa-money btn-icon"></i>
+                <span class="btn-label">Nakit Satış</span>
+            </div>
+            <div class="toolbar-btn p_three" id="transactions">
+                <i class="fa fa-list-alt btn-icon"></i>
+                <span class="btn-label">Tüm Satışlar</span>
+            </div>
+            <div class="toolbar-separator"></div>
+            <div class="toolbar-btn" data-toggle="modal" data-target="#holdOrdersModal">
+                <i class="fa fa-clock-o btn-icon"></i>
+                <span class="btn-label">Açık Sekmeler</span>
+            </div>
+            <div class="toolbar-btn" data-toggle="modal" data-target="#customerModal" onclick="$(this).getCustomerOrders()">
+                <i class="fa fa-shopping-basket btn-icon"></i>
+                <span class="btn-label">Siparişler</span>
+            </div>
+            <div class="toolbar-separator"></div>
+            <div class="toolbar-btn p_one" data-toggle="modal" data-target="#Products">
+                <i class="fa fa-database btn-icon"></i>
+                <span class="btn-label">Ürün Listesi</span>
+            </div>
+            <div class="toolbar-btn p_one" data-toggle="modal" data-target="#newProduct">
+                <i class="fa fa-plus-circle btn-icon"></i>
+                <span class="btn-label">Ürün Ekle</span>
+            </div>
+            <div class="toolbar-separator"></div>
+            <div class="toolbar-btn p_two" data-toggle="modal" data-target="#Categories">
+                <i class="fa fa-th-large btn-icon"></i>
+                <span class="btn-label">Kategoriler</span>
+            </div>
+            <div class="toolbar-btn" data-toggle="modal" data-target="#newCustomer">
+                <i class="fa fa-user-plus btn-icon"></i>
+                <span class="btn-label">Yeni Müşteri</span>
+            </div>
+            <div class="toolbar-separator"></div>
+            <div class="toolbar-btn p_five" data-toggle="modal" data-target="#settingsModal">
+                <i class="fa fa-cog btn-icon"></i>
+                <span class="btn-label">Ayarlar</span>
+            </div>
+        </div>
+
+        <!-- TEBEOS MDI Workspace -->
+        <div class="tebeos-workspace" style="position: relative; flex: 1; overflow: hidden;">
+            <!-- MDI Container - Pencereler burada acilir -->
+            <div class="mdi-container" id="mdi-container"></div>
+
+            <!-- Dashboard Content (arka plan) -->
+            <div class="tebeos-content" style="height: 100%; overflow-y: auto;">
+            <div class="container-fluid p-0">
             <div id="transactions_view">
-                <div class="container">
-                    <div class="row text-center m-t-20" id="totals">
-                        <div id="total_sales" class="col-md-3 py-2 bg-success">
-                            <h5>SALES</h5>
-                            <span id="counter">0</span>
+                <div class="container-fluid">
+                    <!-- TEBEOS Style Dashboard Widgets (2 rows like original) -->
+                    <div class="tebeos-widget-grid" id="totals">
+                        <!-- Row 1 -->
+                        <div class="tebeos-widget" id="total_sales" onclick="$('#transactions').click();">
+                            <div class="widget-header">
+                                <i class="fa fa-money widget-icon"></i>
+                                <span class="widget-title">Günlük Kasa</span>
+                            </div>
+                            <div class="widget-content">
+                                Nakit Tahsi: <strong><span id="counter">0</span> TL</strong><br>
+                                Pos Tahsi: <strong>0 TL</strong>
+                            </div>
                         </div>
-                        <div id="total_transactions" class="col-md-3 py-2 bg-warning">
-                            <h5>TRANSACTIONS</h5>
-                            <span id="counter">0</span>
+                        <div class="tebeos-widget widget-warning" id="total_transactions">
+                            <div class="widget-header">
+                                <i class="fa fa-exchange widget-icon"></i>
+                                <span class="widget-title">Sipariş İşlemleri</span>
+                            </div>
+                            <div class="widget-content">
+                                Günlük Sipariş: <strong><span id="counter">0</span> Adet</strong><br>
+                                Genel Sipariş: <strong>0 Adet</strong>
+                            </div>
                         </div>
-                        <div id="total_items" class="col-md-3 py-2 bg-info">
-                            <h5>ITEMS SOLD</h5>
-                            <span id="counter">0</span>
+                        <div class="tebeos-widget" id="total_items" onclick="$('#holdOrdersModal').modal('show');">
+                            <div class="widget-header">
+                                <i class="fa fa-clock-o widget-icon"></i>
+                                <span class="widget-title">Açık Sekmeler</span>
+                            </div>
+                            <div class="widget-content">
+                                Bekleyen: <strong><span id="counter">0</span> Adet</strong><br>
+                                <small>Tıklayarak görüntüle</small>
+                            </div>
                         </div>
-                        <div id="total_products" class="col-md-3 py-2 bg-success">
-                            <h5>PRODUCTS</h5>
-                            <span id="counter">0</span>
+                        <div class="tebeos-widget widget-success" id="total_products">
+                            <div class="widget-header">
+                                <i class="fa fa-database widget-icon"></i>
+                                <span class="widget-title">Stok Durumu</span>
+                            </div>
+                            <div class="widget-content">
+                                Toplam Ürün: <strong><span id="counter">0</span> Adet</strong><br>
+                                <small>Sistemdeki ürünler</small>
+                            </div>
                         </div>
                     </div>
-                    <div class="row p-t-10 p-b-10 bg-white m-t-10 m-b-20">
-                        <h3 class="col-md-2">Transactions</h3>
-                        <div class="col-md-2">
-                            <div class="input-group">
-                                <span class="input-group-addon" id="till-addon">Till</span>
-                                <select id="tills" class="form-control" aria-describedby="till-addon">
-                                </select>
+
+                    <!-- Row 2 - Additional Widgets -->
+                    <div class="tebeos-widget-grid">
+                        <div class="tebeos-widget widget-danger" data-toggle="modal" data-target="#Products">
+                            <div class="widget-header">
+                                <i class="fa fa-warning widget-icon"></i>
+                                <span class="widget-title">Stok Uyarıları</span>
+                            </div>
+                            <div class="widget-content">
+                                Kritik Stok: <strong>0 Adet</strong><br>
+                                <small>Minimum stok altında</small>
                             </div>
                         </div>
-                        <div class="col-md-2">
-                            <div class="input-group">
-                                <span class="input-group-addon" id="cashier-addon">Cashier</span>
-                                <select id="users" class="form-control" aria-describedby="cashier-addon">
-                                </select>
+                        <div class="tebeos-widget" data-toggle="modal" data-target="#customerModal" onclick="$(this).getCustomerOrders()">
+                            <div class="widget-header">
+                                <i class="fa fa-users widget-icon"></i>
+                                <span class="widget-title">Müşteriler</span>
+                            </div>
+                            <div class="widget-content">
+                                Toplam Müşteri: <strong>0</strong><br>
+                                <small>Kayıtlı müşteriler</small>
                             </div>
                         </div>
-                        <div class="col-md-2">
-                            <div class="input-group">
-                                <span class="input-group-addon" id="status-addon">Status</span>
-                                <select id="status" class="form-control" aria-describedby="">
-                                    <option value="1">Paid</option>
-                                    <option value="0">Unpaid</option>
-                                </select>
+                        <div class="tebeos-widget widget-warning" data-toggle="modal" data-target="#Categories">
+                            <div class="widget-header">
+                                <i class="fa fa-th-large widget-icon"></i>
+                                <span class="widget-title">Kategoriler</span>
+                            </div>
+                            <div class="widget-content">
+                                Toplam Kategori: <strong>0</strong><br>
+                                <small>Ürün kategorileri</small>
                             </div>
                         </div>
-                        <div class="col-md-4">
-                            <div class="input-group">
-                                <span class="input-group-addon" id="date-addon">Date</span>
-                                <div id="reportrange">
-                                    <i class="fa fa-calendar"></i>&nbsp;
+                        <div class="tebeos-widget widget-success" id="pointofsale-widget">
+                            <div class="widget-header">
+                                <i class="fa fa-shopping-cart widget-icon"></i>
+                                <span class="widget-title">Hızlı Satış</span>
+                            </div>
+                            <div class="widget-content">
+                                <strong>Satış Ekranına Git</strong><br>
+                                <small>Yeni satış başlat</small>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- TEBEOS Style Filter Bar -->
+                    <div class="tebeos-table-container m-b-20">
+                        <div class="tebeos-table-title">
+                            <i class="fa fa-filter"></i> İşlem Filtreleri
+                        </div>
+                        <div class="p-15" style="padding: 15px; display: flex; gap: 15px; flex-wrap: wrap; align-items: center;">
+                            <div class="input-group" style="width: auto;">
+                                <span class="input-group-addon" id="till-addon">Kasa</span>
+                                <select id="tills" class="form-control" aria-describedby="till-addon" style="min-width: 120px;">
+                                </select>
+                            </div>
+                            <div class="input-group" style="width: auto;">
+                                <span class="input-group-addon" id="cashier-addon">Kasiyer</span>
+                                <select id="users" class="form-control" aria-describedby="cashier-addon" style="min-width: 120px;">
+                                </select>
+                            </div>
+                            <div class="input-group" style="width: auto;">
+                                <span class="input-group-addon" id="status-addon">Durum</span>
+                                <select id="status" class="form-control" aria-describedby="" style="min-width: 120px;">
+                                    <option value="1">Ödendi</option>
+                                    <option value="0">Ödenmedi</option>
+                                </select>
+                            </div>
+                            <div class="input-group" style="width: auto;">
+                                <span class="input-group-addon" id="date-addon"><i class="fa fa-calendar"></i> Tarih</span>
+                                <div id="reportrange" style="min-width: 200px;">
                                     <span></span>&nbsp;<i class="fa fa-caret-down"></i>
                                 </div>
                             </div>
                         </div>
                     </div>
+                    <!-- TEBEOS Style Tables -->
                     <div class="row">
-                        <div class="col-md-4 bg-white" id="productSales">
-                            <div class="card-box">
-                                <div class="card-title">
-                                    <h4>Products</h4>
+                        <div class="col-md-4" id="productSales">
+                            <div class="tebeos-table-container">
+                                <div class="tebeos-table-title">
+                                    <i class="fa fa-bar-chart"></i> Satılan Ürünler
                                 </div>
-                                <div class="card-body">
-                                    <table class="table tablesaw-enhanced table-responsive" id="productsSold">
+                                <div style="max-height: 400px; overflow-y: auto;">
+                                    <table class="tebeos-table" id="productsSold">
                                         <thead>
                                             <tr>
-                                                <th>Name</th>
-                                                <th>Sold</th>
-                                                <th>Available</th>
-                                                <th>Sales</th>
+                                                <th>Ad</th>
+                                                <th>Satılan</th>
+                                                <th>Mevcut</th>
+                                                <th>Satış</th>
                                             </tr>
                                         </thead>
                                         <tbody id="product_sales"></tbody>
@@ -164,23 +325,23 @@
                             </div>
                         </div>
                         <div class="col-md-8" id="transactionDetails">
-                            <div class="card-box">
-                                <div class="card-title">
-                                    <h4>Transaction Details</h4>
+                            <div class="tebeos-table-container">
+                                <div class="tebeos-table-title">
+                                    <i class="fa fa-list-alt"></i> İşlem Detayları
                                 </div>
-                                <div class="card-body">
-                                    <table class="table table-striped table-bordered table-responsive" id="transactionList">
+                                <div style="max-height: 400px; overflow-y: auto;">
+                                    <table class="tebeos-table" id="transactionList">
                                         <thead>
                                             <tr>
-                                                <th>Invoice</th>
-                                                <th>Date</th>
-                                                <th>Total</th>
-                                                <th>Paid</th>
-                                                <th>Change</th>
-                                                <th>Method</th>
-                                                <th>Till</th>
-                                                <th>Cashier</th>
-                                                <th>View</th>
+                                                <th>Fatura</th>
+                                                <th>Tarih</th>
+                                                <th>Toplam</th>
+                                                <th>Ödenen</th>
+                                                <th>Para Üstü</th>
+                                                <th>Yöntem</th>
+                                                <th>Kasa</th>
+                                                <th>Kasiyer</th>
+                                                <th>İşlem</th>
                                             </tr>
                                         </thead>
                                         <tbody id="transaction_list"></tbody>
@@ -209,7 +370,7 @@
                                     <div class="col-md-10 m-t-5">
                                         <form action="" id="searchBarCode">
                                             <div class="input-group">
-                                                <input type="text" required id="skuCode" name="skuCode" class="form-control number-input" placeholder="Scan barcode or type the number then hit enter" aria-label="barcode" aria-describedby="basic-addon2">
+                                                <input type="text" required id="skuCode" name="skuCode" class="form-control number-input" placeholder="Barkod okutun veya numarayı yazıp enter'a basın" aria-label="barcode" aria-describedby="basic-addon2">
                                                 <span class="input-group-btn">
                                                     <button type="submit" class="btn btn-default search-barcode-btn"><i class="glyphicon glyphicon-ok"></i></button>
                                                 </span>
@@ -222,9 +383,9 @@
                                         <div class="card-title">
                                             <div class="row">
                                                 <div class="col-md-1"><strong>#</strong></div>
-                                                <div class="col-md-3"><strong>Item</strong></div>
-                                                <div class="col-md-3"><strong>Qty</strong></div>
-                                                <div class="col-md-3"><strong>Price</strong></div>
+                                                <div class="col-md-3"><strong>Ürün</strong></div>
+                                                <div class="col-md-3"><strong>Adet</strong></div>
+                                                <div class="col-md-3"><strong>Fiyat</strong></div>
                                                 <div class="col-md-1"><button onclick="$(this).cancelOrder()" class="btn btn-light btn-xs"><i class="fa fa-times"></i></button>
                                                 </div>
                                             </div>
@@ -236,16 +397,16 @@
                             <hr>
                             <div class="m-t-5">
                                 <div class="row">
-                                    <div class="col-md-3">Total Item(s)</div>
+                                    <div class="col-md-3">Toplam Ürün</div>
                                     <div class="col-md-3">: <span id="total">0</span>
                                     </div>
-                                    <div class="col-md-3">Price :</div>
+                                    <div class="col-md-3">Fiyat :</div>
                                     <div class="col-md-3">: <span id="price">0.0</span></div>
                                 </div>
                                 <div class="row">
-                                    <div class="col-md-3">Discount</div>
-                                    <div class="col-md-3"><input class="form-control" type="number" id="inputDiscount" minimum="0" placeholder="amount" oninput="$(this).calculateCart();"></div>
-                                    <div class="col-md-3">Gross Price (inc <span id="taxInfo"></span>% Tax)</div>
+                                    <div class="col-md-3">İndirim</div>
+                                    <div class="col-md-3"><input class="form-control" type="number" id="inputDiscount" minimum="0" placeholder="tutar" oninput="$(this).calculateCart();"></div>
+                                    <div class="col-md-3">Brüt Fiyat (%<span id="taxInfo"></span> KDV dahil)</div>
                                     <div class="col-md-3">
                                         <h3 id="gross_price">0.00</h3>
                                     </div>
@@ -256,13 +417,13 @@
                                     <i class="fa fa-print"></i>
                                 </button>
                                 <button onclick="$(this).cancelOrder()" type="button" class="btn btn-danger waves-effect waves-light">
-                                    <span class="btn-label"><i class="fa fa-ban"></i></span>Cancel
+                                    <span class="btn-label"><i class="fa fa-ban"></i></span>İptal
                                 </button>
                                 <button type="button" id="hold" class="btn btn-info waves-effect waves-light">
-                                    <span class="btn-label"><i class="fa fa-hand-paper-o"></i></span>Hold
+                                    <span class="btn-label"><i class="fa fa-hand-paper-o"></i></span>Beklet
                                 </button>
                                 <button type="button" id="payButton" class="btn btn-success waves-effect waves-light">
-                                    <span class="btn-label"><i class="fa fa-money"></i></span>Pay
+                                    <span class="btn-label"><i class="fa fa-money"></i></span>Öde
                                 </button>
                             </div>
                             <hr>
@@ -272,7 +433,7 @@
                         <div class="card-box">
                             <div class="row">
                                 <div class="col-md-6">
-                                    <input type="text" id="search" class="form-control" placeholder="Search product by name or sku">
+                                    <input type="text" id="search" class="form-control" placeholder="Ürün adı veya SKU ile ara">
                                 </div>
                                 <div class="col-md-6">
                                     <select id="categories" class="form-control">
@@ -286,18 +447,28 @@
                     </div>
                 </div>
             </div>
+            </div><!-- end container-fluid -->
+        </div><!-- end tebeos-content -->
+        </div><!-- end tebeos-workspace -->
+
+        <!-- TEBEOS Footer -->
+        <div class="tebeos-footer">
+            <div><i class="fa fa-clock-o"></i> <span id="current-time"></span></div>
+            <div class="brand">EczaPlus - Eczane Yönetiminde Yardımcınız</div>
+            <div><i class="fa fa-desktop"></i> v1.0.0</div>
         </div>
+
         <div id="dueModal" class="modal fade bs-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
             <div class="modal-dialog modal-sm">
                 <div class="modal-content">
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                        <h4 class="modal-title" id="mySmallModalLabel">Hold Order
+                        <h4 class="modal-title" id="mySmallModalLabel">Siparişi Beklet
                         </h4>
                     </div>
                     <div class="modal-body">
                         <form action="">
-                            <input type="text" id="refNumber" placeholder="Enter a reference" class="form-control">
+                            <input type="text" id="refNumber" placeholder="Referans girin" class="form-control">
                         </form>
                         <hr>
                         <div class="row">
@@ -349,7 +520,7 @@
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" onclick="$(this).submitDueOrder(0);" class="btn btn-primary btn-block btn-lg waves-effect waves-light">Hold Order</button>
+                        <button type="button" onclick="$(this).submitDueOrder(0);" class="btn btn-primary btn-block btn-lg waves-effect waves-light">Siparişi Beklet</button>
                     </div>
                 </div><!-- /.modal-content -->
             </div><!-- /.modal-dialog -->
@@ -360,26 +531,26 @@
                 <div class="modal-content">
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                        <h4 class="modal-title" id="myLargeModalLabel">Payment</h4>
+                        <h4 class="modal-title" id="myLargeModalLabel">Ödeme</h4>
                     </div>
                     <div class="modal-body">
                         <div class="row">
                             <div class="col-md-4">
                                 <div class="list-group">
-                                    <a href="javascript:void(0)" data-payment-method="Cash" data-payment-type="1" class="list-group-item active">
-                                        Cash
+                                    <a href="javascript:void(0)" data-payment-method="Nakit" data-payment-type="1" class="list-group-item active">
+                                        Nakit
                                     </a>
-                                    <a href="javascript:void(0)" data-payment-method="Card" data-payment-type="3" class="list-group-item">Card</a>
+                                    <a href="javascript:void(0)" data-payment-method="Kart" data-payment-type="3" class="list-group-item">Kart</a>
                                 </div>
                             </div>
                             <div class="col-md-8">
                                 <div class="input-group">
-                                    <span class="input-group-addon" id="basic-addon3">Price <span id="price_curr"></span></span>
+                                    <span class="input-group-addon" id="basic-addon3">Fiyat <span id="price_curr"></span></span>
                                     <input id="payablePrice" readonly type="text" class="form-control" aria-describedby="basic-addon3">
                                 </div>
                                 <br>
                                 <div class="input-group">
-                                    <span class="input-group-addon" id="basic-addon3">Payment <span id="payment_curr"></span> </span>
+                                    <span class="input-group-addon" id="basic-addon3">Ödeme <span id="payment_curr"></span> </span>
                                     <input type="text" placeholder="0.0" class="form-control" id="paymentText" aria-describedby="basic-addon3" readonly>
                                     <input type="hidden" class="form-control" id="payment" aria-describedby="basic-addon3">
                                 </div>
@@ -444,7 +615,7 @@
                                 </div>
                                 <br>
                                 <div class="input-group" id="cardInfo">
-                                    <span class="input-group-addon" id="basic-addon3">Card Info </span>
+                                    <span class="input-group-addon" id="basic-addon3">Kart Bilgisi </span>
                                     <input type="text" class="form-control" id="paymentInfo" aria-describedby="basic-addon3">
                                 </div>
                             </div>
@@ -453,11 +624,11 @@
                     <div class="modal-footer">
                         <div class="row">
                             <div class="col-md-6">
-                                <div class="btn btn-primary btn-block btn-lg waves-effect waves-light">Change <span id="change_curr"></span><span id="change"></span> </div>
+                                <div class="btn btn-primary btn-block btn-lg waves-effect waves-light">Para Üstü <span id="change_curr"></span><span id="change"></span> </div>
                             </div>
                             <div class="col-md-6">
-                                <button type="button" id="confirmPayment" class="btn btn-success btn-block btn-lg waves-effect waves-light">Confirm
-                                Payment</button>
+                                <button type="button" id="confirmPayment" class="btn btn-success btn-block btn-lg waves-effect waves-light">Ödemeyi
+                                Onayla</button>
                             </div>
                         </div>
                     </div>
@@ -469,26 +640,26 @@
                 <div class="modal-content">
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                        <h4 class="modal-title" id="mySmallModalLabel">New Customer
+                        <h4 class="modal-title" id="mySmallModalLabel">Yeni Müşteri
                         </h4>
                     </div>
                     <div class="modal-body">
                         <form id="saveCustomer" data-parsley-validate>
                             <div class="form-group">
-                                <label for="userName">Customer Name*</label>
-                                <input type="text" required="required" name="name" parsley-trigger="change" placeholder="Enter name" class="form-control" id="userName">
+                                <label for="userName">Müşteri Adı*</label>
+                                <input type="text" required="required" name="name" parsley-trigger="change" placeholder="Ad girin" class="form-control" id="userName">
                             </div>
                             <div class="form-group">
-                                <label for="userName">Customer Phone</label>
-                                <input type="text" name="phone" parsley-trigger="change" placeholder="Enter Phone number" class="form-control" id="phoneNumber">
+                                <label for="userName">Müşteri Telefonu</label>
+                                <input type="text" name="phone" parsley-trigger="change" placeholder="Telefon numarası girin" class="form-control" id="phoneNumber">
                             </div>
                             <div class="form-group">
-                                <label for="userName">Customer Email</label>
-                                <input type="email" name="email" parsley-trigger="change" placeholder="Enter email address" class="form-control" id="emailAddress">
+                                <label for="userName">Müşteri E-postası</label>
+                                <input type="email" name="email" parsley-trigger="change" placeholder="E-posta adresi girin" class="form-control" id="emailAddress">
                             </div>
                             <div class="form-group">
-                                <label for="userName">Customer Address</label>
-                                <input type="text" name="address" parsley-trigger="change" placeholder="Enter address" class="form-control" id="userAddress">
+                                <label for="userName">Müşteri Adresi</label>
+                                <input type="text" name="address" parsley-trigger="change" placeholder="Adres girin" class="form-control" id="userAddress">
                             </div>
                             <input type="submit" class="btn btn-primary btn-block waves-effect waves-light">
                         </form>
@@ -501,7 +672,7 @@
                 <div class="modal-content">
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                        <h4 class="modal-title" id="mySmallModalLabel">Product
+                        <h4 class="modal-title" id="mySmallModalLabel">Ürün
                         </h4>
                     </div>
                     <div class="modal-body">
@@ -510,39 +681,39 @@
                             <input type="hidden" name="img" id="img">
                             <input type="hidden" name="remove" id="remove_img">
                             <div class="form-group">
-                                <label for="category">Category</label>
+                                <label for="category">Kategori</label>
                                 <select name="category" class="form-control" id="category"></select>
                             </div>
                             <div class="form-group">
-                                <label for="productName">Product Name</label>
-                                <input type="text" required="required" name="name" parsley-trigger="change" placeholder="Enter a product name" class="form-control" id="productName">
+                                <label for="productName">Ürün Adı</label>
+                                <input type="text" required="required" name="name" parsley-trigger="change" placeholder="Ürün adı girin" class="form-control" id="productName">
                             </div>
                             <div class="form-group">
-                                <label for="barcode">BarCode</label>
-                                <input type="text" required="required" name="barcode" parsley-trigger="change" placeholder="Enter product barcode" class="form-control number-input" id="barcode">
+                                <label for="barcode">Barkod</label>
+                                <input type="text" required="required" name="barcode" parsley-trigger="change" placeholder="Ürün barkodunu girin" class="form-control number-input" id="barcode">
                             </div>
                             <div class="form-group">
-                                <label for="product_price">Price</label>
-                                <input type="text" required="required" name="price" placeholder="Price" class="form-control number-input" id="product_price">
+                                <label for="product_price">Fiyat</label>
+                                <input type="text" required="required" name="price" placeholder="Fiyat" class="form-control number-input" id="product_price">
                             </div>
                             <div class="form-group">
-                                <label for="expirationDate">Expiry Date</label>
-                                <input type="text" name="expirationDate" parsley-trigger="change" placeholder="dd/mm/yyyy" class="form-control" id="expirationDate" readonly>
+                                <label for="expirationDate">Son Kullanma Tarihi</label>
+                                <input type="text" name="expirationDate" parsley-trigger="change" placeholder="gg/aa/yyyy" class="form-control" id="expirationDate" readonly>
                             </div>
                             <div class="form-group">
-                                <label for="quantity">Stock</label>
-                                <input type="number" name="quantity" placeholder="Available stock" class="form-control" id="quantity" min="0">
+                                <label for="quantity">Stok</label>
+                                <input type="number" name="quantity" placeholder="Mevcut stok" class="form-control" id="quantity" min="0">
                             </div>
                             <div class="form-group">
-                                <label for="quantity">Minimum Stock</label>
-                                <input type="number" name="minStock" placeholder="Minimum Stock" class="form-control" id="minStock" min="1">
+                                <label for="quantity">Minimum Stok</label>
+                                <input type="number" name="minStock" placeholder="Minimum Stok" class="form-control" id="minStock" min="1">
                             </div>
                             <div class="form-group">
-                                <label><input type="checkbox" name="stock" id="stock"> Disable stock check </label>
+                                <label><input type="checkbox" name="stock" id="stock"> Stok kontrolünü devre dışı bırak </label>
                             </div>
                             <div class="form-group">
-                                <label for="imagename"><span id="rmv_img" class="btn btn-xs btn-warning">Remove</span>
-                                Picture </label>
+                                <label for="imagename"><span id="rmv_img" class="btn btn-xs btn-warning">Kaldır</span>
+                                Resim </label>
                                 <div id="current_img"></div>
                                 <input type="file" name="imagename" id="imagename">
                             </div>
@@ -557,15 +728,15 @@
                 <div class="modal-content">
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                        <h4 class="modal-title" id="mySmallModalLabel">Category
+                        <h4 class="modal-title" id="mySmallModalLabel">Kategori
                         </h4>
                     </div>
                     <div class="modal-body">
                         <form id="saveCategory">
                             <div class="form-group">
-                                <label for="userName">Name</label>
+                                <label for="userName">Ad</label>
                                 <input id="category_id" type="hidden" name="id">
-                                <input id="categoryName" type="text" required="required" name="name" placeholder="Enter a category name" class="form-control">
+                                <input id="categoryName" type="text" required="required" name="name" placeholder="Kategori adı girin" class="form-control">
                             </div>
                             <input type="submit" id="submitCategory" class="btn btn-primary btn-block waves-effect waves-light">
                         </form>
@@ -578,21 +749,21 @@
                 <div class="modal-content">
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                        <h4 class="modal-title" id="mySmallModalLabel">Products
+                        <h4 class="modal-title" id="mySmallModalLabel">Ürünler
                         </h4>
                     </div>
                     <div class="modal-body p-20 p-r-40" id="all_products">
                         <table class="table table-bordered" id="productList">
                             <thead>
                                 <tr>
-                                    <th>Barcode</th>
-                                    <th>Item</th>
-                                    <th>Name</th>
-                                    <th>Price</th>
-                                    <th>Stock</th>
-                                    <th>Expiry Date</th>
-                                    <th>Category</th>
-                                    <th>Action</th>
+                                    <th>Barkod</th>
+                                    <th>Ürün</th>
+                                    <th>Ad</th>
+                                    <th>Fiyat</th>
+                                    <th>Stok</th>
+                                    <th>Son Kullanma Tarihi</th>
+                                    <th>Kategori</th>
+                                    <th>İşlem</th>
                                 </tr>
                             </thead>
                             <tbody id="product_list"></tbody>
@@ -606,17 +777,17 @@
                 <div class="modal-content">
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                        <h4 class="modal-title" id="mySmallModalLabel">Users
+                        <h4 class="modal-title" id="mySmallModalLabel">Kullanıcılar
                         </h4>
                     </div>
                     <div class="modal-body p-20 p-r-20" id="all_userss">
                         <table class="table table-bordered" id="userList">
                             <thead>
                                 <tr>
-                                    <th>Name</th>
-                                    <th>Username</th>
-                                    <th>Status</th>
-                                    <th>Action</th>
+                                    <th>Ad</th>
+                                    <th>Kullanıcı Adı</th>
+                                    <th>Durum</th>
+                                    <th>İşlem</th>
                                 </tr>
                             </thead>
                             <tbody id="user_list"></tbody>
@@ -630,15 +801,15 @@
                 <div class="modal-content">
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                        <h4 class="modal-title" id="mySmallModalLabel">Categories
+                        <h4 class="modal-title" id="mySmallModalLabel">Kategoriler
                         </h4>
                     </div>
                     <div class="modal-body">
                         <table class="table table-bordered" id="categoryList">
                             <thead>
                                 <tr>
-                                    <th>Name</th>
-                                    <th>Action</th>
+                                    <th>Ad</th>
+                                    <th>İşlem</th>
                                 </tr>
                             </thead>
                             <tbody id="category_list"></tbody>
@@ -652,50 +823,50 @@
                 <div class="modal-content">
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                        <h4 class="modal-title" id="mySmallModalLabel">Account Infomarion
+                        <h4 class="modal-title" id="mySmallModalLabel">Hesap Bilgileri
                         </h4>
                     </div>
                     <div class="modal-body">
                         <form id="saveUser" data-parsley-validate>
                             <input type="hidden" name="id" id="user_id">
                             <div class="form-group">
-                                <label for="userName">Name*</label>
-                                <input type="text" required="required" name="fullname" parsley-trigger="change" placeholder="Enter name" class="form-control" id="fullname">
+                                <label for="userName">Ad*</label>
+                                <input type="text" required="required" name="fullname" parsley-trigger="change" placeholder="Ad girin" class="form-control" id="fullname">
                             </div>
                             <div class="form-group">
-                                <label for="userName">Username*</label>
-                                <input type="text" name="username" parsley-trigger="change" placeholder="Login Username" class="form-control" id="username">
+                                <label for="userName">Kullanıcı Adı*</label>
+                                <input type="text" name="username" parsley-trigger="change" placeholder="Giriş Kullanıcı Adı" class="form-control" id="username">
                             </div>
                             <div class="form-group">
-                                <label for="userName">Password</label>
-                                <input type="password" name="password" parsley-trigger="change" placeholder="Password" class="form-control" id="password">
+                                <label for="userName">Şifre</label>
+                                <input type="password" name="password" parsley-trigger="change" placeholder="Şifre" class="form-control" id="password">
                             </div>
                             <div class="form-group">
-                                <label for="userName">Repeat Password</label>
-                                <input type="password" name="pass" parsley-trigger="change" placeholder="Repeat" class="form-control" id="pass">
+                                <label for="userName">Şifre Tekrar</label>
+                                <input type="password" name="pass" parsley-trigger="change" placeholder="Tekrar" class="form-control" id="pass">
                             </div>
                             <div class="perms">
-                                <h3 class="m-t-20">Permissions</h3>
+                                <h3 class="m-t-20">İzinler</h3>
                                 <hr>
                                 <div class="form-group">
-                                    <span><input type="checkbox" name="perm_products" id="perm_products"> Manage
-                                    Products and Stock </span>
+                                    <span><input type="checkbox" name="perm_products" id="perm_products"> Ürün ve
+                                    Stok Yönetimi </span>
                                 </div>
                                 <div class="form-group">
-                                    <span><input type="checkbox" name="perm_categories" id="perm_categories"> Manage
-                                    Product Categories </span>
+                                    <span><input type="checkbox" name="perm_categories" id="perm_categories"> Ürün
+                                    Kategorileri Yönetimi </span>
                                 </div>
                                 <div class="form-group">
-                                    <span><input type="checkbox" name="perm_transactions" id="perm_transactions"> View
-                                    Transactions </span>
+                                    <span><input type="checkbox" name="perm_transactions" id="perm_transactions"> İşlemleri
+                                    Görüntüle </span>
                                 </div>
                                 <div class="form-group">
-                                    <span><input type="checkbox" name="perm_users" id="perm_users"> Manage Users and
-                                    Permissions </span>
+                                    <span><input type="checkbox" name="perm_users" id="perm_users"> Kullanıcı ve
+                                    İzin Yönetimi </span>
                                 </div>
                                 <div class="form-group">
-                                    <span><input type="checkbox" name="perm_settings" id="perm_settings"> Manage
-                                    Settings </span>
+                                    <span><input type="checkbox" name="perm_settings" id="perm_settings"> Ayarları
+                                    Yönet </span>
                                 </div>
                             </div>
                             <input type="submit" class="btn btn-primary btn-block waves-effect waves-light">
@@ -709,14 +880,14 @@
                 <div class="modal-content">
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                        <h4 class="modal-title" id="myLargeModalLabel">Open Orders</h4>
+                        <h4 class="modal-title" id="myLargeModalLabel">Açık Siparişler</h4>
                     </div>
                     <div class="modal-body">
-                        <input type="text" id="holdOrderInput" placeholder="Search order by reference" class="holdOrderInput form-control">
+                        <input type="text" id="holdOrderInput" placeholder="Referansa göre sipariş ara" class="holdOrderInput form-control">
                         <div class="holdOrderKeyboard"></div>
                         <br>
                         <div class="row" id="renderHoldOrders">
-                            <p>Please wait <span class="dot"></span> </p>
+                            <p>Lütfen bekleyin <span class="dot"></span> </p>
                         </div>
                     </div>
                 </div>
@@ -727,14 +898,14 @@
                 <div class="modal-content">
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                        <h4 class="modal-title" id="myLargeModalLabel">Customer Orders</h4>
+                        <h4 class="modal-title" id="myLargeModalLabel">Müşteri Siparişleri</h4>
                     </div>
                     <div class="modal-body">
-                        <input type="text" id="holdCustomerOrderInput" placeholder="Search order by customer name" class="holdCustomerOrderInput form-control">
+                        <input type="text" id="holdCustomerOrderInput" placeholder="Müşteri adına göre sipariş ara" class="holdCustomerOrderInput form-control">
                         <div class="customerOrderKeyboard"></div>
                         <br>
                         <div class="row" id="renderCustomerOrders">
-                            <p>please wait <span class="dot"></span> </p>
+                            <p>Lütfen bekleyin <span class="dot"></span> </p>
                         </div>
                     </div>
                 </div>
@@ -744,11 +915,11 @@
             <div class="modal-dialog modal-sm">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <button class="btn btn-sm btn-success" onclick="$(this).print()">Print</button> <br> <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                        <button class="btn btn-sm btn-success" onclick="$(this).print()">Yazdır</button> <br> <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
                     </div>
                     <div class="modal-body" id="viewTransaction">
                     </div>
-                    <div class="alert alert-danger">Right-Click and Reload if you get stuck after cancelling a print.
+                    <div class="alert alert-danger">Yazdırma iptalinden sonra takılırsanız sağ tıklayıp yenileyin.
                     </div>
                 </div>
             </div>
@@ -758,39 +929,39 @@
                 <div class="modal-content">
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                        <h4 class="modal-title" id="mySmallModalLabel">Settings
+                        <h4 class="modal-title" id="mySmallModalLabel">Ayarlar
                         </h4>
                     </div>
                     <div class="modal-body">
                         <div class="container">
                             <div class="row">
                                 <div class="form-group">
-                                    <label for="app">Application</label>
+                                    <label for="app">Uygulama</label>
                                     <select name="app" id="app" class="form-control">
-                                        <option value="Standalone Point of Sale">Standalone Point of Sale</option>
-                                        <option value="Network Point of Sale Terminal">Network Point of Sale Terminal</option>
-                                        <option value="Network Point of Sale Server">Network Point of Sale Server</option>
+                                        <option value="Standalone Point of Sale">Bağımsız Satış Noktası</option>
+                                        <option value="Network Point of Sale Terminal">Ağ Satış Noktası Terminali</option>
+                                        <option value="Network Point of Sale Server">Ağ Satış Noktası Sunucusu</option>
                                     </select>
                                 </div>
                                 <form id="net_settings_form">
                                     <div class="form-group">
-                                        <label for="ip">Server IP Address*</label>
-                                        <input type="text" required="required" placeholder="Enter the IP address of the admin computer." name="ip" class="form-control" id="ip">
+                                        <label for="ip">Sunucu IP Adresi*</label>
+                                        <input type="text" required="required" placeholder="Yönetici bilgisayarının IP adresini girin." name="ip" class="form-control" id="ip">
                                     </div>
                                     <div class="col-md-5">
                                         <div class="form-group">
-                                            <label for="till">Till Number*</label>
-                                            <input type="text" required="required" placeholder="Enter a number" name="till" class="form-control" id="till">
+                                            <label for="till">Kasa Numarası*</label>
+                                            <input type="text" required="required" placeholder="Numara girin" name="till" class="form-control" id="till">
                                         </div>
                                     </div>
                                     <div class="col-md-7">
                                         <div class="form-group">
-                                            <label for="mac">Hardware Identification Number </label>
+                                            <label for="mac">Donanım Kimlik Numarası </label>
                                             <input type="text" required="required" name="mac" class="form-control" id="mac" readonly="readonly">
                                         </div>
                                     </div>
                                     <div class="form-group">
-                                        <input id="save_settings" type="submit" class="btn btn-success btn-block waves-effect waves-light" value="Save Settings">
+                                        <input id="save_settings" type="submit" class="btn btn-success btn-block waves-effect waves-light" value="Ayarları Kaydet">
                                     </div>
                                 </form>
                             </div>
@@ -802,33 +973,33 @@
                                 <div class="row">
                                     <div class="col-md-6">
                                         <div class="form-group">
-                                            <label for="userName">Store Name</label>
-                                            <input type="text" required="required" name="store" class="form-control" id="store" placeholder="Cool Pharmacy">
+                                            <label for="userName">Mağaza Adı</label>
+                                            <input type="text" required="required" name="store" class="form-control" id="store" placeholder="Eczane Adı">
                                         </div>
                                         <div class="form-group">
-                                            <label for="userName">Address Line 1</label>
-                                            <input type="text" required="required" name="address_one" class="form-control" id="address_one" placeholder="123 Main Street, Building#">
+                                            <label for="userName">Adres Satırı 1</label>
+                                            <input type="text" required="required" name="address_one" class="form-control" id="address_one" placeholder="Ana Cadde 123, Bina No">
                                         </div>
                                         <div class="form-group">
-                                            <label for="userName">Address Line 2</label>
-                                            <input type="text" required="required" name="address_two" class="form-control" id="address_two" placeholder="City, Country">
+                                            <label for="userName">Adres Satırı 2</label>
+                                            <input type="text" required="required" name="address_two" class="form-control" id="address_two" placeholder="Şehir, Ülke">
                                         </div>
                                         <div class="form-group">
-                                            <label for="userName">Contact Number</label>
-                                            <input type="tel" name="contact" class="form-control" id="contact" placeholder="0800 111 000">
+                                            <label for="userName">İletişim Numarası</label>
+                                            <input type="tel" name="contact" class="form-control" id="contact" placeholder="0312 123 4567">
                                         </div>
                                         <div class="form-group">
-                                            <label for="userName">Vat Number</label>
+                                            <label for="userName">KDV Numarası</label>
                                             <input type="text" name="tax" parsley-trigger="change" class="form-control number-input" id="tax">
                                         </div>
                                     </div>
                                     <div class="col-md-6">
                                         <div class="form-group">
-                                            <label for="userName">Currency Symbol</label>
-                                            <input type="text" required="required" name="symbol" class="form-control" id="symbol" minlength="1" maxlength="3" placeholder="USD">
+                                            <label for="userName">Para Birimi Simgesi</label>
+                                            <input type="text" required="required" name="symbol" class="form-control" id="symbol" minlength="1" maxlength="3" placeholder="TL">
                                         </div>
                                         <div class="form-group">
-                                            <label for="userName">Vat Percentage</label>
+                                            <label for="userName">KDV Yüzdesi</label>
                                             <div class="pull-left">
                                                 <div class="col-md-6">
                                                     <div class="input-group" style="width:130%">
@@ -840,25 +1011,25 @@
                                         </div>
                                         <br><br>
                                         <div class="form-group">
-                                            <label><input type="checkbox" name="charge_tax" id="charge_tax"> Charge
-                                            Vat</label>
+                                            <label><input type="checkbox" name="charge_tax" id="charge_tax"> KDV
+                                            Uygula</label>
                                         </div>
                                         <div class="form-group">
-                                            <label for="userName"><span id="rmv_logo" class="btn btn-xs btn-warning">Remove</span> Logo </label>
+                                            <label for="userName"><span id="rmv_logo" class="btn btn-xs btn-warning">Kaldır</span> Logo </label>
                                             <div id="current_logo"></div>
                                             <input type="file" name="imagename" id="logoname" accept=".jpg,.jpeg,.png,.webp">
                                             <small class="text-gray">
-                                            Max filesize: <strong>2MB</strong>; Allowed image types:<strong> jpeg, jpg, png or webp</strong></small>
+                                            Maks dosya boyutu: <strong>2MB</strong>; İzin verilen resim türleri:<strong> jpeg, jpg, png veya webp</strong></small>
 
                                         </div>
                                         <div class="form-group">
-                                            <label for="userName">Receipt Footer</label>
+                                            <label for="userName">Fiş Alt Bilgisi</label>
                                             <textarea name="footer" class="form-control" id="footer"></textarea>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <input id="save_settings" type="submit" class="btn btn-success btn-block waves-effect waves-light" value="Save Settings">
+                                    <input id="save_settings" type="submit" class="btn btn-success btn-block waves-effect waves-light" value="Ayarları Kaydet">
                                 </div>
                             </div>
                             </form>
@@ -869,6 +1040,313 @@
         </div>
     </div>
     <script src="assets/dist/js/bundle.min.js"></script>
+    <script>
+        // =============================================
+        // MDI WINDOW MANAGER - Coklu Pencere Sistemi
+        // =============================================
+        const MDI = {
+            windows: new Map(),
+            windowCounter: 0,
+            zIndexCounter: 100,
+            cascadeOffset: 0,
+            activeWindow: null,
+
+            // Pencere konfigurasyonlari
+            configs: {
+                'pos': { title: 'Nakit Satis', icon: 'fa-money', width: 900, height: 600, url: 'windows/pos-window.html' },
+                'products': { title: 'Urun Listesi', icon: 'fa-database', width: 850, height: 550, url: 'windows/products-window.html' },
+                'transactions': { title: 'Islem Listesi', icon: 'fa-list-alt', width: 900, height: 550, url: 'windows/transactions-window.html' },
+                'customers': { title: 'Musteri Listesi', icon: 'fa-users', width: 750, height: 500, url: 'windows/customers-window.html' },
+                'categories': { title: 'Kategoriler', icon: 'fa-th-large', width: 600, height: 450, url: 'windows/categories-window.html' },
+                'new-product': { title: 'Yeni Urun', icon: 'fa-plus-circle', width: 550, height: 600, url: 'windows/new-product-window.html' },
+                'new-customer': { title: 'Yeni Musteri', icon: 'fa-user-plus', width: 480, height: 450, url: 'windows/new-customer-window.html' },
+                'settings': { title: 'Ayarlar', icon: 'fa-cog', width: 700, height: 550, url: 'windows/settings-window.html' }
+            },
+
+            // Yeni pencere olustur
+            createWindow: function(type) {
+                const config = this.configs[type];
+                if (!config) return null;
+
+                this.windowCounter++;
+                const windowId = type + '-' + this.windowCounter;
+
+                // Cascade pozisyonu hesapla
+                this.cascadeOffset = (this.cascadeOffset + 1) % 10;
+                const offsetX = 30 + (this.cascadeOffset * 25);
+                const offsetY = 30 + (this.cascadeOffset * 25);
+
+                // Pencere HTML olustur
+                const windowEl = document.createElement('div');
+                windowEl.className = 'mdi-window';
+                windowEl.id = windowId;
+                windowEl.style.cssText = `left: ${offsetX}px; top: ${offsetY}px; width: ${config.width}px; height: ${config.height}px; z-index: ${++this.zIndexCounter};`;
+
+                windowEl.innerHTML = `
+                    <div class="mdi-window-titlebar" onmousedown="MDI.startDrag(event, '${windowId}')">
+                        <i class="fa ${config.icon} window-icon"></i>
+                        <span class="window-title">${config.title} #${this.windowCounter}</span>
+                        <div class="window-controls">
+                            <button class="btn-minimize" onclick="MDI.minimizeWindow('${windowId}')" title="Simge Durumuna Kucult"><i class="fa fa-minus"></i></button>
+                            <button class="btn-maximize" onclick="MDI.maximizeWindow('${windowId}')" title="Ekrani Kapla"><i class="fa fa-square-o"></i></button>
+                            <button class="btn-close" onclick="MDI.closeWindow('${windowId}')" title="Kapat"><i class="fa fa-times"></i></button>
+                        </div>
+                    </div>
+                    <div class="mdi-window-content">
+                        <iframe src="${config.url}" frameborder="0"></iframe>
+                    </div>
+                    <div class="mdi-window-resize" onmousedown="MDI.startResize(event, '${windowId}')"></div>
+                `;
+
+                document.getElementById('mdi-container').appendChild(windowEl);
+                this.windows.set(windowId, { el: windowEl, config: config, minimized: false, maximized: false });
+                this.activateWindow(windowId);
+                this.updateTaskbar();
+
+                return windowId;
+            },
+
+            // Pencereyi aktif yap
+            activateWindow: function(windowId) {
+                // Onceki aktif pencereyi pasif yap
+                this.windows.forEach((win, id) => {
+                    win.el.classList.remove('active');
+                    win.el.classList.add('inactive');
+                });
+
+                const win = this.windows.get(windowId);
+                if (win && !win.minimized) {
+                    win.el.classList.add('active');
+                    win.el.classList.remove('inactive');
+                    win.el.style.zIndex = ++this.zIndexCounter;
+                    this.activeWindow = windowId;
+                }
+                this.updateTaskbar();
+            },
+
+            // Pencereyi kapat
+            closeWindow: function(windowId) {
+                const win = this.windows.get(windowId);
+                if (win) {
+                    win.el.remove();
+                    this.windows.delete(windowId);
+                    this.updateTaskbar();
+                }
+            },
+
+            // Pencereyi simge durumuna kucult
+            minimizeWindow: function(windowId) {
+                const win = this.windows.get(windowId);
+                if (win) {
+                    win.minimized = true;
+                    win.el.classList.add('minimized');
+                    this.updateTaskbar();
+                }
+            },
+
+            // Pencereyi geri yukle
+            restoreWindow: function(windowId) {
+                const win = this.windows.get(windowId);
+                if (win) {
+                    win.minimized = false;
+                    win.el.classList.remove('minimized');
+                    this.activateWindow(windowId);
+                }
+            },
+
+            // Pencereyi tam ekran yap/geri al
+            maximizeWindow: function(windowId) {
+                const win = this.windows.get(windowId);
+                if (win) {
+                    if (win.maximized) {
+                        win.el.classList.remove('maximized');
+                        win.el.style.cssText = win.prevStyle;
+                        win.maximized = false;
+                    } else {
+                        win.prevStyle = win.el.style.cssText;
+                        win.el.classList.add('maximized');
+                        win.maximized = true;
+                    }
+                }
+            },
+
+            // Surukleme baslat
+            startDrag: function(e, windowId) {
+                if (e.target.tagName === 'BUTTON' || e.target.tagName === 'I') return;
+
+                const win = this.windows.get(windowId);
+                if (!win || win.maximized) return;
+
+                this.activateWindow(windowId);
+
+                const rect = win.el.getBoundingClientRect();
+                const offsetX = e.clientX - rect.left;
+                const offsetY = e.clientY - rect.top;
+
+                const onMouseMove = (e) => {
+                    const container = document.getElementById('mdi-container').getBoundingClientRect();
+                    let newX = e.clientX - offsetX - container.left;
+                    let newY = e.clientY - offsetY - container.top;
+
+                    // Sinirlar icinde tut
+                    newX = Math.max(0, Math.min(newX, container.width - 100));
+                    newY = Math.max(0, Math.min(newY, container.height - 30));
+
+                    win.el.style.left = newX + 'px';
+                    win.el.style.top = newY + 'px';
+                };
+
+                const onMouseUp = () => {
+                    document.removeEventListener('mousemove', onMouseMove);
+                    document.removeEventListener('mouseup', onMouseUp);
+                };
+
+                document.addEventListener('mousemove', onMouseMove);
+                document.addEventListener('mouseup', onMouseUp);
+            },
+
+            // Boyutlandirma baslat
+            startResize: function(e, windowId) {
+                e.preventDefault();
+                e.stopPropagation();
+
+                const win = this.windows.get(windowId);
+                if (!win || win.maximized) return;
+
+                this.activateWindow(windowId);
+
+                const startX = e.clientX;
+                const startY = e.clientY;
+                const startWidth = win.el.offsetWidth;
+                const startHeight = win.el.offsetHeight;
+
+                const onMouseMove = (e) => {
+                    const newWidth = Math.max(300, startWidth + (e.clientX - startX));
+                    const newHeight = Math.max(200, startHeight + (e.clientY - startY));
+                    win.el.style.width = newWidth + 'px';
+                    win.el.style.height = newHeight + 'px';
+                };
+
+                const onMouseUp = () => {
+                    document.removeEventListener('mousemove', onMouseMove);
+                    document.removeEventListener('mouseup', onMouseUp);
+                };
+
+                document.addEventListener('mousemove', onMouseMove);
+                document.addEventListener('mouseup', onMouseUp);
+            },
+
+            // Taskbar guncelle
+            updateTaskbar: function() {
+                let taskbar = document.getElementById('mdi-taskbar');
+                if (!taskbar) {
+                    taskbar = document.createElement('div');
+                    taskbar.className = 'mdi-taskbar';
+                    taskbar.id = 'mdi-taskbar';
+                    document.getElementById('mdi-container').appendChild(taskbar);
+                }
+
+                taskbar.innerHTML = '';
+                this.windows.forEach((win, id) => {
+                    const btn = document.createElement('button');
+                    btn.className = 'mdi-taskbar-btn' + (id === this.activeWindow && !win.minimized ? ' active' : '');
+                    btn.innerHTML = `<i class="fa ${win.config.icon}"></i><span>${win.config.title}</span>`;
+                    btn.onclick = () => {
+                        if (win.minimized) {
+                            this.restoreWindow(id);
+                        } else if (id === this.activeWindow) {
+                            this.minimizeWindow(id);
+                        } else {
+                            this.activateWindow(id);
+                        }
+                    };
+                    taskbar.appendChild(btn);
+                });
+
+                // Taskbar'i gizle/goster
+                taskbar.style.display = this.windows.size > 0 ? 'flex' : 'none';
+            }
+        };
+
+        // Pencere acma kisayolu
+        function openMDIWindow(type) {
+            MDI.createWindow(type);
+        }
+
+        // TEBEOS Style - Update footer time
+        function updateTime() {
+            const now = new Date();
+            const timeStr = now.toLocaleTimeString('tr-TR', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+            const dateStr = now.toLocaleDateString('tr-TR');
+            const el = document.getElementById('current-time');
+            if (el) el.textContent = dateStr + ' ' + timeStr;
+        }
+        setInterval(updateTime, 1000);
+        updateTime();
+
+        // Menu click handlers
+        $(document).ready(function() {
+            // =============================================
+            // MDI PENCERE ACMA
+            // =============================================
+
+            // Nakit Satis
+            $('#pointofsale-widget, #pointofsale-menu, #pos-menu-nakit, #pointofsale').click(function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                openMDIWindow('pos');
+            });
+
+            // Urun Listesi
+            $('[data-target="#Products"]').click(function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                openMDIWindow('products');
+            });
+
+            // Yeni Urun
+            $('[data-target="#newProduct"]').click(function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                openMDIWindow('new-product');
+            });
+
+            // Kategoriler
+            $('[data-target="#Categories"]').click(function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                openMDIWindow('categories');
+            });
+
+            // Musteriler
+            $('[data-target="#customerModal"]').click(function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                openMDIWindow('customers');
+            });
+
+            // Yeni Musteri
+            $('[data-target="#newCustomer"]').click(function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                openMDIWindow('new-customer');
+            });
+
+            // Islemler/Raporlar
+            $('#transactions-menu, #pos-menu-all, #reports-daily, #reports-transactions, #reports-products, #transactions').click(function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                openMDIWindow('transactions');
+            });
+
+            // Ayarlar
+            $('[data-target="#settingsModal"]').click(function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                openMDIWindow('settings');
+            });
+        });
+    </script>
 </body>
 
 </html>
