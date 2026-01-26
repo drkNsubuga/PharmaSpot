@@ -43,6 +43,7 @@ express.use("/api/categories", require("./api/categories"));
 express.use("/api/settings", require("./api/settings"));
 express.use("/api/users", require("./api/users"));
 express.use("/api/drugs", require("./api/drugs")); // Ilac referans veritabani
+express.use("/api/agents", require("./api/agents")); // Agent sistemi
 express.use("/api", require("./api/transactions"));
 
 server.listen(PORT, () => {

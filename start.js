@@ -108,6 +108,12 @@ function createChildWindow(windowType, options = {}) {
             width: 500,
             height: 500,
             page: 'new-customer-window.html'
+        },
+        'agent-panel': {
+            title: 'Agent Yönetim Paneli',
+            width: Math.floor(width * 0.85),
+            height: Math.floor(height * 0.9),
+            page: 'agent-panel-window.html'
         }
     };
 
@@ -231,6 +237,223 @@ ipcMain.on("close-window", (event, windowId) => {
 // API portunu al
 ipcMain.handle("get-api-port", async () => {
     return process.env.PORT || '3000';
+});
+
+// ============================================
+// Agent Sistemi IPC Handler'ları
+// ============================================
+
+// Agent modülü lazy loading
+let agentSystem = null;
+
+function getAgentSystem() {
+    if (!agentSystem) {
+        agentSystem = require('./agents');
+    }
+    return agentSystem;
+}
+
+// Agent sistemini başlat
+ipcMain.handle("agent:initialize", async () => {
+    try {
+        const agents = getAgentSystem();
+        return await agents.initialize();
+    } catch (err) {
+        console.error('[IPC] Agent initialize hatası:', err);
+        return { success: false, error: err.message };
+    }
+});
+
+// Agent durumunu getir
+ipcMain.handle("agent:getStatus", async () => {
+    try {
+        const agents = getAgentSystem();
+        return await agents.getStatus();
+    } catch (err) {
+        console.error('[IPC] Agent status hatası:', err);
+        return { error: err.message };
+    }
+});
+
+// Zamanlanmış görevleri getir
+ipcMain.handle("agent:scheduler:getTasks", async () => {
+    try {
+        const agents = getAgentSystem();
+        return await agents.getScheduledTasks();
+    } catch (err) {
+        console.error('[IPC] Scheduler tasks hatası:', err);
+        return [];
+    }
+});
+
+// Görevi manuel tetikle
+ipcMain.handle("agent:scheduler:trigger", async (event, taskName, userId) => {
+    try {
+        const agents = getAgentSystem();
+        return await agents.triggerTask(taskName, userId);
+    } catch (err) {
+        console.error('[IPC] Scheduler trigger hatası:', err);
+        return { success: false, error: err.message };
+    }
+});
+
+// Görevi etkinleştir/devre dışı bırak
+ipcMain.handle("agent:scheduler:setEnabled", async (event, taskName, enabled) => {
+    try {
+        const agents = getAgentSystem();
+        await agents.setTaskEnabled(taskName, enabled);
+        return { success: true };
+    } catch (err) {
+        console.error('[IPC] Scheduler setEnabled hatası:', err);
+        return { success: false, error: err.message };
+    }
+});
+
+// Görev zamanlamasını güncelle
+ipcMain.handle("agent:scheduler:updateSchedule", async (event, taskName, cronExpression) => {
+    try {
+        const agents = getAgentSystem();
+        await agents.updateTaskSchedule(taskName, cronExpression);
+        return { success: true };
+    } catch (err) {
+        console.error('[IPC] Scheduler updateSchedule hatası:', err);
+        return { success: false, error: err.message };
+    }
+});
+
+// AI sorgusu gönder
+ipcMain.handle("agent:ai:query", async (event, query, options) => {
+    try {
+        const agents = getAgentSystem();
+        return await agents.aiQuery(query, options || {});
+    } catch (err) {
+        console.error('[IPC] AI query hatası:', err);
+        return { success: false, error: err.message };
+    }
+});
+
+// AI API anahtarını ayarla
+ipcMain.handle("agent:ai:setApiKey", async (event, apiKey) => {
+    try {
+        const agents = getAgentSystem();
+        return await agents.setAiApiKey(apiKey);
+    } catch (err) {
+        console.error('[IPC] AI setApiKey hatası:', err);
+        return { success: false, error: err.message };
+    }
+});
+
+// AI durumunu getir
+ipcMain.handle("agent:ai:getStatus", async () => {
+    try {
+        const agents = getAgentSystem();
+        return await agents.ai.getStatus();
+    } catch (err) {
+        console.error('[IPC] AI status hatası:', err);
+        return { error: err.message };
+    }
+});
+
+// AI konuşmasını temizle
+ipcMain.handle("agent:ai:clearConversation", async (event, conversationId) => {
+    try {
+        const agents = getAgentSystem();
+        agents.clearAiConversation(conversationId || 'default');
+        return { success: true };
+    } catch (err) {
+        console.error('[IPC] AI clearConversation hatası:', err);
+        return { success: false, error: err.message };
+    }
+});
+
+// Önerilen sorguları getir
+ipcMain.handle("agent:ai:getSuggestions", async () => {
+    try {
+        const agents = getAgentSystem();
+        return agents.getSuggestedQueries();
+    } catch (err) {
+        console.error('[IPC] AI suggestions hatası:', err);
+        return [];
+    }
+});
+
+// Log geçmişini getir
+ipcMain.handle("agent:getLogs", async (event, filter, limit) => {
+    try {
+        const agents = getAgentSystem();
+        return await agents.getLogs(filter || {}, limit || 100);
+    } catch (err) {
+        console.error('[IPC] Logs hatası:', err);
+        return [];
+    }
+});
+
+// Son logları getir
+ipcMain.handle("agent:getRecentLogs", async (event, days) => {
+    try {
+        const agents = getAgentSystem();
+        return await agents.getRecentLogs(days || 7);
+    } catch (err) {
+        console.error('[IPC] Recent logs hatası:', err);
+        return [];
+    }
+});
+
+// Bildirimleri getir
+ipcMain.handle("agent:getNotifications", async (event, limit) => {
+    try {
+        const agents = getAgentSystem();
+        return agents.getNotifications(limit || 50);
+    } catch (err) {
+        console.error('[IPC] Notifications hatası:', err);
+        return [];
+    }
+});
+
+// Okunmamış bildirimleri getir
+ipcMain.handle("agent:getUnreadNotifications", async () => {
+    try {
+        const agents = getAgentSystem();
+        return agents.getUnreadNotifications();
+    } catch (err) {
+        console.error('[IPC] Unread notifications hatası:', err);
+        return [];
+    }
+});
+
+// Bildirimi okundu işaretle
+ipcMain.handle("agent:markNotificationAsRead", async (event, notificationId) => {
+    try {
+        const agents = getAgentSystem();
+        agents.markNotificationAsRead(notificationId);
+        return { success: true };
+    } catch (err) {
+        console.error('[IPC] Mark notification hatası:', err);
+        return { success: false, error: err.message };
+    }
+});
+
+// Tüm bildirimleri okundu işaretle
+ipcMain.handle("agent:markAllNotificationsAsRead", async () => {
+    try {
+        const agents = getAgentSystem();
+        agents.markAllNotificationsAsRead();
+        return { success: true };
+    } catch (err) {
+        console.error('[IPC] Mark all notifications hatası:', err);
+        return { success: false, error: err.message };
+    }
+});
+
+// Agent bildirim dinleyicisi (renderer'a bildirim gönderme)
+ipcMain.on("agent:notify", (event, notification) => {
+    // Tüm pencerelere bildirim gönder
+    const windows = BrowserWindow.getAllWindows();
+    windows.forEach(win => {
+        if (win && !win.isDestroyed()) {
+            win.webContents.send('agent:notification', notification);
+        }
+    });
 });
 
 //Context menu

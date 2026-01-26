@@ -32,35 +32,35 @@ const template = [
     : []),
 
   {
-    label: "File",
+    label: "Dosya",
     submenu: [
       {
-        label: "New",
+        label: "Yeni",
         submenu: [
           {
-            label: "Product",
+            label: "Ürün",
             click: () => handleClick("newProductModal"),
           },
           {
-            label: "Category",
+            label: "Kategori",
             click: () => handleClick("newCategoryModal"),
           },
           {
-            label: "Customer",
+            label: "Müşteri",
             click: () => handleClick("newCustomerModal"),
           },
         ],
       },
-      { 
-        label: "Backup",
+      {
+        label: "Yedekle",
         click: ()=>saveBackupDialog(dbFolderPath,uploadsFolderPath)
 
       },
-      { label: "Restore",
+      { label: "Geri Yükle",
       click: ()=>restoreBackupDialog(dbFolderPath,uploadsFolderPath)
        },
       {
-        label: "Logout",
+        label: "Çıkış",
         click: () => handleClick("log-out"),
       },
       isMac ? { role: "close" } : { role: "quit" },
@@ -68,7 +68,7 @@ const template = [
   },
   // { role: 'editMenu' }
   {
-    label: "Edit",
+    label: "Düzenle",
     submenu: [
       { role: "undo" },
       { role: "redo" },
@@ -83,7 +83,7 @@ const template = [
             { role: "selectAll" },
             { type: "separator" },
             {
-              label: "Speech",
+              label: "Konuşma",
               submenu: [{ role: "startSpeaking" }, { role: "stopSpeaking" }],
             },
           ]
@@ -92,28 +92,33 @@ const template = [
   },
   // { role: 'viewMenu' }
   {
-    label: "View",
+    label: "Görünüm",
     submenu: [
-      { 
-        label: "Point of Sale",
+      {
+        label: "Satış Noktası",
         click: ()=>handleClick('pointofsale')
       },
-      { 
-        label: "Transactions",
+      {
+        label: "İşlemler",
         click: ()=>handleClick('transactions')
       },
-      { 
-        label: "Products",
+      {
+        label: "Ürünler",
         click: ()=>handleClick('productModal')
       },
-      { 
-        label: "Settings",
+      {
+        label: "Ayarlar",
         click: ()=>handleClick('settings')
       },
       { type: "separator" },
-      { label: "Refresh", role: "reload" },
+      {
+        label: "🤖 Agent Paneli",
+        click: ()=>handleClick('agent-panel')
+      },
+      { type: "separator" },
+      { label: "Yenile", role: "reload" },
       ...(!app.isPackaged
-        ? [{ role: "toggleDevTools", after: ["Refresh"] }]
+        ? [{ role: "toggleDevTools", after: ["Yenile"] }]
         : []),
       { type: "separator" },
       { role: "resetZoom" },
@@ -129,21 +134,21 @@ const template = [
     role: "Help",
     submenu: [
       {
-        label: "Documentation",
+        label: "Dokümantasyon",
         click: () => getDocs(),
       },
       {
-        label: "Send feedback",
+        label: "Geri bildirim gönder",
         // click: () => sendFeedBack(),
       },
       { type: "separator" },
       {
-        label: "Check for updates...",
+        label: "Güncellemeleri kontrol et...",
         click: () => checkForUpdates(),
       },
       { type: "separator" },
       {
-        label: `About ${app.getName()}`,
+        label: `${app.getName()} Hakkında`,
         click: () => showAbout(),
       },
     ],

@@ -1065,7 +1065,8 @@
                 'categories': { title: 'Kategoriler', icon: 'fa-th-large', width: 600, height: 450, url: 'windows/categories-window.html' },
                 'new-product': { title: 'Yeni Urun', icon: 'fa-plus-circle', width: 550, height: 600, url: 'windows/new-product-window.html' },
                 'new-customer': { title: 'Yeni Musteri', icon: 'fa-user-plus', width: 480, height: 450, url: 'windows/new-customer-window.html' },
-                'settings': { title: 'Ayarlar', icon: 'fa-cog', width: 700, height: 550, url: 'windows/settings-window.html' }
+                'settings': { title: 'Ayarlar', icon: 'fa-cog', width: 700, height: 550, url: 'windows/settings-window.html' },
+                'agent-panel': { title: 'Agent Yönetim Paneli', icon: 'fa-robot', width: 1100, height: 700, url: 'windows/agent-panel-window.html' }
             },
 
             // Yeni pencere olustur
@@ -1282,6 +1283,9 @@
             MDI.createWindow(type);
         }
 
+        // API Port - global erişim için
+        window.API_PORT = process.env.PORT || '3000';
+
         // TEBEOS Style - Update footer time
         function updateTime() {
             const now = new Date();
@@ -1353,6 +1357,20 @@
                 e.preventDefault();
                 e.stopPropagation();
                 openMDIWindow('settings');
+            });
+
+            // Agent Panel (menu ile acilir)
+            // Gizli buton olustur
+            if (!document.getElementById('agent-panel')) {
+                const agentBtn = document.createElement('button');
+                agentBtn.id = 'agent-panel';
+                agentBtn.style.display = 'none';
+                document.body.appendChild(agentBtn);
+            }
+            $('#agent-panel').click(function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                openMDIWindow('agent-panel');
             });
         });
     </script>
