@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Ayarlar</title>
+    <link href="../assets/dist/css/bundle.min.css" rel="stylesheet" type="text/css" />
+    <link href="../assets/css/tebeos-theme.css" rel="stylesheet" type="text/css" />
+    <style>
+        html, body { height: 100%; margin: 0; padding: 0; overflow: hidden; }
+        .window-container { display: flex; flex-direction: column; height: 100vh; overflow: hidden; }
+        .window-header { background: linear-gradient(180deg, #1976d2 0%, #1565c0 100%); color: white; padding: 15px 20px; font-weight: 600; flex-shrink: 0; }
+        .window-body { display: flex; flex: 1; overflow: hidden; }
+        .settings-nav { width: 200px; background: #f5f5f5; border-right: 1px solid #e0e0e0; padding: 10px 0; flex-shrink: 0; }
+        .nav-item { padding: 12px 20px; cursor: pointer; font-size: 13px; border-left: 3px solid transparent; }
+        .nav-item:hover { background: #e3f2fd; }
+        .nav-item.active { background: #e3f2fd; border-left-color: #1976d2; font-weight: 600; }
+        .nav-item i { width: 20px; margin-right: 8px; }
+        .settings-content { flex: 1; overflow-y: auto; padding: 20px; background: white; }
+        .settings-section { display: none; }
+        .settings-section.active { display: block; }
+        .settings-section h3 { margin: 0 0 20px 0; color: #1976d2; font-size: 16px; padding-bottom: 10px; border-bottom: 1px solid #e0e0e0; }
+        .form-group { margin-bottom: 20px; }
+        .form-group label { display: block; font-size: 12px; font-weight: 600; margin-bottom: 5px; color: #666; }
+        .form-group input, .form-group select, .form-group textarea { width: 100%; max-width: 400px; padding: 10px; border: 1px solid #bdbdbd; border-radius: 4px; font-size: 14px; box-sizing: border-box; }
+        .form-group input:focus, .form-group select:focus { border-color: #1976d2; outline: none; }
+        .form-group small { display: block; color: #999; font-size: 11px; margin-top: 5px; }
+        .window-footer { background: #f5f5f5; border-top: 1px solid #e0e0e0; padding: 15px 20px; display: flex; justify-content: flex-end; gap: 10px; flex-shrink: 0; }
+        .logo-preview { width: 100px; height: 100px; border: 1px solid #e0e0e0; border-radius: 8px; display: flex; align-items: center; justify-content: center; background: #fafafa; margin-bottom: 10px; }
+        .logo-preview img { max-width: 90%; max-height: 90%; }
+    </style>
+</head>
+<body>
+    <div class="window-container">
+        <div class="window-header">
+            <i class="fa fa-cog"></i> Ayarlar
+        </div>
+
+        <div class="window-body">
+            <div class="settings-nav">
+                <div class="nav-item active" onclick="showSection('general')"><i class="fa fa-building"></i> Isletme</div>
+                <div class="nav-item" onclick="showSection('receipt')"><i class="fa fa-file-text"></i> Fis Ayarlari</div>
+                <div class="nav-item" onclick="showSection('tax')"><i class="fa fa-percent"></i> Vergi</div>
+                <div class="nav-item" onclick="showSection('printer')"><i class="fa fa-print"></i> Yazici</div>
+                <div class="nav-item" onclick="showSection('backup')"><i class="fa fa-database"></i> Yedekleme</div>
+            </div>
+
+            <div class="settings-content">
+                <div id="section-general" class="settings-section active">
+                    <h3><i class="fa fa-building"></i> Isletme Bilgileri</h3>
+                    <div class="form-group">
+                        <label>Isletme Adi</label>
+                        <input type="text" id="company_name" placeholder="Isletme adi">
+                    </div>
+                    <div class="form-group">
+                        <label>Telefon</label>
+                        <input type="text" id="company_phone" placeholder="0212 123 4567">
+                    </div>
+                    <div class="form-group">
+                        <label>Adres</label>
+                        <textarea id="company_address" rows="2" placeholder="Isletme adresi"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>Logo</label>
+                        <div class="logo-preview">
+                            <img id="logo-img" src="../assets/images/logo.svg" onerror="this.style.display='none'">
+                        </div>
+                        <input type="file" accept="image/*">
+                    </div>
+                </div>
+
+                <div id="section-receipt" class="settings-section">
+                    <h3><i class="fa fa-file-text"></i> Fis Ayarlari</h3>
+                    <div class="form-group">
+                        <label>Fis Basligi</label>
+                        <input type="text" id="receipt_header" placeholder="Fis ust bilgisi">
+                    </div>
+                    <div class="form-group">
+                        <label>Fis Alt Bilgisi</label>
+                        <textarea id="receipt_footer" rows="2" placeholder="Tesekkurler, yine bekleriz..."></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>Fis Genisligi</label>
+                        <select id="receipt_width">
+                            <option value="58">58mm</option>
+                            <option value="80">80mm</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div id="section-tax" class="settings-section">
+                    <h3><i class="fa fa-percent"></i> Vergi Ayarlari</h3>
+                    <div class="form-group">
+                        <label>Varsayilan KDV Orani (%)</label>
+                        <input type="number" id="default_tax" value="18" min="0" max="100">
+                    </div>
+                    <div class="form-group">
+                        <label>Fiyatlara KDV Dahil mi?</label>
+                        <select id="tax_inclusive">
+                            <option value="1">Evet, KDV dahil</option>
+                            <option value="0">Hayir, KDV haric</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div id="section-printer" class="settings-section">
+                    <h3><i class="fa fa-print"></i> Yazici Ayarlari</h3>
+                    <div class="form-group">
+                        <label>Fis Yazicisi</label>
+                        <select id="receipt_printer">
+                            <option value="">Yazici secin</option>
+                        </select>
+                        <small>Sistemde tanimli yazicilar listelenir</small>
+                    </div>
+                    <div class="form-group">
+                        <label>Otomatik Yazdir</label>
+                        <select id="auto_print">
+                            <option value="1">Evet</option>
+                            <option value="0">Hayir</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div id="section-backup" class="settings-section">
+                    <h3><i class="fa fa-database"></i> Yedekleme</h3>
+                    <div class="form-group">
+                        <label>Otomatik Yedekleme</label>
+                        <select id="auto_backup">
+                            <option value="daily">Gunluk</option>
+                            <option value="weekly">Haftalik</option>
+                            <option value="off">Kapali</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Yedekleme Konumu</label>
+                        <input type="text" id="backup_path" placeholder="C:\Backups\EczaPlus">
+                    </div>
+                    <button class="tebeos-btn tebeos-btn-primary" onclick="backupNow()">
+                        <i class="fa fa-download"></i> Simdi Yedekle
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="window-footer">
+            <button type="button" class="tebeos-btn" onclick="window.close()">
+                <i class="fa fa-times"></i> Iptal
+            </button>
+            <button type="button" class="tebeos-btn tebeos-btn-success" onclick="saveSettings()">
+                <i class="fa fa-check"></i> Kaydet
+            </button>
+        </div>
+    </div>
+
+    <script src="../assets/dist/js/bundle.min.js"></script>
+    <script>
+        function showSection(section) {
+            document.querySelectorAll('.settings-section').forEach(s => s.classList.remove('active'));
+            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+            document.getElementById('section-' + section).classList.add('active');
+            event.target.classList.add('active');
+        }
+
+        function loadSettings() {
+            fetch('http://localhost:52484/api/settings')
+                .then(res => res.json())
+                .then(data => {
+                    if (data.company_name) document.getElementById('company_name').value = data.company_name;
+                    if (data.company_phone) document.getElementById('company_phone').value = data.company_phone;
+                    // Diger ayarlar...
+                })
+                .catch(err => console.error('Ayarlar yuklenemedi:', err));
+        }
+
+        function saveSettings() {
+            const settings = {
+                company_name: document.getElementById('company_name').value,
+                company_phone: document.getElementById('company_phone').value,
+                company_address: document.getElementById('company_address').value,
+                default_tax: document.getElementById('default_tax').value
+            };
+
+            fetch('http://localhost:52484/api/settings', {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(settings)
+            })
+            .then(() => {
+                alert('Ayarlar kaydedildi!');
+            })
+            .catch(err => alert('Hata: ' + err));
+        }
+
+        function backupNow() {
+            alert('Yedekleme baslatiliyor...');
+        }
+
+        document.addEventListener('DOMContentLoaded', loadSettings);
+    </script>
+</body>
+</html>

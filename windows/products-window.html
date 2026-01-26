@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Urun Listesi</title>
+    <link href="../assets/dist/css/bundle.min.css" rel="stylesheet" type="text/css" />
+    <link href="../assets/css/tebeos-theme.css" rel="stylesheet" type="text/css" />
+    <style>
+        html, body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+        }
+        .window-container {
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            overflow: hidden;
+        }
+        .window-toolbar {
+            background: linear-gradient(180deg, #fafafa 0%, #e0e0e0 100%);
+            border-bottom: 1px solid #bdbdbd;
+            padding: 8px 10px;
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            flex-shrink: 0;
+        }
+        .window-content {
+            flex: 1;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            padding: 10px;
+            background: #f5f5f5;
+        }
+        .search-row {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 10px;
+            flex-shrink: 0;
+        }
+        .search-row input {
+            flex: 1;
+            padding: 8px 12px;
+            border: 1px solid #bdbdbd;
+            border-radius: 4px;
+        }
+        .table-container {
+            flex: 1;
+            overflow: auto;
+            background: white;
+            border: 1px solid #bdbdbd;
+            border-radius: 4px;
+        }
+        .window-statusbar {
+            background: linear-gradient(180deg, #e0e0e0 0%, #bdbdbd 100%);
+            padding: 4px 10px;
+            font-size: 11px;
+            color: #666;
+            display: flex;
+            justify-content: space-between;
+            border-top: 1px solid #9e9e9e;
+            flex-shrink: 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="window-container">
+        <div class="window-toolbar">
+            <button class="tebeos-btn tebeos-btn-success" onclick="openNewProduct()">
+                <i class="fa fa-plus"></i> Yeni Urun
+            </button>
+            <button class="tebeos-btn tebeos-btn-primary" onclick="refreshProducts()">
+                <i class="fa fa-refresh"></i> Yenile
+            </button>
+            <button class="tebeos-btn" onclick="exportProducts()">
+                <i class="fa fa-download"></i> Excel'e Aktar
+            </button>
+            <div style="flex:1"></div>
+            <span id="product-count">0 urun</span>
+        </div>
+
+        <div class="window-content">
+            <div class="search-row">
+                <input type="text" id="search" placeholder="Urun ara (isim, barkod, kod)..." onkeyup="filterProducts()">
+                <select id="category-filter" onchange="filterProducts()" class="form-control" style="width:200px;">
+                    <option value="">Tum Kategoriler</option>
+                </select>
+            </div>
+            <div class="table-container">
+                <table class="tebeos-table" id="products-table">
+                    <thead>
+                        <tr>
+                            <th style="width:60px">Resim</th>
+                            <th>Barkod</th>
+                            <th>Urun Adi</th>
+                            <th>Kategori</th>
+                            <th>Stok</th>
+                            <th>Alis Fiyati</th>
+                            <th>Satis Fiyati</th>
+                            <th style="width:100px">Islem</th>
+                        </tr>
+                    </thead>
+                    <tbody id="products-body">
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="window-statusbar">
+            <span>Toplam: <strong id="total-products">0</strong> urun</span>
+            <span>Toplam Stok Degeri: <strong id="total-value">0.00 TL</strong></span>
+        </div>
+    </div>
+
+    <script src="../assets/dist/js/bundle.min.js"></script>
+    <script>
+        const { ipcRenderer } = require('electron');
+        let allProducts = [];
+
+        function openNewProduct() {
+            ipcRenderer.send('open-window', 'new-product');
+        }
+
+        function refreshProducts() {
+            loadProducts();
+        }
+
+        function exportProducts() {
+            alert('Excel export islemi...');
+        }
+
+        function loadProducts() {
+            fetch('http://localhost:52484/api/inventory')
+                .then(res => res.json())
+                .then(data => {
+                    allProducts = data;
+                    renderProducts(data);
+                    updateStats(data);
+                })
+                .catch(err => console.error('Hata:', err));
+        }
+
+        function loadCategories() {
+            fetch('http://localhost:52484/api/category')
+                .then(res => res.json())
+                .then(data => {
+                    const select = document.getElementById('category-filter');
+                    data.forEach(cat => {
+                        const opt = document.createElement('option');
+                        opt.value = cat.id;
+                        opt.textContent = cat.category_name;
+                        select.appendChild(opt);
+                    });
+                })
+                .catch(err => console.error('Hata:', err));
+        }
+
+        function renderProducts(products) {
+            const tbody = document.getElementById('products-body');
+            tbody.innerHTML = '';
+            products.forEach(p => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td><img src="${p.image || '../assets/images/default-product.png'}" style="width:40px;height:40px;object-fit:cover;border-radius:4px" onerror="this.src='../assets/images/default-product.png'"></td>
+                    <td>${p.barcode || '-'}</td>
+                    <td>${p.product_name}</td>
+                    <td>${p.category_name || '-'}</td>
+                    <td style="text-align:center"><span class="badge ${p.stock < 10 ? 'badge-danger' : 'badge-success'}">${p.stock}</span></td>
+                    <td>${parseFloat(p.cost_price || 0).toFixed(2)} TL</td>
+                    <td><strong>${parseFloat(p.price).toFixed(2)} TL</strong></td>
+                    <td>
+                        <button class="btn btn-xs btn-primary" onclick="editProduct(${p.id})"><i class="fa fa-edit"></i></button>
+                        <button class="btn btn-xs btn-danger" onclick="deleteProduct(${p.id})"><i class="fa fa-trash"></i></button>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+            document.getElementById('product-count').textContent = products.length + ' urun';
+        }
+
+        function updateStats(products) {
+            document.getElementById('total-products').textContent = products.length;
+            let totalValue = 0;
+            products.forEach(p => {
+                totalValue += (parseFloat(p.price) || 0) * (parseInt(p.stock) || 0);
+            });
+            document.getElementById('total-value').textContent = totalValue.toFixed(2) + ' TL';
+        }
+
+        function filterProducts() {
+            const search = document.getElementById('search').value.toLowerCase();
+            const category = document.getElementById('category-filter').value;
+            let filtered = allProducts.filter(p => {
+                const matchSearch = !search ||
+                    p.product_name.toLowerCase().includes(search) ||
+                    (p.barcode && p.barcode.includes(search));
+                const matchCategory = !category || p.category_id == category;
+                return matchSearch && matchCategory;
+            });
+            renderProducts(filtered);
+        }
+
+        function editProduct(id) {
+            ipcRenderer.send('open-window', 'new-product', { editId: id });
+        }
+
+        function deleteProduct(id) {
+            if (confirm('Bu urunu silmek istediginizden emin misiniz?')) {
+                fetch('http://localhost:52484/api/inventory/' + id, { method: 'DELETE' })
+                    .then(() => loadProducts())
+                    .catch(err => alert('Silme hatasi: ' + err));
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            loadCategories();
+            loadProducts();
+        });
+    </script>
+</body>
+</html>

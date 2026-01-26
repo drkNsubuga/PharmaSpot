@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Yeni Urun</title>
+    <link href="../assets/dist/css/bundle.min.css" rel="stylesheet" type="text/css" />
+    <link href="../assets/css/tebeos-theme.css" rel="stylesheet" type="text/css" />
+    <style>
+        html, body { height: 100%; margin: 0; padding: 0; overflow: hidden; }
+        .window-container { display: flex; flex-direction: column; height: 100vh; overflow: hidden; }
+        .window-header { background: linear-gradient(180deg, #1976d2 0%, #1565c0 100%); color: white; padding: 15px 20px; font-weight: 600; flex-shrink: 0; }
+        .window-content { flex: 1; overflow-y: auto; padding: 20px; background: #f5f5f5; }
+        .form-card { background: white; border: 1px solid #e0e0e0; border-radius: 8px; padding: 20px; margin-bottom: 15px; }
+        .form-card h4 { margin: 0 0 15px 0; color: #1976d2; font-size: 14px; border-bottom: 1px solid #e0e0e0; padding-bottom: 10px; }
+        .form-group { margin-bottom: 15px; }
+        .form-group label { display: block; font-size: 12px; font-weight: 600; margin-bottom: 5px; color: #666; }
+        .form-group input, .form-group select, .form-group textarea { width: 100%; padding: 10px; border: 1px solid #bdbdbd; border-radius: 4px; font-size: 14px; box-sizing: border-box; }
+        .form-group input:focus, .form-group select:focus { border-color: #1976d2; outline: none; box-shadow: 0 0 0 2px rgba(25,118,210,0.2); }
+        .form-row { display: flex; gap: 15px; }
+        .form-row .form-group { flex: 1; }
+        .window-footer { background: white; border-top: 1px solid #e0e0e0; padding: 15px 20px; display: flex; justify-content: flex-end; gap: 10px; flex-shrink: 0; }
+        .image-preview { width: 100px; height: 100px; border: 2px dashed #bdbdbd; border-radius: 8px; display: flex; align-items: center; justify-content: center; cursor: pointer; background: #fafafa; }
+        .image-preview:hover { border-color: #1976d2; background: #e3f2fd; }
+        .image-preview img { max-width: 100%; max-height: 100%; border-radius: 6px; }
+    </style>
+</head>
+<body>
+    <div class="window-container">
+        <div class="window-header">
+            <i class="fa fa-plus-circle"></i> Yeni Urun Ekle
+        </div>
+
+        <div class="window-content">
+            <form id="product-form">
+                <div class="form-card">
+                    <h4><i class="fa fa-info-circle"></i> Temel Bilgiler</h4>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Urun Adi *</label>
+                            <input type="text" name="product_name" required placeholder="Urun adini girin">
+                        </div>
+                        <div class="form-group">
+                            <label>Barkod</label>
+                            <input type="text" name="barcode" placeholder="Barkod numarasi">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Kategori</label>
+                            <select name="category_id" id="category-select">
+                                <option value="">Kategori secin</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>SKU / Kod</label>
+                            <input type="text" name="sku" placeholder="Urun kodu">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Aciklama</label>
+                        <textarea name="description" rows="2" placeholder="Urun aciklamasi"></textarea>
+                    </div>
+                </div>
+
+                <div class="form-card">
+                    <h4><i class="fa fa-money"></i> Fiyat ve Stok</h4>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Alis Fiyati (TL)</label>
+                            <input type="number" name="cost_price" step="0.01" placeholder="0.00">
+                        </div>
+                        <div class="form-group">
+                            <label>Satis Fiyati (TL) *</label>
+                            <input type="number" name="price" step="0.01" required placeholder="0.00">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Stok Miktari</label>
+                            <input type="number" name="stock" value="0" placeholder="0">
+                        </div>
+                        <div class="form-group">
+                            <label>Minimum Stok Uyarisi</label>
+                            <input type="number" name="min_stock" value="5" placeholder="5">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-card">
+                    <h4><i class="fa fa-image"></i> Urun Resmi</h4>
+                    <div class="image-preview" onclick="selectImage()">
+                        <i class="fa fa-camera fa-2x" style="color:#bdbdbd"></i>
+                    </div>
+                    <input type="file" id="image-input" name="image" accept="image/*" style="display:none">
+                </div>
+            </form>
+        </div>
+
+        <div class="window-footer">
+            <button type="button" class="tebeos-btn" onclick="window.close()">
+                <i class="fa fa-times"></i> Iptal
+            </button>
+            <button type="button" class="tebeos-btn tebeos-btn-primary" onclick="saveAndNew()">
+                <i class="fa fa-plus"></i> Kaydet ve Yeni
+            </button>
+            <button type="button" class="tebeos-btn tebeos-btn-success" onclick="saveProduct()">
+                <i class="fa fa-check"></i> Kaydet
+            </button>
+        </div>
+    </div>
+
+    <script src="../assets/dist/js/bundle.min.js"></script>
+    <script>
+        function loadCategories() {
+            fetch('http://localhost:52484/api/category')
+                .then(res => res.json())
+                .then(data => {
+                    const select = document.getElementById('category-select');
+                    data.forEach(c => {
+                        const opt = document.createElement('option');
+                        opt.value = c.id;
+                        opt.textContent = c.category_name;
+                        select.appendChild(opt);
+                    });
+                });
+        }
+
+        function selectImage() {
+            document.getElementById('image-input').click();
+        }
+
+        function saveProduct() {
+            const form = document.getElementById('product-form');
+            const formData = new FormData(form);
+            const data = Object.fromEntries(formData.entries());
+
+            fetch('http://localhost:52484/api/inventory', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data)
+            })
+            .then(res => res.json())
+            .then(() => {
+                alert('Urun kaydedildi!');
+                window.close();
+            })
+            .catch(err => alert('Hata: ' + err));
+        }
+
+        function saveAndNew() {
+            const form = document.getElementById('product-form');
+            const formData = new FormData(form);
+            const data = Object.fromEntries(formData.entries());
+
+            fetch('http://localhost:52484/api/inventory', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data)
+            })
+            .then(() => {
+                alert('Urun kaydedildi!');
+                form.reset();
+            })
+            .catch(err => alert('Hata: ' + err));
+        }
+
+        document.addEventListener('DOMContentLoaded', loadCategories);
+    </script>
+</body>
+</html>

@@ -1,0 +1,1464 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agent Yönetim Paneli</title>
+    <link rel="stylesheet" href="../assets/css/common/bootstrap.min.css">
+    <link rel="stylesheet" href="../node_modules/notiflix/dist/notiflix-3.2.6.min.css">
+    <style>
+        :root {
+            --primary-color: #2563eb;
+            --success-color: #10b981;
+            --warning-color: #f59e0b;
+            --danger-color: #ef4444;
+            --bg-color: #f8fafc;
+            --card-bg: #ffffff;
+            --text-color: #1e293b;
+            --text-muted: #64748b;
+            --border-color: #e2e8f0;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 0;
+        }
+
+        .container-fluid {
+            padding: 20px;
+        }
+
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .page-header h1 {
+            font-size: 1.75rem;
+            font-weight: 600;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.875rem;
+            font-weight: 500;
+        }
+
+        .status-badge.active {
+            background-color: #dcfce7;
+            color: #166534;
+        }
+
+        .status-badge.inactive {
+            background-color: #fee2e2;
+            color: #991b1b;
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background-color: currentColor;
+        }
+
+        .nav-tabs {
+            border-bottom: 2px solid var(--border-color);
+            margin-bottom: 24px;
+        }
+
+        .nav-tabs .nav-link {
+            border: none;
+            color: var(--text-muted);
+            font-weight: 500;
+            padding: 12px 20px;
+            margin-bottom: -2px;
+        }
+
+        .nav-tabs .nav-link:hover {
+            color: var(--text-color);
+            border: none;
+        }
+
+        .nav-tabs .nav-link.active {
+            color: var(--primary-color);
+            border: none;
+            border-bottom: 2px solid var(--primary-color);
+            background: transparent;
+        }
+
+        .card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+            margin-bottom: 20px;
+        }
+
+        .card-header {
+            background: transparent;
+            border-bottom: 1px solid var(--border-color);
+            padding: 16px 20px;
+            font-weight: 600;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .card-body {
+            padding: 20px;
+        }
+
+        .task-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px;
+            border-bottom: 1px solid var(--border-color);
+            transition: background-color 0.2s;
+        }
+
+        .task-item:last-child {
+            border-bottom: none;
+        }
+
+        .task-item:hover {
+            background-color: #f8fafc;
+        }
+
+        .task-info {
+            flex: 1;
+        }
+
+        .task-name {
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .task-description {
+            font-size: 0.875rem;
+            color: var(--text-muted);
+            margin-bottom: 8px;
+        }
+
+        .task-meta {
+            display: flex;
+            gap: 16px;
+            font-size: 0.75rem;
+            color: var(--text-muted);
+        }
+
+        .task-actions {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+
+        .btn {
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-weight: 500;
+            font-size: 0.875rem;
+            border: none;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-primary {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: #1d4ed8;
+        }
+
+        .btn-outline {
+            background-color: transparent;
+            border: 1px solid var(--border-color);
+            color: var(--text-color);
+        }
+
+        .btn-outline:hover {
+            background-color: var(--bg-color);
+        }
+
+        .btn-success {
+            background-color: var(--success-color);
+            color: white;
+        }
+
+        .btn-danger {
+            background-color: var(--danger-color);
+            color: white;
+        }
+
+        .btn-sm {
+            padding: 6px 12px;
+            font-size: 0.75rem;
+        }
+
+        .switch {
+            position: relative;
+            width: 48px;
+            height: 26px;
+        }
+
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #cbd5e1;
+            transition: 0.3s;
+            border-radius: 26px;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 20px;
+            width: 20px;
+            left: 3px;
+            bottom: 3px;
+            background-color: white;
+            transition: 0.3s;
+            border-radius: 50%;
+        }
+
+        input:checked + .slider {
+            background-color: var(--success-color);
+        }
+
+        input:checked + .slider:before {
+            transform: translateX(22px);
+        }
+
+        /* AI Chat */
+        .chat-container {
+            display: flex;
+            flex-direction: column;
+            height: 500px;
+        }
+
+        .chat-messages {
+            flex: 1;
+            overflow-y: auto;
+            padding: 16px;
+            background-color: var(--bg-color);
+            border-radius: 8px;
+            margin-bottom: 16px;
+        }
+
+        .message {
+            margin-bottom: 16px;
+            max-width: 80%;
+        }
+
+        .message.user {
+            margin-left: auto;
+        }
+
+        .message.assistant {
+            margin-right: auto;
+        }
+
+        .message-content {
+            padding: 12px 16px;
+            border-radius: 12px;
+            line-height: 1.5;
+        }
+
+        .message.user .message-content {
+            background-color: var(--primary-color);
+            color: white;
+            border-bottom-right-radius: 4px;
+        }
+
+        .message.assistant .message-content {
+            background-color: white;
+            border: 1px solid var(--border-color);
+            border-bottom-left-radius: 4px;
+        }
+
+        .message-time {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            margin-top: 4px;
+            text-align: right;
+        }
+
+        .chat-input-container {
+            display: flex;
+            gap: 12px;
+        }
+
+        .chat-input {
+            flex: 1;
+            padding: 12px 16px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 0.9375rem;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        .chat-input:focus {
+            border-color: var(--primary-color);
+        }
+
+        .suggestions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 16px;
+        }
+
+        .suggestion-chip {
+            padding: 8px 14px;
+            background-color: white;
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            font-size: 0.8125rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .suggestion-chip:hover {
+            background-color: var(--primary-color);
+            color: white;
+            border-color: var(--primary-color);
+        }
+
+        /* Logs */
+        .log-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .log-table th,
+        .log-table td {
+            padding: 12px 16px;
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .log-table th {
+            font-weight: 600;
+            color: var(--text-muted);
+            font-size: 0.8125rem;
+            text-transform: uppercase;
+        }
+
+        .log-status {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-size: 0.8125rem;
+            font-weight: 500;
+        }
+
+        .log-status.completed {
+            background-color: #dcfce7;
+            color: #166534;
+        }
+
+        .log-status.failed {
+            background-color: #fee2e2;
+            color: #991b1b;
+        }
+
+        .log-status.running {
+            background-color: #dbeafe;
+            color: #1e40af;
+        }
+
+        /* Stats */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        .stat-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 20px;
+        }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+
+        .stat-label {
+            color: var(--text-muted);
+            font-size: 0.875rem;
+        }
+
+        .stat-card.primary .stat-value {
+            color: var(--primary-color);
+        }
+
+        .stat-card.success .stat-value {
+            color: var(--success-color);
+        }
+
+        .stat-card.warning .stat-value {
+            color: var(--warning-color);
+        }
+
+        .stat-card.danger .stat-value {
+            color: var(--danger-color);
+        }
+
+        /* Notifications */
+        .notification-item {
+            display: flex;
+            gap: 12px;
+            padding: 16px;
+            border-bottom: 1px solid var(--border-color);
+            transition: background-color 0.2s;
+        }
+
+        .notification-item:hover {
+            background-color: #f8fafc;
+        }
+
+        .notification-item.unread {
+            background-color: #eff6ff;
+        }
+
+        .notification-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.25rem;
+        }
+
+        .notification-icon.info {
+            background-color: #dbeafe;
+        }
+
+        .notification-icon.success {
+            background-color: #dcfce7;
+        }
+
+        .notification-icon.warning {
+            background-color: #fef3c7;
+        }
+
+        .notification-icon.error {
+            background-color: #fee2e2;
+        }
+
+        .notification-content {
+            flex: 1;
+        }
+
+        .notification-title {
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .notification-message {
+            color: var(--text-muted);
+            font-size: 0.875rem;
+            margin-bottom: 4px;
+        }
+
+        .notification-time {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+        }
+
+        /* Settings */
+        .settings-section {
+            margin-bottom: 24px;
+        }
+
+        .settings-section h3 {
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 16px;
+        }
+
+        .form-group {
+            margin-bottom: 16px;
+        }
+
+        .form-label {
+            display: block;
+            font-weight: 500;
+            margin-bottom: 8px;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 12px 16px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 0.9375rem;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        .form-control:focus {
+            border-color: var(--primary-color);
+        }
+
+        .form-help {
+            font-size: 0.8125rem;
+            color: var(--text-muted);
+            margin-top: 4px;
+        }
+
+        /* Loading */
+        .loading-spinner {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 2px solid var(--border-color);
+            border-radius: 50%;
+            border-top-color: var(--primary-color);
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 40px;
+            color: var(--text-muted);
+        }
+
+        .empty-state-icon {
+            font-size: 3rem;
+            margin-bottom: 16px;
+            opacity: 0.5;
+        }
+    </style>
+</head>
+<body>
+    <div class="container-fluid">
+        <!-- Header -->
+        <div class="page-header">
+            <h1>
+                <span>🤖</span>
+                Agent Yönetim Paneli
+            </h1>
+            <div id="systemStatus">
+                <span class="status-badge inactive">
+                    <span class="status-dot"></span>
+                    Bağlanıyor...
+                </span>
+            </div>
+        </div>
+
+        <!-- Navigation Tabs -->
+        <ul class="nav nav-tabs" id="mainTabs" role="tablist">
+            <li class="nav-item">
+                <a class="nav-link active" id="dashboard-tab" data-bs-toggle="tab" href="#dashboard" role="tab">
+                    📊 Dashboard
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" id="scheduler-tab" data-bs-toggle="tab" href="#scheduler" role="tab">
+                    ⏰ Zamanlanmış Görevler
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" id="ai-tab" data-bs-toggle="tab" href="#ai" role="tab">
+                    🧠 AI Asistan
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" id="logs-tab" data-bs-toggle="tab" href="#logs" role="tab">
+                    📜 Loglar
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" id="notifications-tab" data-bs-toggle="tab" href="#notifications" role="tab">
+                    🔔 Bildirimler
+                    <span id="notificationBadge" class="badge bg-danger ms-1" style="display: none;">0</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" id="settings-tab" data-bs-toggle="tab" href="#settings" role="tab">
+                    ⚙️ Ayarlar
+                </a>
+            </li>
+        </ul>
+
+        <!-- Tab Content -->
+        <div class="tab-content" id="mainTabContent">
+            <!-- Dashboard -->
+            <div class="tab-pane fade show active" id="dashboard" role="tabpanel">
+                <div class="stats-grid" id="statsGrid">
+                    <div class="stat-card primary">
+                        <div class="stat-value" id="statTotalTasks">-</div>
+                        <div class="stat-label">Toplam Görev</div>
+                    </div>
+                    <div class="stat-card success">
+                        <div class="stat-value" id="statActiveTasks">-</div>
+                        <div class="stat-label">Aktif Görev</div>
+                    </div>
+                    <div class="stat-card warning">
+                        <div class="stat-value" id="statTotalRuns">-</div>
+                        <div class="stat-label">Toplam Çalışma</div>
+                    </div>
+                    <div class="stat-card danger">
+                        <div class="stat-value" id="statFailCount">-</div>
+                        <div class="stat-label">Başarısız</div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="card">
+                            <div class="card-header">Son Çalışan Görevler</div>
+                            <div class="card-body" id="recentTasks">
+                                <div class="empty-state">
+                                    <div class="loading-spinner"></div>
+                                    <p>Yükleniyor...</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="card">
+                            <div class="card-header">Son Bildirimler</div>
+                            <div class="card-body" id="recentNotifications">
+                                <div class="empty-state">
+                                    <div class="loading-spinner"></div>
+                                    <p>Yükleniyor...</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Scheduler -->
+            <div class="tab-pane fade" id="scheduler" role="tabpanel">
+                <div class="card">
+                    <div class="card-header">
+                        <span>Zamanlanmış Görevler</span>
+                        <button class="btn btn-outline btn-sm" onclick="refreshTasks()">
+                            🔄 Yenile
+                        </button>
+                    </div>
+                    <div class="card-body p-0" id="taskList">
+                        <div class="empty-state">
+                            <div class="loading-spinner"></div>
+                            <p>Yükleniyor...</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- AI Assistant -->
+            <div class="tab-pane fade" id="ai" role="tabpanel">
+                <div class="row">
+                    <div class="col-md-8">
+                        <div class="card">
+                            <div class="card-header">
+                                <span>AI Asistan</span>
+                                <button class="btn btn-outline btn-sm" onclick="clearConversation()">
+                                    🗑️ Temizle
+                                </button>
+                            </div>
+                            <div class="card-body">
+                                <div class="suggestions" id="suggestions"></div>
+                                <div class="chat-container">
+                                    <div class="chat-messages" id="chatMessages">
+                                        <div class="message assistant">
+                                            <div class="message-content">
+                                                Merhaba! Size eczane verileriniz hakkında sorular sorabilirsiniz. Örneğin satış trendleri, stok durumu veya ürün analizleri hakkında bilgi alabiliriz.
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="chat-input-container">
+                                        <input type="text" class="chat-input" id="chatInput"
+                                               placeholder="Sorunuzu yazın..."
+                                               onkeypress="handleChatKeypress(event)">
+                                        <button class="btn btn-primary" onclick="sendChatMessage()" id="sendBtn">
+                                            Gönder
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card">
+                            <div class="card-header">AI Durumu</div>
+                            <div class="card-body" id="aiStatus">
+                                <div class="empty-state">
+                                    <div class="loading-spinner"></div>
+                                    <p>Yükleniyor...</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Logs -->
+            <div class="tab-pane fade" id="logs" role="tabpanel">
+                <div class="card">
+                    <div class="card-header">
+                        <span>Görev Logları</span>
+                        <div>
+                            <select class="form-control form-control-sm d-inline-block"
+                                    style="width: auto;" id="logFilter" onchange="filterLogs()">
+                                <option value="">Tümü</option>
+                                <option value="scheduler">Scheduler</option>
+                                <option value="ai">AI</option>
+                            </select>
+                            <button class="btn btn-outline btn-sm ms-2" onclick="refreshLogs()">
+                                🔄 Yenile
+                            </button>
+                        </div>
+                    </div>
+                    <div class="card-body p-0">
+                        <table class="log-table">
+                            <thead>
+                                <tr>
+                                    <th>Zaman</th>
+                                    <th>Tip</th>
+                                    <th>Görev</th>
+                                    <th>Durum</th>
+                                    <th>Süre</th>
+                                </tr>
+                            </thead>
+                            <tbody id="logTableBody">
+                                <tr>
+                                    <td colspan="5" class="text-center">
+                                        <div class="loading-spinner"></div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Notifications -->
+            <div class="tab-pane fade" id="notifications" role="tabpanel">
+                <div class="card">
+                    <div class="card-header">
+                        <span>Bildirimler</span>
+                        <button class="btn btn-outline btn-sm" onclick="markAllAsRead()">
+                            ✓ Tümünü Okundu İşaretle
+                        </button>
+                    </div>
+                    <div class="card-body p-0" id="notificationList">
+                        <div class="empty-state">
+                            <div class="loading-spinner"></div>
+                            <p>Yükleniyor...</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Settings -->
+            <div class="tab-pane fade" id="settings" role="tabpanel">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="card">
+                            <div class="card-header">Claude API Ayarları</div>
+                            <div class="card-body">
+                                <div class="form-group">
+                                    <label class="form-label">API Anahtarı</label>
+                                    <input type="password" class="form-control" id="apiKeyInput"
+                                           placeholder="sk-ant-...">
+                                    <div class="form-help">
+                                        Anthropic Console'dan API anahtarınızı alın.
+                                    </div>
+                                </div>
+                                <button class="btn btn-primary" onclick="saveApiKey()">
+                                    Kaydet
+                                </button>
+                                <button class="btn btn-outline ms-2" onclick="testApiKey()">
+                                    Test Et
+                                </button>
+                                <div id="apiKeyStatus" class="mt-3"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="card">
+                            <div class="card-header">Sistem Bilgisi</div>
+                            <div class="card-body" id="systemInfo">
+                                <div class="empty-state">
+                                    <div class="loading-spinner"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="../assets/js/common/jquery.min.js"></script>
+    <script src="../assets/js/common/bootstrap.bundle.min.js"></script>
+    <script src="../node_modules/notiflix/dist/notiflix-3.2.6.min.js"></script>
+    <script>
+        // API Base URL - dinamik port
+        let API_BASE = '';
+
+        // State
+        let agentStatus = null;
+        let tasks = [];
+        let logs = [];
+        let notifications = [];
+        let conversationId = 'panel-' + Date.now();
+
+        // Port keşif fonksiyonu
+        async function discoverApiPort() {
+            // Yöntem 1: Parent window'daki global değişken
+            try {
+                if (window.parent && window.parent.API_PORT) {
+                    console.log('Port from parent window:', window.parent.API_PORT);
+                    return window.parent.API_PORT;
+                }
+            } catch (e) {
+                console.log('Parent API_PORT failed:', e.message);
+            }
+
+            // Yöntem 2: IPC ile
+            try {
+                const { ipcRenderer } = require('electron');
+                const port = await ipcRenderer.invoke('get-api-port');
+                if (port) {
+                    console.log('Port from IPC:', port);
+                    return port;
+                }
+            } catch (e) {
+                console.log('IPC port discovery failed:', e.message);
+            }
+
+            // Yöntem 3: process.env'den
+            try {
+                if (typeof process !== 'undefined' && process.env && process.env.PORT) {
+                    console.log('Port from process.env:', process.env.PORT);
+                    return process.env.PORT;
+                }
+            } catch (e) {
+                console.log('Process env port discovery failed:', e.message);
+            }
+
+            // Yöntem 4: Port taraması (son çare)
+            console.log('Scanning ports...');
+            for (let port = 49000; port < 60000; port += 1000) {
+                for (let p = port; p < port + 100; p++) {
+                    try {
+                        const response = await fetch(`http://localhost:${p}/`, {
+                            method: 'GET',
+                            signal: AbortSignal.timeout(100)
+                        });
+                        const text = await response.text();
+                        if (text.includes('POS Server')) {
+                            console.log('Found server on port:', p);
+                            return p;
+                        }
+                    } catch (e) {
+                        // Bu port çalışmıyor
+                    }
+                }
+            }
+
+            // Son çare: 3000
+            return '3000';
+        }
+
+        // API Helper
+        async function apiCall(endpoint, options = {}) {
+            const url = API_BASE + endpoint;
+            try {
+                const response = await fetch(url, {
+                    ...options,
+                    headers: {
+                        'Content-Type': 'application/json',
+                        ...options.headers
+                    }
+                });
+                return response.json();
+            } catch (err) {
+                console.error('API call failed:', endpoint, err);
+                throw err;
+            }
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', async () => {
+            // Port'u bul
+            updateSystemStatus(false, 'Port aranıyor...');
+            const port = await discoverApiPort();
+            API_BASE = `http://localhost:${port}/api/agents`;
+            console.log('Using API:', API_BASE);
+
+            await initializeAgent();
+            await refreshAll();
+            loadSuggestions();
+
+            // Periyodik yenileme
+            setInterval(refreshStatus, 30000);
+            setInterval(refreshNotifications, 10000);
+        });
+
+        // Initialize Agent System
+        async function initializeAgent() {
+            try {
+                const result = await apiCall('/initialize', { method: 'POST' });
+                if (result.success) {
+                    updateSystemStatus(true);
+                } else {
+                    updateSystemStatus(false, result.error);
+                }
+            } catch (err) {
+                console.error('Agent initialize error:', err);
+                updateSystemStatus(false, err.message);
+            }
+        }
+
+        // Update System Status
+        function updateSystemStatus(active, error = null) {
+            const statusEl = document.getElementById('systemStatus');
+            if (active) {
+                statusEl.innerHTML = `
+                    <span class="status-badge active">
+                        <span class="status-dot"></span>
+                        Aktif
+                    </span>
+                `;
+            } else {
+                statusEl.innerHTML = `
+                    <span class="status-badge inactive">
+                        <span class="status-dot"></span>
+                        ${error || 'Bağlantı Hatası'}
+                    </span>
+                `;
+            }
+        }
+
+        // Refresh All Data
+        async function refreshAll() {
+            await Promise.all([
+                refreshStatus(),
+                refreshTasks(),
+                refreshLogs(),
+                refreshNotifications(),
+                refreshAiStatus()
+            ]);
+        }
+
+        // Refresh Status
+        async function refreshStatus() {
+            try {
+                agentStatus = await apiCall('/status');
+                updateDashboard();
+            } catch (err) {
+                console.error('Status refresh error:', err);
+            }
+        }
+
+        // Update Dashboard
+        function updateDashboard() {
+            if (!agentStatus) return;
+
+            // Stats
+            document.getElementById('statTotalTasks').textContent =
+                agentStatus.scheduler?.tasks?.length || 0;
+            document.getElementById('statActiveTasks').textContent =
+                agentStatus.scheduler?.activeJobCount || 0;
+            document.getElementById('statTotalRuns').textContent =
+                agentStatus.logs?.total || 0;
+            document.getElementById('statFailCount').textContent =
+                agentStatus.logs?.failed || 0;
+
+            // Recent Tasks
+            const recentTasksEl = document.getElementById('recentTasks');
+            if (agentStatus.scheduler?.tasks) {
+                const recent = agentStatus.scheduler.tasks
+                    .filter(t => t.lastRun)
+                    .sort((a, b) => new Date(b.lastRun) - new Date(a.lastRun))
+                    .slice(0, 5);
+
+                if (recent.length > 0) {
+                    recentTasksEl.innerHTML = recent.map(task => `
+                        <div class="task-item">
+                            <div class="task-info">
+                                <div class="task-name">${task.displayName}</div>
+                                <div class="task-meta">
+                                    <span>Son: ${formatDate(task.lastRun)}</span>
+                                </div>
+                            </div>
+                        </div>
+                    `).join('');
+                } else {
+                    recentTasksEl.innerHTML = '<div class="empty-state">Henüz çalışan görev yok</div>';
+                }
+            }
+
+            // Update system status
+            updateSystemStatus(agentStatus.isInitialized);
+        }
+
+        // Refresh Tasks
+        async function refreshTasks() {
+            try {
+                tasks = await apiCall('/scheduler/tasks');
+                renderTasks();
+            } catch (err) {
+                console.error('Tasks refresh error:', err);
+            }
+        }
+
+        // Render Tasks
+        function renderTasks() {
+            const taskListEl = document.getElementById('taskList');
+
+            if (!tasks || tasks.length === 0) {
+                taskListEl.innerHTML = '<div class="empty-state">Görev bulunamadı</div>';
+                return;
+            }
+
+            taskListEl.innerHTML = tasks.map(task => `
+                <div class="task-item">
+                    <div class="task-info">
+                        <div class="task-name">${task.displayName || task.name}</div>
+                        <div class="task-description">${task.description || ''}</div>
+                        <div class="task-meta">
+                            <span>⏰ ${task.cronExpression}</span>
+                            <span>📊 ${task.runCount || 0} çalışma</span>
+                            ${task.lastRun ? `<span>Son: ${formatDate(task.lastRun)}</span>` : ''}
+                        </div>
+                    </div>
+                    <div class="task-actions">
+                        <label class="switch">
+                            <input type="checkbox" ${task.enabled ? 'checked' : ''}
+                                   onchange="toggleTask('${task.name}', this.checked)">
+                            <span class="slider"></span>
+                        </label>
+                        <button class="btn btn-outline btn-sm" onclick="triggerTask('${task.name}')">
+                            ▶️ Çalıştır
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Toggle Task
+        async function toggleTask(taskName, enabled) {
+            try {
+                await apiCall(`/scheduler/tasks/${taskName}/enabled`, {
+                    method: 'PUT',
+                    body: JSON.stringify({ enabled })
+                });
+                Notiflix.Notify.success(enabled ? 'Görev etkinleştirildi' : 'Görev devre dışı bırakıldı');
+                await refreshTasks();
+            } catch (err) {
+                Notiflix.Notify.failure('Hata: ' + err.message);
+            }
+        }
+
+        // Trigger Task
+        async function triggerTask(taskName) {
+            try {
+                Notiflix.Loading.pulse('Görev çalıştırılıyor...');
+                const result = await apiCall(`/scheduler/trigger/${taskName}`, {
+                    method: 'POST',
+                    body: JSON.stringify({})
+                });
+                Notiflix.Loading.remove();
+
+                if (result.error) {
+                    Notiflix.Notify.failure('Hata: ' + result.error);
+                } else {
+                    Notiflix.Notify.success('Görev tamamlandı');
+                }
+
+                await refreshAll();
+            } catch (err) {
+                Notiflix.Loading.remove();
+                Notiflix.Notify.failure('Hata: ' + err.message);
+            }
+        }
+
+        // Refresh Logs
+        async function refreshLogs() {
+            try {
+                const filter = document.getElementById('logFilter')?.value;
+                const query = filter ? `?agentType=${filter}&limit=50` : '?limit=50';
+                logs = await apiCall('/logs' + query);
+                renderLogs();
+            } catch (err) {
+                console.error('Logs refresh error:', err);
+            }
+        }
+
+        // Filter Logs
+        function filterLogs() {
+            refreshLogs();
+        }
+
+        // Render Logs
+        function renderLogs() {
+            const tbody = document.getElementById('logTableBody');
+
+            if (!logs || logs.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="5" class="text-center">Log bulunamadı</td></tr>';
+                return;
+            }
+
+            tbody.innerHTML = logs.map(log => `
+                <tr>
+                    <td>${formatDate(log.startTime)}</td>
+                    <td><span class="badge bg-${log.agentType === 'ai' ? 'primary' : 'secondary'}">${log.agentType}</span></td>
+                    <td>${log.taskName}</td>
+                    <td><span class="log-status ${log.status}">${getStatusText(log.status)}</span></td>
+                    <td>${log.duration ? formatDuration(log.duration) : '-'}</td>
+                </tr>
+            `).join('');
+        }
+
+        // Refresh Notifications
+        async function refreshNotifications() {
+            try {
+                notifications = await apiCall('/notifications?limit=50');
+                renderNotifications();
+                updateNotificationBadge();
+            } catch (err) {
+                console.error('Notifications refresh error:', err);
+            }
+        }
+
+        // Render Notifications
+        function renderNotifications() {
+            const listEl = document.getElementById('notificationList');
+
+            if (!notifications || notifications.length === 0) {
+                listEl.innerHTML = '<div class="empty-state">Bildirim bulunamadı</div>';
+                return;
+            }
+
+            listEl.innerHTML = notifications.map(notif => `
+                <div class="notification-item ${notif.read ? '' : 'unread'}"
+                     onclick="markAsRead('${notif.id}')">
+                    <div class="notification-icon ${notif.type}">
+                        ${getNotificationIcon(notif.type)}
+                    </div>
+                    <div class="notification-content">
+                        <div class="notification-title">${notif.title}</div>
+                        <div class="notification-message">${notif.message}</div>
+                        <div class="notification-time">${formatDate(notif.timestamp)}</div>
+                    </div>
+                </div>
+            `).join('');
+
+            // Recent notifications for dashboard
+            const recentEl = document.getElementById('recentNotifications');
+            if (recentEl) {
+                const recent = notifications.slice(0, 5);
+                recentEl.innerHTML = recent.map(notif => `
+                    <div class="notification-item">
+                        <div class="notification-icon ${notif.type}">
+                            ${getNotificationIcon(notif.type)}
+                        </div>
+                        <div class="notification-content">
+                            <div class="notification-title">${notif.title}</div>
+                            <div class="notification-time">${formatDate(notif.timestamp)}</div>
+                        </div>
+                    </div>
+                `).join('');
+            }
+        }
+
+        // Update Notification Badge
+        function updateNotificationBadge() {
+            const unread = notifications.filter(n => !n.read).length;
+            const badge = document.getElementById('notificationBadge');
+            if (unread > 0) {
+                badge.textContent = unread > 99 ? '99+' : unread;
+                badge.style.display = 'inline';
+            } else {
+                badge.style.display = 'none';
+            }
+        }
+
+        // Mark As Read
+        async function markAsRead(notificationId) {
+            await apiCall(`/notifications/${notificationId}/read`, { method: 'PUT' });
+            await refreshNotifications();
+        }
+
+        // Mark All As Read
+        async function markAllAsRead() {
+            await apiCall('/notifications/read-all', { method: 'PUT' });
+            await refreshNotifications();
+            Notiflix.Notify.success('Tüm bildirimler okundu işaretlendi');
+        }
+
+        // Handle New Notification
+        function handleNewNotification(notification) {
+            notifications.unshift(notification);
+            renderNotifications();
+            updateNotificationBadge();
+
+            // Show toast
+            const notifyFn = notification.type === 'error' ? Notiflix.Notify.failure :
+                            notification.type === 'warning' ? Notiflix.Notify.warning :
+                            notification.type === 'success' ? Notiflix.Notify.success :
+                            Notiflix.Notify.info;
+            notifyFn(notification.message);
+        }
+
+        // AI Functions
+        async function refreshAiStatus() {
+            try {
+                const status = await apiCall('/ai/status');
+                renderAiStatus(status);
+            } catch (err) {
+                console.error('AI status error:', err);
+            }
+        }
+
+        function renderAiStatus(status) {
+            const el = document.getElementById('aiStatus');
+
+            el.innerHTML = `
+                <div class="mb-3">
+                    <strong>API Durumu:</strong>
+                    <span class="status-badge ${status.api?.status === 'active' ? 'active' : 'inactive'}">
+                        ${status.api?.status === 'active' ? 'Aktif' :
+                          status.api?.status === 'not_configured' ? 'Yapılandırılmamış' : 'Hata'}
+                    </span>
+                </div>
+                <div class="mb-3">
+                    <strong>Kalan İstek:</strong>
+                    ${status.usage?.remainingRequests || '-'}
+                </div>
+                ${status.api?.model ? `
+                    <div class="mb-3">
+                        <strong>Model:</strong>
+                        ${status.api.model}
+                    </div>
+                ` : ''}
+            `;
+        }
+
+        async function loadSuggestions() {
+            try {
+                const suggestions = await apiCall('/ai/suggestions');
+                const el = document.getElementById('suggestions');
+                el.innerHTML = suggestions.slice(0, 4).map(s => `
+                    <span class="suggestion-chip" onclick="useSuggestion('${s.replace(/'/g, "\\'")}')">
+                        ${s}
+                    </span>
+                `).join('');
+            } catch (err) {
+                console.error('Suggestions error:', err);
+            }
+        }
+
+        function useSuggestion(text) {
+            document.getElementById('chatInput').value = text;
+            sendChatMessage();
+        }
+
+        function handleChatKeypress(event) {
+            if (event.key === 'Enter' && !event.shiftKey) {
+                event.preventDefault();
+                sendChatMessage();
+            }
+        }
+
+        async function sendChatMessage() {
+            const input = document.getElementById('chatInput');
+            const message = input.value.trim();
+
+            if (!message) return;
+
+            // Add user message
+            addChatMessage(message, 'user');
+            input.value = '';
+
+            // Disable input
+            input.disabled = true;
+            document.getElementById('sendBtn').disabled = true;
+
+            try {
+                const result = await apiCall('/ai/query', {
+                    method: 'POST',
+                    body: JSON.stringify({
+                        query: message,
+                        conversationId: conversationId
+                    })
+                });
+
+                if (result.success) {
+                    addChatMessage(result.message, 'assistant');
+                } else {
+                    addChatMessage('Hata: ' + (result.error || 'Bilinmeyen hata'), 'assistant');
+                }
+            } catch (err) {
+                addChatMessage('Hata: ' + err.message, 'assistant');
+            }
+
+            // Re-enable input
+            input.disabled = false;
+            document.getElementById('sendBtn').disabled = false;
+            input.focus();
+        }
+
+        function addChatMessage(content, role) {
+            const messagesEl = document.getElementById('chatMessages');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${role}`;
+            messageDiv.innerHTML = `
+                <div class="message-content">${formatMessage(content)}</div>
+                <div class="message-time">${new Date().toLocaleTimeString('tr-TR')}</div>
+            `;
+            messagesEl.appendChild(messageDiv);
+            messagesEl.scrollTop = messagesEl.scrollHeight;
+        }
+
+        function formatMessage(content) {
+            // Basic markdown-like formatting
+            return content
+                .replace(/\n/g, '<br>')
+                .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+                .replace(/\*(.*?)\*/g, '<em>$1</em>');
+        }
+
+        async function clearConversation() {
+            await apiCall(`/ai/conversation/${conversationId}`, { method: 'DELETE' });
+            document.getElementById('chatMessages').innerHTML = `
+                <div class="message assistant">
+                    <div class="message-content">
+                        Konuşma temizlendi. Yeni bir soru sorabilirsiniz.
+                    </div>
+                </div>
+            `;
+            Notiflix.Notify.success('Konuşma geçmişi temizlendi');
+        }
+
+        // Settings
+        async function saveApiKey() {
+            const apiKey = document.getElementById('apiKeyInput').value.trim();
+
+            if (!apiKey) {
+                Notiflix.Notify.warning('API anahtarı girin');
+                return;
+            }
+
+            if (!apiKey.startsWith('sk-ant-')) {
+                Notiflix.Notify.warning('Geçersiz API anahtarı formatı');
+                return;
+            }
+
+            try {
+                const result = await apiCall('/ai/api-key', {
+                    method: 'POST',
+                    body: JSON.stringify({ apiKey })
+                });
+
+                if (result.status === 'active') {
+                    Notiflix.Notify.success('API anahtarı kaydedildi');
+                    document.getElementById('apiKeyStatus').innerHTML =
+                        '<span class="text-success">✓ API bağlantısı aktif</span>';
+                    await refreshAiStatus();
+                } else {
+                    Notiflix.Notify.failure('API bağlantı hatası: ' + result.message);
+                    document.getElementById('apiKeyStatus').innerHTML =
+                        '<span class="text-danger">✗ ' + result.message + '</span>';
+                }
+            } catch (err) {
+                Notiflix.Notify.failure('Hata: ' + err.message);
+            }
+        }
+
+        async function testApiKey() {
+            try {
+                const result = await apiCall('/ai/status');
+
+                if (result.api?.status === 'active') {
+                    Notiflix.Notify.success('API bağlantısı aktif');
+                } else if (result.api?.status === 'not_configured') {
+                    Notiflix.Notify.warning('API anahtarı ayarlanmamış');
+                } else {
+                    Notiflix.Notify.failure('API hatası: ' + result.api?.message);
+                }
+            } catch (err) {
+                Notiflix.Notify.failure('Test hatası: ' + err.message);
+            }
+        }
+
+        // Helpers
+        function formatDate(dateStr) {
+            if (!dateStr) return '-';
+            const date = new Date(dateStr);
+            return date.toLocaleDateString('tr-TR') + ' ' + date.toLocaleTimeString('tr-TR');
+        }
+
+        function formatDuration(ms) {
+            if (ms < 1000) return ms + 'ms';
+            if (ms < 60000) return Math.round(ms / 1000) + 's';
+            return Math.round(ms / 60000) + 'm';
+        }
+
+        function getStatusText(status) {
+            switch (status) {
+                case 'completed': return 'Tamamlandı';
+                case 'failed': return 'Başarısız';
+                case 'running': return 'Çalışıyor';
+                default: return status;
+            }
+        }
+
+        function getNotificationIcon(type) {
+            switch (type) {
+                case 'success': return '✓';
+                case 'warning': return '⚠';
+                case 'error': return '✗';
+                default: return 'ℹ';
+            }
+        }
+    </script>
+</body>
+</html>
