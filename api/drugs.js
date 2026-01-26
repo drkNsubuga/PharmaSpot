@@ -42,6 +42,22 @@ app.get("/", function (req, res) {
 });
 
 /**
+ * GET /all: Tum ilaclari getir
+ * Query params: limit (sonuc limiti, varsayilan 500)
+ */
+app.get("/all", function (req, res) {
+    const limit = parseInt(req.query.limit) || 500;
+
+    drugDB.find({}).sort({ name: 1 }).limit(limit).exec(function (err, docs) {
+        if (err) {
+            res.status(500).json({ error: "Veritabani hatasi" });
+        } else {
+            res.json(docs || []);
+        }
+    });
+});
+
+/**
  * GET /search: Ilac ara (isim veya barkod ile)
  * Query params: q (arama terimi), limit (sonuc limiti)
  */

@@ -84,12 +84,9 @@
         }
         .products-grid {
             flex: 1;
-            padding: 10px;
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
-            gap: 10px;
+            padding: 0;
             overflow-y: auto;
-            align-content: start;
+            background: white;
         }
         .product-card {
             background: white;
@@ -255,7 +252,7 @@
                     <!-- Kategoriler JS ile yuklenecek -->
                 </div>
                 <div class="products-grid" id="products-grid">
-                    <!-- Urunler JS ile yuklenecek -->
+                    <!-- Urunler yuklenecek -->
                 </div>
             </div>
 
@@ -314,142 +311,327 @@
 
     <script src="../assets/dist/js/bundle.min.js"></script>
     <script>
-        const { ipcRenderer } = require('electron');
+        // Global degiskenler
+        var API_PORT = null;
+        var API_BASE = null;
+        var searchTimeout = null;
+        var cart = [];
+        var allDrugsList = [];
+
+        // Sayfa yuklenir yuklenmez calis
+        (function() {
+            var grid = document.getElementById('products-grid');
+            if (grid) {
+                grid.innerHTML = '<div style="padding:20px;text-align:center;">Port aranıyor...</div>';
+            }
+
+            // Parent'tan port al
+            var port = null;
+            try {
+                if (window.parent && window.parent.API_PORT) {
+                    port = window.parent.API_PORT;
+                }
+            } catch(e) {}
+
+            // URL'den port al
+            if (!port) {
+                try {
+                    var urlParams = new URLSearchParams(window.location.search);
+                    port = urlParams.get('port');
+                } catch(e) {}
+            }
+
+            if (port) {
+                API_PORT = port;
+                API_BASE = 'http://localhost:' + port;
+                if (grid) grid.innerHTML = '<div style="padding:20px;text-align:center;">Port bulundu: ' + port + ', ilaçlar yükleniyor...</div>';
+                loadDrugs();
+            } else {
+                // Port taramasi yap
+                scanPorts();
+            }
+        })();
+
+        // Port taramasi
+        function scanPorts() {
+            var grid = document.getElementById('products-grid');
+            var ports = [51522, 51480, 51851, 59849, 51295, 52000, 53000, 54000, 55000, 56000, 57000, 58000, 59000, 60000];
+            var found = false;
+            var checked = 0;
+
+            for (var i = 50000; i <= 60000; i += 500) {
+                ports.push(i);
+            }
+
+            ports.forEach(function(p) {
+                if (found) return;
+
+                var xhr = new XMLHttpRequest();
+                xhr.timeout = 500;
+                xhr.onreadystatechange = function() {
+                    if (found) return;
+                    if (xhr.readyState === 4 && xhr.status === 200) {
+                        found = true;
+                        API_PORT = p;
+                        API_BASE = 'http://localhost:' + p;
+                        if (grid) grid.innerHTML = '<div style="padding:20px;text-align:center;color:green;">Port bulundu: ' + p + '</div>';
+                        loadDrugs();
+                    }
+                };
+                xhr.onerror = function() { checked++; };
+                xhr.ontimeout = function() { checked++; };
+                try {
+                    xhr.open('GET', 'http://localhost:' + p + '/api/drugs/stats', true);
+                    xhr.send();
+                } catch(e) { checked++; }
+            });
+
+            // 5 saniye sonra hala bulunamadiysa hata goster
+            setTimeout(function() {
+                if (!found && grid) {
+                    grid.innerHTML = '<div style="padding:20px;text-align:center;color:red;">Sunucu bulunamadı!</div>';
+                }
+            }, 5000);
+        }
+
+        // Ilaclari yukle
+        function loadDrugs() {
+            var grid = document.getElementById('products-grid');
+            if (!API_BASE) {
+                if (grid) grid.innerHTML = '<div style="padding:20px;color:red;">API tanımlı değil</div>';
+                return;
+            }
+
+            var xhr = new XMLHttpRequest();
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState === 4) {
+                    if (xhr.status === 200) {
+                        try {
+                            allDrugsList = JSON.parse(xhr.responseText);
+                            renderProducts(allDrugsList.slice(0, 500));
+                            var searchInput = document.getElementById('product-search');
+                            if (searchInput) {
+                                searchInput.placeholder = 'İlaç ara (' + allDrugsList.length + ' ilaç yüklendi)...';
+                            }
+                            // Parol var mı kontrol et
+                            var parolCount = 0;
+                            for (var i = 0; i < allDrugsList.length; i++) {
+                                if (allDrugsList[i].name && allDrugsList[i].name.toLowerCase().indexOf('parol') >= 0) {
+                                    parolCount++;
+                                }
+                            }
+                            console.log('Toplam ilaç: ' + allDrugsList.length + ', PAROL içeren: ' + parolCount);
+                        } catch(e) {
+                            if (grid) grid.innerHTML = '<div style="padding:20px;color:red;">JSON parse hatası: ' + e.message + '</div>';
+                        }
+                    } else {
+                        if (grid) grid.innerHTML = '<div style="padding:20px;color:red;">API hatası: ' + xhr.status + '</div>';
+                    }
+                }
+            };
+            xhr.onerror = function() {
+                if (grid) grid.innerHTML = '<div style="padding:20px;color:red;">Bağlantı hatası</div>';
+            };
+            xhr.open('GET', API_BASE + '/api/drugs/all?limit=50000', true);
+            xhr.send();
+        }
 
         // Yeni POS penceresi ac
         function openNewPOS() {
-            ipcRenderer.send('open-window', 'pos');
+            try {
+                if (window.parent && window.parent.MDI) {
+                    window.parent.MDI.createWindow('pos');
+                }
+            } catch(e) {}
         }
 
         // Sepet islemleri
-        let cart = [];
-
         function clearCart() {
             cart = [];
             renderCart();
+            updateTotals();
         }
 
         function holdOrder() {
-            if (cart.length === 0) {
-                alert('Sepet bos!');
-                return;
-            }
-            // Siparisi beklet
+            if (cart.length === 0) { alert('Sepet bos!'); return; }
             alert('Siparis beklemeye alindi');
             clearCart();
         }
 
         function processPayment() {
-            if (cart.length === 0) {
-                alert('Sepet bos!');
-                return;
-            }
-            // Odeme islemi
+            if (cart.length === 0) { alert('Sepet bos!'); return; }
             alert('Odeme islemi baslatiliyor...');
         }
 
         function renderCart() {
-            const container = document.getElementById('cart-items');
-            const emptyCart = document.getElementById('empty-cart');
-            const cartCount = document.getElementById('cart-count');
+            var container = document.getElementById('cart-items');
+            var emptyCart = document.getElementById('empty-cart');
+            var cartCount = document.getElementById('cart-count');
+            if (!container) return;
 
+            container.innerHTML = '';
             if (cart.length === 0) {
-                emptyCart.style.display = 'block';
-                container.innerHTML = '';
-                container.appendChild(emptyCart);
+                if (emptyCart) { emptyCart.style.display = 'block'; container.appendChild(emptyCart); }
             } else {
-                emptyCart.style.display = 'none';
-                // Sepet itemlerini renderla
+                if (emptyCart) emptyCart.style.display = 'none';
+                for (var i = 0; i < cart.length; i++) {
+                    var item = cart[i];
+                    var div = document.createElement('div');
+                    div.className = 'cart-item';
+                    div.innerHTML = '<div class="qty">' + item.qty + 'x</div>' +
+                        '<div class="info"><div class="name">' + item.name + '</div>' +
+                        '<div class="price">' + parseFloat(item.price || 0).toFixed(2) + ' TL</div></div>' +
+                        '<div class="total">' + (parseFloat(item.price || 0) * item.qty).toFixed(2) + ' TL</div>' +
+                        '<div class="remove" onclick="removeFromCart(' + i + ')"><i class="fa fa-times"></i></div>';
+                    container.appendChild(div);
+                }
             }
-            cartCount.textContent = cart.length;
+            if (cartCount) cartCount.textContent = cart.length;
+        }
+
+        function removeFromCart(index) {
+            cart.splice(index, 1);
+            renderCart();
+            updateTotals();
         }
 
         // Saat guncelle
         function updateTime() {
-            const now = new Date();
-            const timeStr = now.toLocaleTimeString('tr-TR');
-            document.getElementById('status-time').textContent = timeStr;
+            var now = new Date();
+            var el = document.getElementById('status-time');
+            if (el) el.textContent = now.toLocaleTimeString('tr-TR');
         }
         setInterval(updateTime, 1000);
-        updateTime();
 
-        // Sayfa yuklendiginde
+        // Arama input event
         document.addEventListener('DOMContentLoaded', function() {
-            // Urunleri ve kategorileri yukle
-            loadCategories();
-            loadProducts();
+            var searchInput = document.getElementById('product-search');
+            if (searchInput) {
+                searchInput.addEventListener('input', function(e) {
+                    var query = e.target.value.trim().toLowerCase();
+                    if (searchTimeout) clearTimeout(searchTimeout);
+                    searchTimeout = setTimeout(function() { filterDrugs(query); }, 150);
+                });
+                searchInput.addEventListener('keypress', function(e) {
+                    if (e.key === 'Enter') {
+                        var firstCard = document.querySelector('.product-card');
+                        if (firstCard) firstCard.click();
+                    }
+                });
+            }
         });
 
-        function loadCategories() {
-            // API'den kategorileri yukle
-            fetch('http://localhost:52484/api/category')
-                .then(res => res.json())
-                .then(data => {
-                    const tabs = document.getElementById('category-tabs');
-                    data.forEach(cat => {
-                        const tab = document.createElement('div');
-                        tab.className = 'category-tab';
-                        tab.dataset.category = cat.id;
-                        tab.textContent = cat.category_name;
-                        tab.onclick = () => filterByCategory(cat.id);
-                        tabs.appendChild(tab);
-                    });
-                })
-                .catch(err => console.error('Kategori yukleme hatasi:', err));
+        // Listeyi filtrele
+        function filterDrugs(query) {
+            if (!query || query.length === 0) {
+                renderProducts(allDrugsList.slice(0, 500));
+                return;
+            }
+
+            query = query.toLowerCase();
+            var filtered = [];
+            for (var i = 0; i < allDrugsList.length; i++) {
+                var drug = allDrugsList[i];
+                var name = (drug.name || '').toLowerCase();
+                var barcode = (drug.barcode || '').toString();
+                var firm = (drug.firmName || '').toLowerCase();
+                if (name.indexOf(query) >= 0 || barcode.indexOf(query) === 0 || firm.indexOf(query) >= 0) {
+                    filtered.push(drug);
+                }
+            }
+
+            var grid = document.getElementById('products-grid');
+            if (filtered.length === 0) {
+                if (grid) grid.innerHTML = '<div style="text-align:center;padding:40px;color:#999;">Sonuç bulunamadı<br><small>Toplam ' + allDrugsList.length + ' ilaç içinde "' + query + '" bulunamadı</small></div>';
+            } else {
+                renderProducts(filtered.slice(0, 500));
+            }
         }
 
-        function loadProducts() {
-            fetch('http://localhost:52484/api/inventory')
-                .then(res => res.json())
-                .then(data => {
-                    renderProducts(data);
-                })
-                .catch(err => console.error('Urun yukleme hatasi:', err));
-        }
-
+        // Urunleri liste olarak goster
         function renderProducts(products) {
-            const grid = document.getElementById('products-grid');
-            grid.innerHTML = '';
-            products.forEach(p => {
-                const card = document.createElement('div');
-                card.className = 'product-card';
-                card.onclick = () => addToCart(p);
-                card.innerHTML = `
-                    <img src="${p.image || '../assets/images/default-product.png'}" onerror="this.src='../assets/images/default-product.png'">
-                    <div class="name">${p.product_name}</div>
-                    <div class="price">${parseFloat(p.price).toFixed(2)} TL</div>
-                `;
-                grid.appendChild(card);
-            });
+            var grid = document.getElementById('products-grid');
+            if (!grid) return;
+
+            // Liste tablosu olustur
+            var html = '<table style="width:100%;border-collapse:collapse;font-size:12px;">';
+            html += '<thead><tr style="background:#1976d2;color:white;position:sticky;top:0;">';
+            html += '<th style="padding:8px;text-align:left;">İlaç Adı</th>';
+            html += '<th style="padding:8px;text-align:left;width:150px;">Firma</th>';
+            html += '<th style="padding:8px;text-align:center;width:60px;">Reçete</th>';
+            html += '<th style="padding:8px;text-align:right;width:80px;">Fiyat</th>';
+            html += '</tr></thead><tbody>';
+
+            for (var i = 0; i < products.length; i++) {
+                var p = products[i];
+                var bgColor = i % 2 === 0 ? '#fff' : '#f5f5f5';
+                var badgeColor = '#4caf50';
+                if (p.prescriptionType === 'Mor') badgeColor = '#9c27b0';
+                else if (p.prescriptionType === 'Kirmizi') badgeColor = '#f44336';
+                else if (p.prescriptionType === 'Turuncu') badgeColor = '#ff9800';
+
+                html += '<tr style="background:' + bgColor + ';cursor:pointer;" onclick="addToCartByIndex(' + i + ')" onmouseover="this.style.background=\'#e3f2fd\'" onmouseout="this.style.background=\'' + bgColor + '\'">';
+                html += '<td style="padding:6px 8px;">' + (p.name || '') + '</td>';
+                html += '<td style="padding:6px 8px;color:#666;">' + (p.firmName ? p.firmName.substring(0,25) : '') + '</td>';
+                html += '<td style="padding:6px 8px;text-align:center;"><span style="background:' + badgeColor + ';color:white;padding:2px 6px;border-radius:3px;font-size:10px;">' + (p.prescriptionType || 'N') + '</span></td>';
+                var priceVal = parseFloat(p.price || 0);
+                html += '<td style="padding:6px 8px;text-align:right;font-weight:bold;color:' + (priceVal > 0 ? '#1976d2' : '#999') + ';">' + (priceVal > 0 ? priceVal.toFixed(2) + ' TL' : '-') + '</td>';
+                html += '</tr>';
+            }
+
+            html += '</tbody></table>';
+            grid.innerHTML = html;
+
+            // Gosterilen urunleri kaydet
+            window.displayedProducts = products;
+        }
+
+        // Index ile sepete ekle
+        function addToCartByIndex(index) {
+            if (window.displayedProducts && window.displayedProducts[index]) {
+                addToCart(window.displayedProducts[index]);
+            }
         }
 
         function addToCart(product) {
-            const existing = cart.find(item => item.id === product.id);
+            var existing = null;
+            for (var i = 0; i < cart.length; i++) {
+                if (cart[i]._id === product._id) {
+                    existing = cart[i];
+                    break;
+                }
+            }
             if (existing) {
                 existing.qty++;
             } else {
-                cart.push({ ...product, qty: 1 });
+                var newItem = {};
+                for (var key in product) {
+                    newItem[key] = product[key];
+                }
+                newItem.qty = 1;
+                cart.push(newItem);
             }
             renderCart();
             updateTotals();
         }
 
         function updateTotals() {
-            let subtotal = 0;
-            cart.forEach(item => {
-                subtotal += parseFloat(item.price) * item.qty;
-            });
-            const tax = subtotal * 0.18;
-            const total = subtotal + tax;
+            var subtotal = 0;
+            for (var i = 0; i < cart.length; i++) {
+                subtotal += parseFloat(cart[i].price || 0) * cart[i].qty;
+            }
+            var tax = subtotal * 0.18;
+            var total = subtotal + tax;
 
-            document.getElementById('subtotal').textContent = subtotal.toFixed(2) + ' TL';
-            document.getElementById('tax').textContent = tax.toFixed(2) + ' TL';
-            document.getElementById('total').textContent = total.toFixed(2) + ' TL';
+            var el1 = document.getElementById('subtotal');
+            var el2 = document.getElementById('tax');
+            var el3 = document.getElementById('total');
+            if (el1) el1.textContent = subtotal.toFixed(2) + ' TL';
+            if (el2) el2.textContent = tax.toFixed(2) + ' TL';
+            if (el3) el3.textContent = total.toFixed(2) + ' TL';
         }
 
         function filterByCategory(categoryId) {
-            document.querySelectorAll('.category-tab').forEach(t => t.classList.remove('active'));
-            event.target.classList.add('active');
             // Kategoriye gore filtrele
         }
     </script>

@@ -30,7 +30,7 @@ function createWindow() {
         frame: true,
         webPreferences: {
             nodeIntegration: true,
-            enableRemoteModule: false,
+            enableRemoteModule: true,
             contextIsolation: false,
         },
     });
@@ -132,7 +132,7 @@ function createChildWindow(windowType, options = {}) {
         title: config.title,
         webPreferences: {
             nodeIntegration: true,
-            enableRemoteModule: false,
+            enableRemoteModule: true,
             contextIsolation: false,
         },
     });
@@ -226,6 +226,11 @@ ipcMain.on("close-window", (event, windowId) => {
     if (win && !win.isDestroyed()) {
         win.close();
     }
+});
+
+// API portunu al
+ipcMain.handle("get-api-port", async () => {
+    return process.env.PORT || '3000';
 });
 
 //Context menu

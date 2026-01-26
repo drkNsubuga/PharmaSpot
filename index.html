@@ -1041,6 +1041,11 @@
     </div>
     <script src="assets/dist/js/bundle.min.js"></script>
     <script>
+        // Global API port - iframe'ler bu degiskene erisebilir
+        window.API_PORT = (typeof process !== 'undefined' && process.env && process.env.PORT) ? process.env.PORT : '3000';
+        window.API_BASE = 'http://localhost:' + window.API_PORT;
+        console.log('Global API Port:', window.API_PORT);
+
         // =============================================
         // MDI WINDOW MANAGER - Coklu Pencere Sistemi
         // =============================================
@@ -1082,6 +1087,10 @@
                 windowEl.id = windowId;
                 windowEl.style.cssText = `left: ${offsetX}px; top: ${offsetY}px; width: ${config.width}px; height: ${config.height}px; z-index: ${++this.zIndexCounter};`;
 
+                // API portunu URL'e ekle
+                const apiPort = typeof process !== 'undefined' ? process.env.PORT : '3000';
+                const urlWithPort = config.url + '?port=' + apiPort;
+
                 windowEl.innerHTML = `
                     <div class="mdi-window-titlebar" onmousedown="MDI.startDrag(event, '${windowId}')">
                         <i class="fa ${config.icon} window-icon"></i>
@@ -1093,7 +1102,7 @@
                         </div>
                     </div>
                     <div class="mdi-window-content">
-                        <iframe src="${config.url}" frameborder="0"></iframe>
+                        <iframe src="${urlWithPort}" frameborder="0"></iframe>
                     </div>
                     <div class="mdi-window-resize" onmousedown="MDI.startResize(event, '${windowId}')"></div>
                 `;
