@@ -161,15 +161,16 @@ app.post("/product", function (req, res) {
         _id: parseInt(validator.escape(req.body.id)),
         barcode: parseInt(validator.escape(req.body.barcode)),
         expirationDate: validator.escape(req.body.expirationDate),
-        price: validator.escape(req.body.price),
+        price: validator.escape(req.body.price) == "" ? 0 : parseFloat(validator.escape(req.body.price)),
+        cost: validator.escape(req.body.cost) == "" ? 0 : parseFloat(validator.escape(req.body.cost)),
         category: validator.escape(req.body.category),
         quantity:
             validator.escape(req.body.quantity) == ""
                 ? 0
-                : validator.escape(req.body.quantity),
+                : parseFloat(validator.escape(req.body.quantity)),
         name: validator.escape(req.body.name),
         stock: req.body.stock === "on" ? 0 : 1,
-        minStock: validator.escape(req.body.minStock),
+        minStock: validator.escape(req.body.minStock) == "" ? 0 : parseFloat(validator.escape(req.body.minStock)),
         img: image,
     };
 
@@ -280,8 +281,10 @@ app.decrementInventory = function (products) {
                     callback();
                 } else {
                     let updatedQuantity =
-                        parseInt(product.quantity) -
-                        parseInt(transactionProduct.quantity);
+                        (parseFloat(product.quantity) || 0) -
+                        (parseFloat(transactionProduct.quantity) || 0);
+
+                    if (updatedQuantity < 0) updatedQuantity = 0;
 
                     inventoryDB.update(
                         {
