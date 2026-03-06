@@ -42,7 +42,7 @@
     "lodash": "^4.17.21",
     "macaddress": "^0.5.3",
     "moment": "^2.29.4",
-    "multer": "^2.0.2",
+    "multer": "^2.1.1",
     "notiflix": "^3.2.5",
     "print-js": "^1.6.0",
     "sanitize": "^2.1.2",
