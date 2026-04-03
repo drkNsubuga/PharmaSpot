@@ -86,7 +86,7 @@
     "@electron-forge/publisher-github": "^7.8.3",
     "browser-sync": "^3.0.3",
     "cross-env": "^7.0.3",
-    "electron": "^37.1.0",
+    "electron": "^41.1.1",
     "electron-is-dev": "^2.0.0",
     "electron-log": "^4.4.8",
     "electron-reloader": "^1.2.3",
