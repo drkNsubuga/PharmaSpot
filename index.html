@@ -526,6 +526,11 @@
                                 <input type="text" required="required" name="price" placeholder="Price" class="form-control number-input" id="product_price">
                             </div>
                             <div class="form-group">
+                                <label for="product_cost">Cost Price</label>
+                                <input type="text" name="cost" placeholder="Cost Price" class="form-control number-input" id="product_cost">
+                                <small class="text-muted">Used for profit/margin reporting (optional).</small>
+                            </div>
+                            <div class="form-group">
                                 <label for="expirationDate">Expiry Date</label>
                                 <input type="text" name="expirationDate" parsley-trigger="change" placeholder="dd/mm/yyyy" class="form-control" id="expirationDate" readonly>
                             </div>
@@ -589,6 +594,7 @@
                                     <th>Item</th>
                                     <th>Name</th>
                                     <th>Price</th>
+                                    <th>Cost</th>
                                     <th>Stock</th>
                                     <th>Expiry Date</th>
                                     <th>Category</th>

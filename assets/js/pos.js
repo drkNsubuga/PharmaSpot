@@ -165,6 +165,57 @@ $.fn.allowOnlyNumbers = function() {
 };
 $('.number-input').allowOnlyNumbers();
 
+    // ---- Fractional quantity support (0.5, 1/2, ½, نصف, ثلث, ربع...) ----
+    function parseQuantity(input) {
+      if (typeof input === "number") return input;
+      let s = String(input ?? "").trim();
+      if (!s) return NaN;
+
+      // normalize: Arabic decimal comma, extra spaces
+      s = s.replace(/,/g, ".").replace(/\s+/g, " ").trim();
+
+      // Arabic keywords
+      const ar = {
+        "نصف": 0.5,
+        "ثلث": 1 / 3,
+        "ثلثين": 2 / 3,
+        "ربع": 0.25,
+        "ثلاثة ارباع": 0.75,
+        "ثلاثة أرباع": 0.75,
+        "ربعين": 0.5,
+      };
+      if (ar[s] != null) return ar[s];
+
+      // Unicode fractions
+      const uni = { "½": 0.5, "⅓": 1 / 3, "⅔": 2 / 3, "¼": 0.25, "¾": 0.75 };
+      if (uni[s] != null) return uni[s];
+
+      // mixed number: "1 1/2"
+      let m = s.match(/^(\d+)\s+(\d+)\s*\/\s*(\d+)$/);
+      if (m) return Number(m[1]) + Number(m[2]) / Number(m[3]);
+
+      // fraction: "1/2"
+      m = s.match(/^(\d+)\s*\/\s*(\d+)$/);
+      if (m) return Number(m[1]) / Number(m[2]);
+
+      // decimal
+      const v = Number(s);
+      return Number.isFinite(v) ? v : NaN;
+    }
+
+    function roundQty(q) {
+      // 3 decimals is enough for 1/3, 1/4, etc.
+      return Math.round(q * 1000) / 1000;
+    }
+
+    function formatQty(q) {
+      const n = parseQuantity(q);
+      if (!Number.isFinite(n)) return String(q ?? "");
+      if (Math.abs(n - Math.round(n)) < 1e-9) return String(Math.round(n));
+      return String(roundQty(n));
+    }
+
+
 //Serialize Object
 $.fn.serializeObject = function () {
   var o = {};
@@ -267,6 +318,7 @@ if (auth == undefined) {
       $.get(api + "inventory/products", function (data) {
         data.forEach((item) => {
           item.price = parseFloat(item.price).toFixed(2);
+        item.cost = parseFloat(item.cost ?? 0).toFixed(2);
         });
 
         allProducts = [...data];
@@ -424,7 +476,7 @@ if (auth == undefined) {
         success: function (product) {
           $(".search-barcode-btn").html(searchBarCodeIcon);
           const expired = isExpired(product.expirationDate);
-          if (product._id != undefined && product.quantity >= 1 && !expired) {
+          if (product._id != undefined && (parseFloat(product.quantity) || 0) > 0 && !expired) {
             $(this).addProductToCart(product);
             $("#searchBarCode").get(0).reset();
             $("#basic-addon2").empty();
@@ -437,7 +489,7 @@ if (auth == undefined) {
               `${product.name} is expired`,
               "Ok",
             );
-          } else if (product.quantity < 1) {
+          } else if ((parseFloat(product.quantity) || 0) <= 0) {
             notiflix.Report.info(
               "Out of stock!",
               "This item is currently unavailable",
@@ -495,7 +547,8 @@ if (auth == undefined) {
         id: data._id,
         product_name: data.name,
         sku: data.sku,
-        price: data.price,
+        price: parseFloat(data.price) || 0,
+        cost: parseFloat(data.cost ?? 0) || 0,
         quantity: 1,
       };
 
@@ -527,10 +580,10 @@ if (auth == undefined) {
       let grossTotal;
       let total_items = 0;
       $.each(cart, function (index, data) {
-        total += data.quantity * data.price;
-        total_items += parseInt(data.quantity);
+        total += (parseQuantity(data.quantity) || 0) * (parseFloat(data.price) || 0);
+        total_items += (parseQuantity(data.quantity) || 0);
       });
-      $("#total").text(total_items);
+      $("#total").text(formatQty(total_items));
       total = total - $("#inputDiscount").val();
       $("#price").text(validator.unescape(settings.symbol) + moneyFormat(total.toFixed(2)));
 
@@ -572,9 +625,9 @@ if (auth == undefined) {
                 $("<input>", {
                   class: "form-control",
                   type: "text",
-                  readonly: "",
-                  value: data.quantity,
-                  min: "1",
+                  value: formatQty(data.quantity),
+                  inputmode: "decimal",
+                  placeholder: "e.g. 0.5 / 1/2 / ½ / نصف",
                   onInput: "$(this).qtInput(" + index + ")",
                 }),
                 $("<span>", { class: "input-group-btn" }).append(
@@ -589,7 +642,7 @@ if (auth == undefined) {
               class: "col-md-3",
               text:
                 validator.unescape(settings.symbol) +
-                moneyFormat((data.price * data.quantity).toFixed(2)),
+                moneyFormat(((parseFloat(data.price) || 0) * (parseQuantity(data.quantity) || 0)).toFixed(2)),
             }),
             $("<div>", { class: "col-md-1" }).append(
               $("<button>", {
@@ -613,9 +666,14 @@ if (auth == undefined) {
         return selected._id == parseInt(item.id);
       });
 
-      if (product[0].stock == 1) {
-        if (item.quantity < product[0].quantity) {
-          item.quantity = parseInt(item.quantity) + 1;
+      const step = 1; // set to 0.25 to make +/- work in quarters by default
+      const current = parseQuantity(item.quantity) || 0;
+      const next = roundQty(current + step);
+
+      if (product[0] && product[0].stock == 1) {
+        const max = parseQuantity(product[0].quantity) || 0;
+        if (next <= max) {
+          item.quantity = next;
           $(this).renderTable(cart);
         } else {
           notiflix.Report.info(
@@ -625,22 +683,41 @@ if (auth == undefined) {
           );
         }
       } else {
-        item.quantity = parseInt(item.quantity) + 1;
+        item.quantity = next;
         $(this).renderTable(cart);
       }
     };
 
     $.fn.qtDecrement = function (i) {
-      if (item.quantity > 1) {
-        item = cart[i];
-        item.quantity = parseInt(item.quantity) - 1;
+      item = cart[i];
+      const step = 1; // set to 0.25 to make +/- work in quarters by default
+      const current = parseQuantity(item.quantity);
+      if (!Number.isFinite(current)) return;
+
+      const next = roundQty(current - step);
+      if (next > 0) {
+        item.quantity = next;
         $(this).renderTable(cart);
       }
     };
 
     $.fn.qtInput = function (i) {
       item = cart[i];
-      item.quantity = $(this).val();
+      const q = roundQty(parseQuantity($(this).val()));
+      if (!Number.isFinite(q) || q <= 0) return;
+
+      let product = allProducts.filter(function (selected) {
+        return selected._id == parseInt(item.id);
+      });
+      if (product[0] && product[0].stock == 1) {
+        const max = parseQuantity(product[0].quantity) || 0;
+        if (q > max) {
+          notiflix.Notify.warning("Quantity exceeds available stock");
+          return;
+        }
+      }
+
+      item.quantity = q;
       $(this).renderTable(cart);
     };
 
@@ -1334,6 +1411,7 @@ if (auth == undefined) {
 
       $("#productName").val(allProducts[index].name);
       $("#product_price").val(allProducts[index].price);
+      $("#product_cost").val(allProducts[index].cost ?? 0);
       $("#quantity").val(allProducts[index].quantity);
       $("#barcode").val(allProducts[index].barcode || allProducts[index]._id);
       $("#expirationDate").val(allProducts[index].expirationDate);
@@ -1615,6 +1693,7 @@ if (auth == undefined) {
             <td>${product.name}
             ${product.expiryAlert}</td>
             <td>${validator.unescape(settings.symbol)}${product.price}</td>
+            <td>${validator.unescape(settings.symbol)}${product.cost ?? 0}</td>
             <td>${product.stock == 1 ? product.quantity : "N/A"}
             ${product.stockAlert}
             </td>
@@ -2045,7 +2124,7 @@ function loadTransactions() {
             result[item].forEach((i) => {
               id = i.id;
               price = i.price;
-              quantity = quantity + parseInt(i.quantity);
+              quantity = quantity + (parseQuantity(i.quantity) || 0);
             });
 
             sold.push({
@@ -2106,7 +2185,7 @@ function loadSoldProducts() {
   $("#product_sales").empty();
 
   sold.forEach((item, index) => {
-    items = items + parseInt(item.qty);
+    items = items + (parseQuantity(item.qty) || 0);
     products++;
 
     let product = allProducts.filter(function (selected) {
@@ -2117,7 +2196,7 @@ function loadSoldProducts() {
 
     sold_list += `<tr>
             <td>${item.product}</td>
-            <td>${item.qty}</td>
+            <td>${formatQty(item.qty)}</td>
             <td>${
               product[0].stock == 1
                 ? product.length > 0
