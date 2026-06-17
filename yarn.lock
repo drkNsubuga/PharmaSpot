@@ -3291,14 +3291,14 @@ end-of-stream@^1.1.0, end-of-stream@^1.4.4:
     once "^1.4.0"
 
 engine.io-client@~6.6.1:
-  version "6.6.5"
-  resolved "https://registry.yarnpkg.com/engine.io-client/-/engine.io-client-6.6.5.tgz#9baebe6358dc432fb174bb42ed74cfd17626d051"
-  integrity sha512-QCwxUDULPlXv8F6tqMMKx5dNkTe6OaBYRMPYeXKBlyOoKvAmE0ac6pW7fFhSscJ/5SI7666/U/B+MElbsrJlIg==
+  version "6.6.6"
+  resolved "https://registry.yarnpkg.com/engine.io-client/-/engine.io-client-6.6.6.tgz#8a8f1e451b1f6d4acf413305445e42133d1cbe9a"
+  integrity sha512-iY6QdftLQ9pyiPoX082bpf/u1UewnOaJrtJIF9T0++QB34lZrj0uP+Q/bj8AlUsAxqhnkTV2BS8SBZSxOmoV5Q==
   dependencies:
     "@socket.io/component-emitter" "~3.1.0"
     debug "~4.4.1"
     engine.io-parser "~5.2.1"
-    ws "~8.20.1"
+    ws "~8.21.0"
     xmlhttprequest-ssl "~2.1.1"
 
 engine.io-parser@~5.2.1:
@@ -3307,9 +3307,9 @@ engine.io-parser@~5.2.1:
   integrity sha512-HqD3yTBfnBxIrbnM1DoD6Pcq8NECnh8d4As1Qgh0z5Gg3jRRIqijury0CL3ghu/edArpUYiYqQiDUQBIs4np3Q==
 
 engine.io@~6.6.0:
-  version "6.6.8"
-  resolved "https://registry.yarnpkg.com/engine.io/-/engine.io-6.6.8.tgz#52c43629964fb9d84bf991e0e34e3c28d4e0d3e0"
-  integrity sha512-2agL3ueZhqxoVrfmntO8yuVj+uNSlIOnhykYHk3Cq0ShYPdUjjUiSJrQvXjq01I9jAuI0Zl2YO8Evv5Mqytm5g==
+  version "6.6.9"
+  resolved "https://registry.yarnpkg.com/engine.io/-/engine.io-6.6.9.tgz#fd17e9f4e3a256423592574b60ac262e91af4b82"
+  integrity sha512-clKkw4C7nJ22mGgoVcCg6V/W/TxdNyIOTr89k2ONZu81qqkddPFDF0LXcbAwhzPD8DjkiRCjzuiO6Y+fkpD4vg==
   dependencies:
     "@types/cors" "^2.8.12"
     "@types/node" ">=10.0.0"
@@ -3320,7 +3320,7 @@ engine.io@~6.6.0:
     cors "~2.8.5"
     debug "~4.4.1"
     engine.io-parser "~5.2.1"
-    ws "~8.20.1"
+    ws "~8.21.0"
 
 env-paths@^2.2.0, env-paths@^2.2.1:
   version "2.2.1"
@@ -7426,12 +7426,12 @@ smart-buffer@^4.2.0:
   integrity sha512-94hK0Hh8rPqQl2xXc3HsaBoOXKV20MToPkcXvwbISWLEs+64sBq5kFgn2kJDHb1Pry9yrP0dxrCI9RRci7RXKg==
 
 socket.io-adapter@~2.5.2:
-  version "2.5.7"
-  resolved "https://registry.yarnpkg.com/socket.io-adapter/-/socket.io-adapter-2.5.7.tgz#463428625f55be6f2f784a4501013b71454c0761"
-  integrity sha512-e0LyK91f3cUxTmv95/KzoLg47+zF+s/sbxRGDNsyG4dmIP8ZSX8ax6byOxfJXeNNtS/8AZlfD+uP7gBeR7DLlg==
+  version "2.5.8"
+  resolved "https://registry.yarnpkg.com/socket.io-adapter/-/socket.io-adapter-2.5.8.tgz#c9fcabf602dbd5b09258ca98e5ec6a7ae4360698"
+  integrity sha512-6Oy52pbg+kvdCVvjcN+FnY7BvxZ7cIHNScbvztT/It5d0vbwoJoVZmF2gjJmnV0/4WlXRfG15zc45ySk9Ah8bw==
   dependencies:
     debug "~4.4.1"
-    ws "~8.20.1"
+    ws "~8.21.0"
 
 socket.io-client@^4.4.1:
   version "4.8.1"
@@ -8494,10 +8494,10 @@ write-file-atomic@^4.0.2:
     imurmurhash "^0.1.4"
     signal-exit "^3.0.7"
 
-ws@~8.20.1:
-  version "8.20.1"
-  resolved "https://registry.yarnpkg.com/ws/-/ws-8.20.1.tgz#91a9ae2b312ccf98e0a85ec499b48cef45ab0ddb"
-  integrity sha512-It4dO0K5v//JtTXuPkfEOaI3uUN87iYPnqo/ZzqCoG3g8uhA66QUMs/SrM0YK7/NAu+r4LMh/9dq2A7k+rHs+w==
+ws@~8.21.0:
+  version "8.21.0"
+  resolved "https://registry.yarnpkg.com/ws/-/ws-8.21.0.tgz#012e413fc07429945121b0c153158c4343086951"
+  integrity sha512-Vsp28b7DRcimFQvrqu2Wek3z1iYxDCWqHYB8Qsnk/S4RfaCQzPGPyBNuVjJV3cd6UiKtUtp6sNM77gWvzcCH+g==
 
 xmlbuilder@^15.1.1:
   version "15.1.1"
