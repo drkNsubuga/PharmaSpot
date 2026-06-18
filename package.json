@@ -42,7 +42,7 @@
     "lodash": "^4.17.24",
     "macaddress": "^0.5.3",
     "moment": "^2.29.4",
-    "multer": "^2.1.1",
+    "multer": "^2.2.0",
     "notiflix": "^3.2.5",
     "print-js": "^1.6.0",
     "sanitize": "^2.1.2",
@@ -86,7 +86,7 @@
     "dompurify": "^3.4.10",
     "follow-redirects": "^1.15.11",
     "lodash": "^4.17.24",
-    "multer": "^2.1.1",
+    "multer": "^2.2.0",
     "picomatch": "^2.3.2",
     "electron": "^41.2.2"
   },
