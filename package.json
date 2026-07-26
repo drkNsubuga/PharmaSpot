@@ -27,7 +27,7 @@
     "electron-context-menu": "^3.6.1",
     "electron-squirrel-startup": "^1.0.0",
     "electron-store": "^8.1.0",
-    "electron-updater": "^6.3.0",
+    "electron-updater": "^6.8.9",
     "express": "^4.22.2",
     "express-fileupload": "^1.4.0",
     "express-rate": "^0.0.1",
