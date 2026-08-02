@@ -41,6 +41,9 @@
                                 <i class="fa fa-plus"></i>
                             </button>
                         </div>
+                        <button id="newProductBulkModal" data-toggle="modal" data-target="#bulkImport" type="button" class="btn btn-info waves-effect waves-light" title="Bulk import products from CSV">
+                            <span class="btn-label"><i class="fa fa-upload"></i></span> Bulk Import
+                        </button>
                         <div class="btn-group p_two">
                             <button id="categoryModal" data-toggle="modal" data-target="#Categories" type="button" class="btn btn-success waves-effect waves-light">
                                 <span class="btn-label"><i class="glyphicon glyphicon-th"></i> </span> Categories
@@ -554,6 +557,82 @@
                             </div>
                             <input type="submit" id="submitProduct" class="btn btn-primary btn-block waves-effect waves-light">
                         </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="bulkImport" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="bulkImportLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                        <h4 class="modal-title" id="bulkImportLabel">Bulk Import Products</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div id="bulkImportPanelUpload">
+                            <form id="bulkImportForm" enctype="multipart/form-data">
+                                <div class="form-group">
+                                    <label for="csvfile">CSV File</label>
+                                    <input type="file" name="csvfile" id="csvfile" accept=".csv" class="form-control" required>
+                                    <p class="help-block">Max 5,000 rows, 5 MB. UTF-8 CSV with header row.</p>
+                                </div>
+                                <button type="submit" class="btn btn-primary waves-effect waves-light">Parse &amp; Preview</button>
+                                <button type="button" class="btn btn-default waves-effect waves-light" data-dismiss="modal">Cancel</button>
+                                <a href="#" id="downloadBulkTemplate" class="btn btn-link pull-right">
+                                    <i class="fa fa-download"></i> Download Template
+                                </a>
+                            </form>
+                        </div>
+                        <div id="bulkImportPanelPreview" style="display:none;">
+                            <div class="row" style="margin-bottom: 10px;">
+                                <div class="col-md-12">
+                                    <span class="label label-success" id="bulkImportValidCount">0 valid</span>
+                                    <span class="label label-danger" id="bulkImportInvalidCount">0 invalid</span>
+                                    <span class="label label-info" id="bulkImportTotalCount">0 total</span>
+                                </div>
+                            </div>
+                            <div style="max-height: 360px; overflow-y: auto;">
+                                <table class="table table-bordered table-condensed" id="bulkImportPreviewTable">
+                                    <thead>
+                                        <tr>
+                                            <th>Line</th>
+                                            <th>Status</th>
+                                            <th>Name</th>
+                                            <th>Barcode</th>
+                                            <th>Category</th>
+                                            <th>Errors</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody></tbody>
+                                </table>
+                            </div>
+                            <div id="bulkImportCategoryNote" class="alert alert-info" style="display:none;"></div>
+                            <p class="text-muted">In-file duplicate barcodes will be silently skipped. Rows already in the database will be skipped at import time.</p>
+                            <button type="button" id="bulkImportBack" class="btn btn-default waves-effect waves-light">Back</button>
+                            <button type="button" id="confirmBulkImport" class="btn btn-primary waves-effect waves-light">Confirm Import</button>
+                        </div>
+                        <div id="bulkImportPanelResults" style="display:none;">
+                            <div class="row" style="margin-bottom: 10px;">
+                                <div class="col-md-4 text-center">
+                                    <h3 id="bulkImportResultInserted" class="text-success">0</h3>
+                                    <p>Inserted</p>
+                                </div>
+                                <div class="col-md-4 text-center">
+                                    <h3 id="bulkImportResultSkipped" class="text-warning">0</h3>
+                                    <p>Skipped</p>
+                                </div>
+                                <div class="col-md-4 text-center">
+                                    <h3 id="bulkImportResultCategories" class="text-info">0</h3>
+                                    <p>Categories Created</p>
+                                </div>
+                            </div>
+                            <details id="bulkImportResultErrors" style="display:none;">
+                                <summary>Per-row errors</summary>
+                                <ul id="bulkImportResultErrorList" class="text-danger"></ul>
+                            </details>
+                            <button type="button" id="bulkImportAgain" class="btn btn-default waves-effect waves-light">Import Another File</button>
+                            <button type="button" class="btn btn-primary waves-effect waves-light" data-dismiss="modal">Close</button>
+                        </div>
                     </div>
                 </div>
             </div>

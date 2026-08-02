@@ -35,6 +35,7 @@ let paymentType = 0;
 let receipt = "";
 let totalVat = 0;
 let subTotal = 0;
+let bulkState = { phase: "upload", preview: null };
 let method = "";
 let order_index = 0;
 let user_index = 0;
@@ -1400,6 +1401,170 @@ if (auth == undefined) {
       }
 
       });
+    });
+
+    // ------------------------------------------------------------------
+    // Bulk Import Products (CSV)
+    // Two-step flow: parse & preview (no DB writes) -> confirm & import.
+    // ------------------------------------------------------------------
+
+    function setBulkPanel(name) {
+      $("#bulkImportPanelUpload").toggle(name === "upload");
+      $("#bulkImportPanelPreview").toggle(name === "preview");
+      $("#bulkImportPanelResults").toggle(name === "results");
+    }
+
+    function resetBulkImport() {
+      $("#bulkImportForm").get(0).reset();
+      $("#bulkImportPreviewTable tbody").empty();
+      $("#bulkImportResultErrorList").empty();
+      $("#bulkImportResultErrors").hide();
+      $("#bulkImportCategoryNote").hide();
+      bulkState.phase = "upload";
+      bulkState.preview = null;
+      setBulkPanel("upload");
+    }
+
+    function escapeHtml(value) {
+      if (value === null || value === undefined) return "";
+      return String(value)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#39;");
+    }
+
+    function renderBulkPreview(preview) {
+      bulkState.preview = preview;
+      var tbody = $("#bulkImportPreviewTable tbody");
+      tbody.empty();
+
+      for (var i = 0; i < preview.rows.length; i++) {
+        var r = preview.rows[i];
+        var statusBadge = r.valid
+          ? '<span class="label label-success">OK</span>'
+          : '<span class="label label-danger">FAIL</span>';
+        var errorText = (r.errors && r.errors.length) ? r.errors.join("; ") : "";
+        tbody.append(
+          "<tr" + (r.valid ? "" : ' class="danger"') + ">" +
+            "<td>" + r.line + "</td>" +
+            "<td>" + statusBadge + "</td>" +
+            "<td>" + escapeHtml(r.data ? r.data.name : (r.valid ? "" : "")) + "</td>" +
+            "<td>" + escapeHtml(r.data ? r.data.barcode : "") + "</td>" +
+            "<td>" + escapeHtml(r.data && r.data.categoryName ? r.data.categoryName : "") + "</td>" +
+            "<td>" + escapeHtml(errorText) + "</td>" +
+          "</tr>"
+        );
+      }
+
+      $("#bulkImportValidCount").text(preview.summary.valid + " valid");
+      $("#bulkImportInvalidCount").text(preview.summary.invalid + " invalid");
+      $("#bulkImportTotalCount").text(preview.summary.total + " total");
+
+      if (preview.categoriesToCreate && preview.categoriesToCreate.length) {
+        $("#bulkImportCategoryNote")
+          .text("Categories to be created: " + preview.categoriesToCreate.join(", "))
+          .show();
+      } else {
+        $("#bulkImportCategoryNote").hide();
+      }
+
+      setBulkPanel("preview");
+    }
+
+    function renderBulkResults(resp) {
+      $("#bulkImportResultInserted").text(resp.inserted || 0);
+      $("#bulkImportResultSkipped").text(resp.skipped || 0);
+      $("#bulkImportResultCategories").text((resp.categoriesCreated || []).length);
+
+      var list = $("#bulkImportResultErrorList");
+      list.empty();
+      if (resp.errors && resp.errors.length) {
+        for (var i = 0; i < resp.errors.length; i++) {
+          list.append("<li>Line " + resp.errors[i].line + ": " + escapeHtml(resp.errors[i].message) + "</li>");
+        }
+        $("#bulkImportResultErrors").show();
+      } else {
+        $("#bulkImportResultErrors").hide();
+      }
+
+      setBulkPanel("results");
+
+      var msg = (resp.inserted || 0) + " products inserted";
+      if (resp.skipped) msg += ", " + resp.skipped + " skipped";
+      notiflix.Report.success("Import complete", msg, "Ok");
+    }
+
+    $("#newProductBulkModal").on("click", function () {
+      resetBulkImport();
+    });
+
+    $("#bulkImportForm").submit(function (e) {
+      e.preventDefault();
+      var $form = $(this);
+      $form.attr("action", api + "inventory/bulk/preview");
+      $form.attr("method", "POST");
+      $form.ajaxSubmit({
+        success: function (response) {
+          renderBulkPreview(response);
+        },
+        error: function (jqXHR) {
+          var body = jqXHR && jqXHR.responseJSON;
+          notiflix.Report.failure(
+            body && body.error ? body.error : "Preview failed",
+            body && body.message ? body.message : "Server error",
+            "Ok"
+          );
+        },
+      });
+    });
+
+    $("#confirmBulkImport").on("click", function () {
+      if (!bulkState.preview) return;
+      var validRows = [];
+      for (var i = 0; i < bulkState.preview.rows.length; i++) {
+        if (bulkState.preview.rows[i].valid) {
+          validRows.push(bulkState.preview.rows[i].data);
+        }
+      }
+      if (validRows.length === 0) {
+        notiflix.Notify.warning("No valid rows to import.");
+        return;
+      }
+      $.ajax({
+        type: "POST",
+        url: api + "inventory/bulk/import",
+        contentType: "application/json; charset=utf-8",
+        data: JSON.stringify({ rows: validRows }),
+        success: function (resp) {
+          renderBulkResults(resp);
+          loadProducts();
+        },
+        error: function (jqXHR) {
+          var body = jqXHR && jqXHR.responseJSON;
+          notiflix.Report.failure(
+            body && body.error ? body.error : "Import failed",
+            body && body.message ? body.message : "Server error",
+            "Ok"
+          );
+        },
+      });
+    });
+
+    $("#bulkImportBack").on("click", function () {
+      bulkState.phase = "upload";
+      bulkState.preview = null;
+      setBulkPanel("upload");
+    });
+
+    $("#bulkImportAgain").on("click", function () {
+      resetBulkImport();
+    });
+
+    $("#downloadBulkTemplate").on("click", function (e) {
+      e.preventDefault();
+      window.open(api + "inventory/bulk/template", "_blank");
     });
 
     $("#saveCategory").submit(function (e) {

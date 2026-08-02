@@ -122,3 +122,7 @@ app.put("/category", function (req, res) {
         },
     );
 });
+
+// Expose the NeDB instance so other API modules (e.g. api/inventoryBulk.js)
+// can reuse the same connection instead of opening a second one on the file.
+app.categoryDB = categoryDB;
