@@ -330,3 +330,8 @@ app.decrementInventory = function (products) {
         );
     });
 };
+
+// Expose helpers so other API modules (e.g. api/inventoryBulk.js) can reuse
+// the same NeDB instance and product-id generation strategy.
+app.inventoryDB = inventoryDB;
+app.generateUniqueProductId = generateUniqueProductId;
