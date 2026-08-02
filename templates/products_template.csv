@@ -1,0 +1,4 @@
+name,barcode,price,quantity,category,supplier,expirationDate,minStock,stock
+Paracetamol 500mg (Box of 20),8901234500017,120.00,50,Analgesics,MediCorp,15-Mar-2027,10,0
+Amoxicillin 250mg (Box of 10),8901234500024,450.00,30,Antibiotics,MediCorp,20-Jun-2026,5,0
+Cetirizine 10mg (Strip of 10),8901234500031,85.00,0,Antihistamines,,10-Dec-2027,15,1
