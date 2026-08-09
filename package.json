@@ -23,7 +23,7 @@
     "async": "^3.2.4",
     "bcrypt": "npm:bcryptjs@^2.4.3",
     "body-parser": "^1.20.6",
-    "dompurify": "^3.4.12",
+    "dompurify": "^3.4.13",
     "electron-context-menu": "^3.6.1",
     "electron-squirrel-startup": "^1.0.0",
     "electron-store": "^8.1.0",
@@ -83,12 +83,12 @@
     "@octokit/request": "^8.4.1",
     "@octokit/request-error": "^5.1.1",
     "brace-expansion": "^2.0.3",
-    "dompurify": "^3.4.12",
+    "dompurify": "^3.4.13",
     "follow-redirects": "^1.15.11",
     "lodash": "^4.17.24",
     "multer": "^2.2.0",
     "picomatch": "^2.3.2",
-    "electron": "^41.10.3"
+    "electron": "^43.3.0"
   },
   "scripts": {
     "electron": "cross-env NODE_ENV=dev nodemon --exec \"\"electron .\"\"",
@@ -123,7 +123,7 @@
     "@electron-forge/publisher-github": "^7.11.1",
     "browser-sync": "^3.0.3",
     "cross-env": "^7.0.3",
-    "electron": "^41.10.3",
+    "electron": "^43.3.0",
     "electron-is-dev": "^2.0.0",
     "electron-log": "^4.4.8",
     "electron-reloader": "^1.2.3",
